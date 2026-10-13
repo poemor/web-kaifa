@@ -31,6 +31,9 @@ const BASE=process.env.SITE_TEST_URL||'http://127.0.0.1:8743/';
       await page.locator('#lesson-source').waitFor({state:'attached'});
       const lecture=await page.locator('#lesson-source').textContent();
       assert(lecture.includes(id==='go-01'?'git add .gitignore main.go go.mod':'go.mod'),'supplemental lecture is available');
+      const starter=await page.locator('#lesson-code').inputValue();
+      const fullProgram=await page.evaluate(id=>window.LEARNING_LESSON_GUIDES[id].starterCode,id);
+      assert.equal(starter,fullProgram,'course starter matches the complete lecture file');
       if(id==='go-06')assert(!lecture.includes('"example/go-lab/calc"'),'lecture must not use a different module path');
     }
     await page.goto(BASE+'#/lesson/web-12');

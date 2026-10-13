@@ -43,4 +43,6 @@ VS Code、Python、PostgreSQL安装界面按当前官方资料核对，本轮没
 
 ## 部署后复验
 
-发布前修复与本地回归已完成；推送后的Pages状态、线上资源与修复场景将单独核对，并补入本节。
+实施提交：`be276736c6c6e413b56837b17fa5b0badf4a1dc9`，已推送 main。GitHub Pages [部署运行38342956838](https://github.com/zhouwu97/web-kaifa/actions/runs/38342956838) 成功；Pages API 对应 commit 为此提交、状态 built、error 为 null。
+
+主代理重新请求线上首页和全部17份入口JS/CSS，逐字核对本地源码与资源内容哈希，均匹配。用独立浏览器实际打开109个学习目的页，无运行时错误与请求失败，阅读后完成数仍为0；线上 `test_walkthrough.cjs` 通过键盘跳正文、Go补充讲义、示例恢复/撤销和复制到独立HTTP网页的表单本地检查。运行证据保存在本机忽略目录 `.qa/deployment-verification.json`。三份子代理报告另补独立部署后复验结果。

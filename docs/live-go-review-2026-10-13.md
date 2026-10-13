@@ -67,3 +67,24 @@ Go工具链为本机已有版本，没有为了审查重装。`go run` 外层进
 安装、账户、psql、数据库和Go工具说明只核对官方主来源，链接已直接写进修改讲义。另核对Go官方稳定下载元数据仍提供Windows ARM64安装器；GitHub官方仓库 `actions/checkout@v7` 与 `actions/setup-go@v7` 标签可解析，未把当前有效版本误报成错误。
 
 本机发现已有 psql14.20客户端，但未找到对应服务器程序；Docker客户端存在、daemon未运行。本轮未启动已有服务、未连接未知数据库，也未安装系统软件、创建账户或执行真实SQL事务。Windows安装向导、macOS/Linux包管理、真实PostgreSQL查询与重启、race detector、Docker镜像构建、完整注册登录、数据库CI均未在本轮实测。教程将这些阶段的真实验收要求保留；主代理负责网页呈现、数据包生成、回归与重新部署后的线上复验。
+
+## 部署后的线上实际复验
+
+实施提交：`be276736c6c6e413b56837b17fa5b0badf4a1dc9`。直接读取 GitHub 官方 Actions API，核对 [Pages部署记录38342956838](https://github.com/zhouwu97/web-kaifa/actions/runs/38342956838) 的状态为 completed、结论为 success，head_sha 与该提交完全一致。随后重新获取线上入口和实际带版本的数据包，没有只根据本地代码推测线上已经生效。
+
+| 发布后资源 | 线上版本 | 与发布后本地内容比较 |
+| --- | --- | --- |
+| curriculum.js | a4be18b5c7b9 | 完全一致；原材料数据保留 |
+| learning-lab.js | 3ad8ffbabd93 | 完全一致 |
+| knowledge-guides.js | 37f8b58db536 | 完全一致，包含新增包讲义及更新知识讲义 |
+| getting-started.js | 4ed66dc93264 | 完全一致 |
+
+在新建、未登录的浏览器环境中访问**实际线上路由**，再展开完整讲义、切换动手写面板，得到以下证据：
+
+1. `#/lesson/go-01` 的有效完整讲义使用更新 go-tools，包含 `.gitignore`、`git add .gitignore main.go go.mod` 与 `git diff --cached --name-only`。它通过页面的讲义映射替代原材料中的提交步骤；不是仅在知识地图增加一段而课内仍暴露旧操作。
+2. `#/lesson/go-06` 展开的是 go-packages 完整三文件教程，能看到 module/import 对应与 `calc/math.go`、`calc/math_test.go`。切换“动手写”后，编辑起点是完整 main 包，导入 `example.com/learn/go-packages/calc`，与讲义中 main.go 完全相同。
+3. 从**部署后的线上数据包**再次提取 go-06 三个文件，在新的 `.qa/live-go-review/deployed/packages-run` 目录运行。`go run .` 输出7；`go test -count=1 -v ./...` 的 positive、mixed、zero、cancel 四用例均通过；`go vet ./...` 通过。没有复用上轮已运行模块。
+4. `#/lesson/go-03` 的课内详细讲解已显示完整 `bufio.NewScanner(os.Stdin)` 示例、输入位置、Scan/Text/Err、空行与EOF说明。
+5. `#/topic/go-sql` 实际显示 Windows 安装与 SQL Shell 提示、`CREATE ROLE learner LOGIN`、两个专用库、schema保存执行步骤。四组反斜杠命令上方明确显示“psql 客户端命令 · 在已连接数据库的 SQL Shell 中执行”，避免误贴进 PowerShell。
+
+这四个线上路由检查没有页面JavaScript异常。证据保存在 `.qa/live-go-review/deployed/`。本节只是部署后的内容、显示、起点和包示例复验；真实数据库安装、账户创建、查询/事务/重启等边界仍与上一节一致，未把文档上线或psql标签正确当作数据库实验成功。

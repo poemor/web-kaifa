@@ -115,7 +115,6 @@
     const lesson = byId[id];
     if (id === 'go-02' && state.audience === 'new' && window.LEARNING_ADAPTATIONS?.goBeginner02) return { ...lesson, ...window.LEARNING_ADAPTATIONS.goBeginner02, sourceMarkdown: window.LEARNING_KNOWLEDGE_GUIDES['go-control'].markdown };
     if (id === 'web-12' && window.LEARNING_ADAPTATIONS?.webForm12) return { ...lesson, ...window.LEARNING_ADAPTATIONS.webForm12 };
-    if (id === 'go-01') return { ...lesson, sourceMarkdown: window.LEARNING_KNOWLEDGE_GUIDES['go-tools'].markdown };
     const revisedLecture = window.LEARNING_LESSON_GUIDES?.[id];
     if (revisedLecture) return { ...lesson, starterCode: revisedLecture.starterCode, sourceMarkdown: revisedLecture.markdown };
     return lesson;
