@@ -111,8 +111,13 @@
   }
   const isDone = id => state.completed.includes(id);
   const effectiveLesson = id => {
+    if (!knownLesson(id)) return undefined;
     const lesson = byId[id];
     if (id === 'go-02' && state.audience === 'new' && window.LEARNING_ADAPTATIONS?.goBeginner02) return { ...lesson, ...window.LEARNING_ADAPTATIONS.goBeginner02, sourceMarkdown: window.LEARNING_KNOWLEDGE_GUIDES['go-control'].markdown };
+    if (id === 'web-12' && window.LEARNING_ADAPTATIONS?.webForm12) return { ...lesson, ...window.LEARNING_ADAPTATIONS.webForm12 };
+    if (id === 'go-01') return { ...lesson, sourceMarkdown: window.LEARNING_KNOWLEDGE_GUIDES['go-tools'].markdown };
+    const revisedLecture = window.LEARNING_LESSON_GUIDES?.[id];
+    if (revisedLecture) return { ...lesson, starterCode: revisedLecture.starterCode, sourceMarkdown: revisedLecture.markdown };
     return lesson;
   };
   const hasRecords = () => state.completed.length || Object.keys(state.checks).length || Object.keys(state.quiz).length || Object.values(state.notes).some(Boolean) || Object.values(state.drafts).some(Boolean);
@@ -280,7 +285,7 @@
     activeAiLesson = newId;
     aiDraft = aiDrafts.get(newId || 'custom') || {
       goal: state.notes[newId] || '',
-      code: state.drafts[newId] && state.drafts[newId] !== byId[newId]?.starterCode ? state.drafts[newId] : '',
+      code: state.drafts[newId] && state.drafts[newId] !== effectiveLesson(newId)?.starterCode ? state.drafts[newId] : '',
       error: '', tried: '', level: 'hint', mode: aiDraft.mode
     };
   }
@@ -334,7 +339,7 @@
   }
   function renderSearch(query) {
     const normalized = query.trim().toLowerCase();
-    const results = normalized ? allLessons.filter(lesson => [lesson.title, lesson.summary, lesson.task, ...lesson.concepts, lesson.sourceMarkdown].join(' ').toLowerCase().includes(normalized)) : [];
+    const results = normalized ? allLessons.map(lesson => effectiveLesson(lesson.id)).filter(lesson => [lesson.title, lesson.summary, lesson.task, ...lesson.concepts, lesson.sourceMarkdown].join(' ').toLowerCase().includes(normalized)) : [];
     const labResults = window.LearningLab.search(normalized);
     const setupResults = window.GettingStarted.search(normalized);
     const hasResults = results.length || labResults.topics.length || labResults.exercises.length || setupResults.length;
@@ -399,7 +404,7 @@
     titles.setup = '安装与起步教程';
     const labDetail = routeKey === 'topic' ? window.LEARNING_LAB.topics.find(item => item.id === parts[1]) : routeKey === 'exercise' ? window.LEARNING_LAB.exercises.find(item => item.id === parts[1]) : null;
     document.querySelector('#breadcrumb').innerHTML = routeKey === 'lesson' || routeKey === 'followup' ? `<a href="#/${nav || 'home'}">${nav === 'go' ? 'Go 后端' : 'Web 开发'}</a> / ${routeKey === 'lesson' ? '课内练习' : '后续阶段'}` : labDetail ? `<a href="#/${nav}">${titles[nav]}</a> / ${routeKey === 'topic' ? '概念讲解' : '练习任务'}` : escape(titles[routeKey] || '开始学习');
-    document.title = `${routeKey === 'lesson' && byId[parts[1]] ? byId[parts[1]].title : labDetail?.title || titles[routeKey] || '开发练习册'} · 开发练习册`;
+    document.title = `${routeKey === 'lesson' && knownLesson(parts[1]) ? effectiveLesson(parts[1]).title : labDetail?.title || titles[routeKey] || '开发练习册'} · 开发练习册`;
     if (routeKey === 'home') renderHome();
     else if (routeKey === 'setup') main.innerHTML = window.GettingStarted.markup(params);
     else if (routeKey === 'web' || routeKey === 'go') renderTrack(routeKey);
@@ -424,6 +429,11 @@
     updateSidebar();
     window.Workbench.routeChanged(routeKey, routeKey === 'lesson' && knownLesson(parts[1]) ? effectiveLesson(parts[1]) : null);
   }
+  document.querySelector('.skip-link').addEventListener('click', event => {
+    event.preventDefault();
+    main.focus({ preventScroll: true });
+    main.scrollIntoView({ behavior: 'instant', block: 'start' });
+  });
   document.querySelector('#menu-toggle').addEventListener('click', () => {
     const sidebar = document.querySelector('#sidebar');
     const open = sidebar.dataset.open !== 'true'; sidebar.dataset.open = String(open);
@@ -503,12 +513,13 @@
     if (target.dataset.copyTemplate) { const template = ai.prompts.find(item => item.id === target.dataset.copyTemplate); if (template) await copyText(template.prompt, target); }
     const action = target.dataset.action;
     if (action === 'copy-code') await copyText(document.querySelector('#lesson-code').value, target);
-    if (action === 'run-preview') runPreview(byId[state.lastLesson]);
+    if (action === 'run-preview') runPreview(effectiveLesson(state.lastLesson));
     if (action === 'copy-prompt') await copyText(generatedPrompt, target);
     if (action === 'reset-code') {
       const id = state.lastLesson; const prior = state.drafts[id];
-      state.drafts[id] = byId[id].starterCode; document.querySelector('#lesson-code').value = byId[id].starterCode; persist();
-      if (document.querySelector('#code-preview')) runPreview(byId[id]);
+      const lesson = effectiveLesson(id);
+      state.drafts[id] = lesson.starterCode; document.querySelector('#lesson-code').value = lesson.starterCode; persist();
+      if (document.querySelector('#code-preview')) runPreview(lesson);
       notify('已恢复课程示例。', () => { if (prior === undefined) delete state.drafts[id]; else state.drafts[id] = prior; persist(); if (routeKey === 'lesson' && state.lastLesson === id) renderLesson(id); });
     }
     if (action === 'complete-lesson' && isReady(byId[target.dataset.lesson])) { state.completed = [...new Set([...state.completed, target.dataset.lesson])]; persist(); renderLesson(target.dataset.lesson); }

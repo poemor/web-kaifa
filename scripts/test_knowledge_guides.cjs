@@ -92,9 +92,31 @@ const normalize=s=>String(s).replace(/\r\n/g,'\n').trim();
       if(spec.id==='web-box'){await example.locator('#measure').click();assert.equal(await example.locator('#result').textContent(),'content-box：226px\nborder-box：200px');}
       if(spec.id==='web-flex'){await example.locator('#toggle').click();assert.equal(await example.locator('.bar').evaluate(el=>getComputedStyle(el).flexDirection),'column');}
       if(spec.id==='web-forms'){
-        await example.locator('#name').fill('小林');await example.locator('#email').fill('student@example.com');await example.locator('[type=submit]').click();
-        assert((await example.locator('#feedback').textContent()).includes('尚未提交或保存'));
-        await example.locator('#name').fill('   ');await example.locator('[type=submit]').click();assert((await example.locator('#feedback').textContent()).includes('不能只包含空格'));
+        await example.waitForLoadState('networkidle');
+        const beforeURL=example.url(),formRequests=[];
+        const recordRequest=request=>formRequests.push({method:request.method(),url:request.url()});
+        example.on('request',recordRequest);
+        try{
+          await example.locator('#name').fill('小林');await example.locator('#email').fill('student@example.com');await example.locator('[type=submit]').click();
+          assert((await example.locator('#feedback').textContent()).includes('尚未提交或保存'));
+          await example.locator('#name').fill('小张');
+          assert.equal(await example.locator('#feedback').textContent(),'输入已修改，请重新检查。','editing invalidates the old successful check');
+          await example.getByRole('button',{name:'清空本地输入'}).click();
+          assert.equal(await example.locator('#name').inputValue(),'','clear removes the successful draft name');
+          assert.equal(await example.locator('#email').inputValue(),'','clear removes the successful draft email');
+          assert.equal(await example.locator('#feedback').textContent(),'本地输入已清空，未发送数据。');
+          assert.equal(await example.evaluate(()=>document.activeElement.id),'name','clear restores focus to the first field');
+          await example.locator('#name').fill('   ');await example.locator('#email').fill('student@example.com');await example.locator('[type=submit]').click();
+          assert((await example.locator('#feedback').textContent()).includes('不能只包含空格'));
+          assert.equal(await example.evaluate(()=>document.activeElement.id),'name');
+          await example.getByRole('button',{name:'清空本地输入'}).click();
+          assert.equal(await example.locator('#name').inputValue(),'','clear also removes an invalid draft');
+          assert.equal(await example.locator('#email').inputValue(),'');
+          assert.equal(await example.locator('#feedback').textContent(),'本地输入已清空，未发送数据。');
+          assert.equal(await example.evaluate(()=>document.activeElement.id),'name');
+          assert.equal(example.url(),beforeURL,'local checks do not expose entered values through URL navigation');
+          assert.deepEqual(formRequests,[],'form checks and clear never send data to the static server');
+        }finally{example.off('request',recordRequest);}
       }
       if(spec.id==='web-js'){await example.locator('#run').click();assert.equal(await example.locator('#output').textContent(),'匹配 2 项：HTML、CSS');await example.locator('#limit').fill('');await example.locator('#run').click();assert((await example.locator('#output').textContent()).includes('请输入'));}
       if(spec.id==='web-dom'){await example.locator('#keyword').fill('<script>alert(1)</script>');assert.equal(await example.locator('#list script').count(),0);assert((await example.locator('#count').textContent()).includes('没有匹配'));}

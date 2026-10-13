@@ -85,6 +85,74 @@ rust：0，存在=false
 
 关键的执行链是 `Fields` 按空白拆分 → `ToLower` 归一化 → map 累加 → 收集键 → 按规则排序 → 输出。`Fields` 不做中文分词，也不会自动剔除标点；`go,` 与 `go` 是不同键。说明限制是数据处理的一部分，不要悄悄修改输入后声称支持所有自然语言。
 
+## 从固定文字改成“读取一整行”：不要用 Scan 只读一个词
+
+本课正式任务要求用户输入一行，例如 `Go go WEB`。起步教程里的 `fmt.Scan(&name)` 只读一个以空白分隔的词；直接拿它读这行，会先得到 `Go`，无法统计后面的两个词。`bufio.Scanner` 默认按行读取：`Scan()` 尝试读下一行，成功才可以用 `Text()` 取得该行内容；遇到输入结束返回false，读入失败还应检查 `Err()`。按下Enter代表这一行输入完成，换行本身不包含在Text结果中。[Scanner官方说明](https://pkg.go.dev/bufio#Scanner)
+
+下面是**另一个独立完整程序**，不要追加在前面主程序后，也不要在同一目录保留两个含main的 `.go` 文件。新建 `exercises/go/go-collections-input`，打开它，第一次执行 `go mod init example.com/learn/go-collections-input`。新建main.go，完整保存以下代码；然后在终端 `go run .`，点击终端输入一整行并按Enter。新增的两个导入是 `bufio`（读一行）和 `os`（提供标准输入）。
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"sort"
+	"strings"
+)
+
+func main() {
+	fmt.Println("请输入一行文字，再按Enter：")
+	scanner := bufio.NewScanner(os.Stdin)
+	if !scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			fmt.Println("读取失败：", err)
+		} else {
+			fmt.Println("没有读到一行，请重新运行并输入。")
+		}
+		return
+	}
+	text := scanner.Text()
+	counts := make(map[string]int)
+	for _, word := range strings.Fields(text) {
+		counts[strings.ToLower(word)]++
+	}
+	keys := make([]string, 0, len(counts))
+	for word := range counts {
+		keys = append(keys, word)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		if counts[keys[i]] != counts[keys[j]] {
+			return counts[keys[i]] > counts[keys[j]]
+		}
+		return keys[i] < keys[j]
+	})
+	if len(keys) == 0 {
+		fmt.Println("没有可统计的词")
+		return
+	}
+	for _, word := range keys {
+		fmt.Printf("%s:%d\n", word, counts[word])
+	}
+}
+```
+
+输入 `Go go WEB` 时应看到如下对话；其中输入行由你输入，不是程序再次打印的：
+
+```output
+请输入一行文字，再按Enter：
+Go go WEB
+go:2
+web:1
+```
+
+重新运行输入 `b a`，应按字典序输出 `a:1`、`b:1`；直接按Enter输入空行，应输出“没有可统计的词”。空行是已经读到的一行，不等于没有任何输入。程序在提示后等待你输入是正常现象，不要往源码区填写要统计的句子。
+
+`sort.Slice(keys, func(i,j int) bool { ... })` 的第二参数是一个没有名字的函数。排序库多次调用它，询问“当前位置i的词应该排在位置j的词之前吗？”返回true表示应该在前，而不是已经完成交换。先比较次数，次数相等才比较单词，这就是两条排序规则。这个函数会读取外面已有的keys和counts；不用给自己每个比较都手工写调用。后面的 `keys` 才是稳定的顺序，直接遍历map打印不会得到同样保证。
+
+本例统计并输出所有词；正式任务的Top3要在排序后只取最多三个。用 `end := len(keys)`，若 `end > 3` 就设为3，再遍历 `keys[:end]`；不足三项和空行先按规则处理，不能直接取 `keys[:3]`。Scanner默认有行长限制，过长输入会走Err分支；本课先使用短的一行，不把它当成任意大小文本文件处理器。
+
 ## 改一个输入
 
 1. 把词频输入改成 `b a`，相同次数时输出谁在前？

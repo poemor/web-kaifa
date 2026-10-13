@@ -80,25 +80,33 @@
     next.innerHTML = '<button class="button primary" data-next-tab="review">检查运行结果 →</button><button class="button" data-assist-code>带着代码提问 ↗</button>';
     panels.code.append(next);
     grid.replaceChildren(...Object.values(panels));
-    function select(name, focus = false) {
+    function select(name, focus = false, reveal = false) {
       tabs.set(lesson.id, name);
       tabList.querySelectorAll('button').forEach(button => {
         const active = button.dataset.lessonTab === name;
         button.setAttribute('aria-selected', String(active));
         button.tabIndex = active ? 0 : -1;
-        if (active && focus) button.focus();
+        if (active && focus) button.focus({ preventScroll: true });
       });
       Object.entries(panels).forEach(([key, panel]) => { panel.hidden = key !== name; });
+      if (reveal) {
+        // A short panel replacing a long guide can leave its start above the viewport.
+        // Keep both the selected tab and the new panel below the fixed mobile header.
+        const style = getComputedStyle(tabList);
+        const tabTop = style.position === 'sticky' ? parseFloat(style.top) || 0 : 32;
+        const panelTop = tabTop + tabList.getBoundingClientRect().height + (parseFloat(style.marginBottom) || 0);
+        window.scrollTo({ top: Math.max(0, window.scrollY + panels[name].getBoundingClientRect().top - panelTop), behavior: 'instant' });
+      }
     }
-    tabList.addEventListener('click', event => { const button = event.target.closest('[data-lesson-tab]'); if (button) select(button.dataset.lessonTab); });
+    tabList.addEventListener('click', event => { const button = event.target.closest('[data-lesson-tab]'); if (button) select(button.dataset.lessonTab, true, true); });
     tabList.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
       event.preventDefault();
       const active = names.findIndex(([name]) => name === tabs.get(lesson.id));
       const index = event.key === 'Home' ? 0 : event.key === 'End' ? 2 : (active + (event.key === 'ArrowRight' ? 1 : -1) + 3) % 3;
-      select(names[index][0], true);
+      select(names[index][0], true, true);
     });
-    grid.querySelectorAll('[data-next-tab]').forEach(button => button.addEventListener('click', () => select(button.dataset.nextTab, true)));
+    grid.querySelectorAll('[data-next-tab]').forEach(button => button.addEventListener('click', () => select(button.dataset.nextTab, true, true)));
     select(tabs.get(lesson.id) || 'task');
     const editor = $('#lesson-code');
     if (editor) {
@@ -346,7 +354,7 @@
         <div id="assistant-update" class="assistant-update" hidden role="status">当前扩展 v<span id="assistant-loaded-version"></span>。新版 0.2.3 修复打开官网后的连接与会话恢复；右侧若出现“载入本机新版”，点击即可保存记录并重载。<a href="projects/web/ai-browser-bridge/README.md" target="_blank" rel="noopener">更新说明 ↗</a></div>
         <header class="assistant-heading"><div class="assistant-row"><h2 id="assistant-title"><span class="assistant-symbol" aria-hidden="true">✳</span>AI 助教</h2><button class="assistant-close" id="assistant-close" aria-label="收起 AI 助教">×</button></div><button class="button provider-button" id="assistant-provider" aria-haspopup="dialog"><span><b id="assistant-provider-name">Claude</b> · 本地提问</span><span>选择服务 ⌄</span></button></header>
         <div class="assistant-body"><p class="assistant-mode-note"><span id="assistant-connection-summary">当前可整理并复制提问</span> <button type="button" class="button quiet small" id="assistant-install">连接扩展</button></p><span class="workbook-eyebrow">A LITTLE HELP, AT THE RIGHT TIME</span><h3 class="assistant-greeting">从你卡住的地方开始。</h3><p class="assistant-description">说说你想做什么、试过什么。先整理一个清楚的问题，再带着提示回到自己的代码里。</p><div class="assistant-suggestions"><button data-assist-preset="plan">帮我把任务拆小</button><button data-assist-preset="hint">先给我一个线索</button><button data-assist-preset="debug">教我怎样排查报错</button></div><section class="assistant-context"><h3 id="assistant-context-label"></h3><label><input id="assistant-task" type="checkbox" checked>当前课程与验收标准</label><label><input id="assistant-code" type="checkbox">我编辑的代码</label><details><summary>查看本次提问的上下文</summary><pre id="assistant-context-preview"></pre></details></section><section class="assistant-result" id="assistant-result" hidden><div class="assistant-row"><h3>整理后的提问 · 非 AI 回答</h3><button class="button quiet small" id="assistant-copy">复制</button></div><pre id="assistant-output" tabindex="0"></pre></section></div>
-        <div class="assistant-compose-area"><form class="assistant-compose" id="assistant-form"><label for="assistant-question">你的问题</label><textarea id="assistant-question" maxlength="4000" aria-describedby="assistant-status" placeholder="例如：我该先写页面结构，还是先调整样式？"></textarea><div class="assistant-row"><small>先要线索，再自己动手</small><button class="button primary" type="submit">整理提问 ↑</button></div></form><p id="assistant-status" class="assistant-status" role="status"></p><p class="assistant-footnote">提问草稿仅保留在当前页面，请及时复制</p></div>
+        <div class="assistant-compose-area"><form class="assistant-compose" id="assistant-form"><label for="assistant-question">你的问题</label><textarea id="assistant-question" maxlength="4000" aria-describedby="assistant-keyboard-hint assistant-status" placeholder="例如：我该先写页面结构，还是先调整样式？"></textarea><div class="assistant-row"><small>先要线索，再自己动手</small><button class="button primary" type="submit">整理提问 ↑</button></div><p class="small hint" id="assistant-keyboard-hint">Enter 换行；Ctrl+Enter 整理（Mac 用 Cmd+Enter）。也可点击“整理提问”。</p></form><p id="assistant-status" class="assistant-status" role="status"></p><p class="assistant-footnote">提问草稿仅保留在当前页面，请及时复制</p></div>
       </aside>
       <dialog class="workbook-dialog" id="provider-dialog" aria-labelledby="provider-title"><div class="assistant-row"><h2 id="provider-title">选择你使用的 AI</h2><button class="assistant-close" data-close-dialog="provider-dialog" aria-label="关闭服务选择">×</button></div><p>未连接扩展时，这里选择要复制提问到的工具；连接扩展后可在右侧直接对话。</p><div class="provider-options">${['Claude', 'ChatGPT', 'Gemini', 'DeepSeek', 'Kimi', '豆包', '智谱清言'].map(name => `<button class="button" data-provider="${name}" aria-pressed="${name === provider}"><strong>${name}</strong><small>本地提问</small></button>`).join('')}</div><p>选择服务不会登录第三方账号，也不会把课程或代码发出去。</p><button class="button" id="connection-info">连接已安装扩展 / 使用说明</button></dialog>
       <dialog class="workbook-dialog" id="connection-dialog" aria-labelledby="connection-title"><div class="assistant-row"><h2 id="connection-title">连接官网对话扩展</h2><button class="assistant-close" data-close-dialog="connection-dialog" aria-label="关闭连接说明">×</button></div><p>连接后就在右侧对话，使用你自己的官网账号；对应 AI 标签页需保持打开，可以放在后台。</p><section id="connection-state" class="connection-state" data-phase="idle" role="status" aria-live="polite"><strong id="connection-state-title">连接你的扩展</strong><p id="connection-detail">已安装扩展可以直接连接，无需重新安装。</p></section><div class="button-row"><button class="button primary" type="button" id="connection-retry">连接已安装扩展</button><button class="button" data-close-dialog="connection-dialog">稍后连接</button></div><details id="connection-install-guide"><summary>还没有安装？查看安装方法</summary><ol><li>下载仓库中的 ai-browser-bridge 文件夹。</li><li>打开浏览器的扩展管理，开启开发者模式，选择“加载已解压的扩展程序”。</li><li>选取包含 manifest.json 的文件夹，再点扩展图标回到本页。</li></ol><p>当前是开发原型，尚未上架扩展商店，浏览器不能由网页自动安装。</p></details><a class="button quiet small" href="projects/web/ai-browser-bridge/README.md" target="_blank" rel="noopener">扩展说明与排查步骤 ↗</a></dialog>`;
@@ -377,8 +385,8 @@
     $('#assistant-question').addEventListener('compositionend',()=>{composing=false;});
     $('#assistant-question').addEventListener('keydown',event=>{
       if(event.key!=='Enter' || composing || event.isComposing || event.keyCode===229)return;
-      if(event.ctrlKey || event.shiftKey || event.metaKey)return;
-      event.preventDefault();if(!event.repeat && !event.altKey && draft.question.trim())$('#assistant-form').requestSubmit();
+      if((!event.ctrlKey && !event.metaKey) || event.shiftKey || event.altKey)return;
+      event.preventDefault();if(!event.repeat && draft.question.trim())$('#assistant-form').requestSubmit();
     });
     $('#assistant-question').addEventListener('input', event => {
       draft.question = event.target.value;

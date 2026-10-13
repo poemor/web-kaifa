@@ -80,6 +80,8 @@ for (const topic of lab.topics) {
   assert(lab.exercises.some(exercise => exercise.topicIds.includes(topic.id)), topic.id + ' linked exercise');
 }
 assert.equal(Object.keys(context.window.LEARNING_KNOWLEDGE_GUIDES).length,lab.topics.length);
+assert(context.window.LEARNING_LESSON_GUIDES['go-06'].starterCode.includes('example.com/learn/go-packages/calc'));
+assert(fs.existsSync(path.join(root,context.window.LEARNING_LESSON_GUIDES['go-06'].source)));
 function visitTopic(id, pathIds = new Set()) {
   assert(!pathIds.has(id), 'cyclic prerequisites at ' + id);
   const next = new Set(pathIds); next.add(id);

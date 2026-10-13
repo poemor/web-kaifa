@@ -81,7 +81,7 @@ disabled控件一般不能交互，也通常从Tab序列和表单提交数据中
       <label for="email">邮箱（必填）</label>
       <input id="email" name="email" type="email" required>
       <button type="submit">检查信息</button>
-      <button type="button" id="reset">清空本地输入</button>
+      <button type="button" id="reset-input">清空本地输入</button>
     </form>
     <p id="feedback" role="status">尚未检查。</p>
     <script>
@@ -100,7 +100,7 @@ disabled控件一般不能交互，也通常从Tab序列和表单提交数据中
     form.addEventListener('input',()=>{
       feedback.textContent='输入已修改，请重新检查。';
     });
-    document.querySelector('#reset').addEventListener('click',()=>{
+    document.querySelector('#reset-input').addEventListener('click',()=>{
       form.reset();
       feedback.textContent='本地输入已清空，未发送数据。';
       document.querySelector('#name').focus();
@@ -117,6 +117,10 @@ disabled控件一般不能交互，也通常从Tab序列和表单提交数据中
 ```
 
 两个label与对应input建立关联，required和type=email让浏览器负责第一道校验。submit监听阻止真实提交，取称呼trim后补充空格边界检查，再用textContent显示结果。input监听撤销过期反馈；reset按钮调用form.reset恢复输入初值。本例没有默认value，因此恢复成空值，而不是清除浏览器所有状态。
+
+清空按钮的 `id` 特意叫 `reset-input`，不要改成 `reset`。浏览器可以通过 `form.控件名` 找到表单里的控件，若某个控件的 id 或 name 是 reset，它会遮住本来的 `form.reset` 方法，点击后就可能报“form.reset is not a function”。这里的 reset-input 只是我们给按钮的标识，真正恢复表单初值的是 `form.reset()`。同样不要给控件随意取 `submit` 等原生方法名；字段名称与表单 API 是两套用途。
+
+按完整顺序验收一次：先填写合法信息并检查，改一下称呼应立即撤销旧通过提示；点击清空，两框应变空、反馈应说明未发送数据，光标回到称呼。再填写只有空格的称呼与合法邮箱，检查后应拒绝；此时清空也应有效。页面不应跳转，地址栏不应出现姓名或邮箱参数，Network 不应新增报名请求。
 
 先用鼠标点击“称呼”文字，确认光标进入输入框。再只用键盘完成整个表单。打开Network并提交合法信息，确认没有出现报名POST请求，反馈也没有说“报名成功”。这是诚实交互的证据，不是功能缺失被包装成成功。
 
@@ -150,3 +154,4 @@ disabled控件一般不能交互，也通常从Tab序列和表单提交数据中
 - [MDN：客户端表单校验](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Form_validation)
 - [MDN：label元素](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label)
 - [MDN：disabled与提交数据](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/disabled)
+- [MDN：reset 方法与同名控件遮蔽](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/reset)

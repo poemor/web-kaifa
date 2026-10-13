@@ -117,13 +117,56 @@ HTML 描述页面“有什么”：标题、段落、链接等。浏览器读取
 
 如果出现 JavaScript 错误：Windows/Linux 可按 `F12` 或 `Ctrl+Shift+I` 打开浏览器开发者工具，找到 **Console（控制台）**；macOS Chrome/Edge 常用 `Cmd+Option+I`。复制相关错误文字以及文件名和行号，连同最小相关代码一起提问。
 
-## 6. 什么时候需要本地服务器
+## 6. 准备 Python，启动第一个本地服务器
 
-后面涉及 `fetch`、JavaScript 模块或接口时，直接打开文件可能受浏览器限制。此时按对应课程的 README 启动本地服务，再用 `http://localhost:端口` 打开。不要把关闭浏览器安全功能当作解决办法。
+第一张静态网页可以直接双击 HTML 打开。后面学习 `fetch`、JavaScript 模块和接口时，需要从 HTTP 地址打开。本节把准备工具、启动、访问、停止四步连起来；不用关闭浏览器安全功能。Python 在这里仅提供静态文件，HTML 仍由浏览器显示，不要求先学 Python 语法，也不需要安装 pip 包。
 
-如果电脑**已经安装 Python 3**，可以在练习目录中用以下命令提供静态文件。它是可选的起步工具，不是 Go 或 Node 后端。
+### 先检查，已经能用就不重复安装
 
-先在 VS Code 左侧右键含 `index.html` 的 `setup-check` 文件夹，选“在集成终端中打开”；运行 `pwd` 核对位置。下面按自己的系统**只选一条**命令执行。
+在 VS Code 选择“终端 → 新建终端”，按系统选一条版本检查命令：Windows 输入 `py --version`，macOS/Linux 输入 `python3 --version`。看到 `Python 3.x.x` 就说明对应命令能运行 Python 3。`x` 是实际版本数字，不要把示意输出当命令输入。若 Windows 只有 `python --version` 能输出 Python 3，后面的服务器命令可用 `python` 替换 `py`。
+
+命令找不到、只弹出应用商店或没有版本输出，才按下面自己系统的分支安装。Python 扩展只是编辑辅助，不能替代 Python 程序；本节也不需要 VS Code 的 Python 扩展。
+
+### Windows：首次安装与确认
+
+1. 用浏览器打开 [Python 官方下载页](https://www.python.org/downloads/)，选择 Windows 的 **Python install manager（安装管理器）**，下载后双击安装文件，点 Install（安装）。管理器负责安装和选择 Python 版本，它与 Python 运行时是两件事。
+2. 安装结束后完全关闭 VS Code，再重新打开练习文件夹和新终端。在新终端执行下面第一条命令，让管理器安装默认稳定运行时；等待下载完成，再执行第二条。已有可用 Python 3 的人跳过这一步。
+
+```powershell
+pymanager install default
+py --version
+```
+
+预期第二条输出 `Python 3.x.x`。旧版 `py` 启动器没有管理器的安装命令，所以安装步骤明确使用 `pymanager`。若 `pymanager` 找不到，检查管理器安装是否成功并重开终端；若版本检查仍失败，把系统版本、安装方式和这两条命令的实际结果带到提问整理器。不要随意删除已有 Python 或整段替换 PATH。Windows 安装细节以 [Python 官方 Windows 说明](https://docs.python.org/3/using/windows.html) 为准。
+
+### macOS：首次安装与确认
+
+打开 [Python 官方 macOS 下载页](https://www.python.org/downloads/macos/)，选择稳定版本的 macOS `.pkg` 安装包，双击后按 Continue（继续）、Agree（同意）、Install（安装）完成，必要时输入自己的系统管理员凭据。官方安装说明还要求运行“应用程序 → Python 版本文件夹”中的 `Install Certificates.command` 完成证书准备；它用于 HTTPS，不是启动本地服务器的命令。
+
+完全关闭并重开 VS Code，在新终端输入：
+
+```sh
+python3 --version
+```
+
+预期输出 `Python 3.x.x`。系统自带的 Python 与自行安装的 Python 可以共存，不要删除或改写 macOS 的 `/usr/bin/python3`。具体安装界面见 [Python 官方 macOS 说明](https://docs.python.org/3/using/mac.html)。
+
+### Linux：按发行版安装，不混用命令
+
+先执行 `python3 --version`；许多发行版已经提供 Python 3。Ubuntu/Debian 在确实缺少时，可逐条执行以下命令：
+
+```sh
+sudo apt update
+sudo apt install python3
+python3 --version
+```
+
+`sudo` 表示使用管理员权限，密码输入时终端通常不显示字符；它与你的代码内容无关。安装会显示待安装软件并要求确认，读清楚后按提示继续。Fedora 使用自己的包管理器：`sudo dnf install python3`，然后同样用 `python3 --version` 验证。其他发行版请按该发行版的官方包管理说明，不把 apt 命令强行套用。依据：[Ubuntu Python 环境说明](https://ubuntu.com/developers/docs/howto/python-setup/)、[Fedora Python 说明](https://fedoraproject.org/wiki/SIGs/Python)。
+
+### 在正确文件夹启动，再去浏览器看结果
+
+1. VS Code 左侧右键含 `index.html` 的练习文件夹（本教程是 `setup-check`），选“在集成终端中打开”。Windows 用 `Get-Location`，macOS/Linux 用 `pwd` 核对最后一级目录；它必须包含你要打开的 `index.html`。
+2. 按自己的系统**只选一条**启动命令，在终端中输入、按 Enter，不写进 HTML 文件。
 
 Windows PowerShell：
 
@@ -137,14 +180,20 @@ macOS/Linux：
 python3 -m http.server 8744 --bind 127.0.0.1
 ```
 
-预期：终端显示服务地址并保持运行，不出现新的提示符是正常的。把 `http://127.0.0.1:8744/` 粘贴到浏览器**地址栏**，不是终端或搜索框，应看见当前目录网页。`127.0.0.1` 表示这台电脑，`8744` 是此服务的端口。结束时回终端按 `Ctrl+C`；重新访问前需再次启动服务。若找不到 `py` 或 `python3`，本节静态文件方式仍可完成；需要服务器时再按课程准备环境，不要为完成第一张网页先装一大套工具。
+`-m http.server` 表示运行 Python 自带的静态服务器模块；`8744` 是端口；`--bind 127.0.0.1` 只让这台电脑访问。它服务的是**启动时所在目录**的文件，不能处理真实报名或 Go API。预期终端显示服务信息并保持运行，没有新的提示符是正常的。
+
+3. 把 `http://127.0.0.1:8744/` 粘贴到浏览器**地址栏**，不是终端或搜索框。应看见刚才的网页；地址现在以 `http:` 开头，而不是 `file:`。如果出现文件列表，说明服务可达，但当前目录没有对应首页，要回头核对文件位置。
+4. 改标题、保存、刷新，应看见变化；终端可能打印一行 GET 请求记录，这是浏览器读取文件的证据，不是编译输出。结束时回终端按 `Ctrl+C`（Mac 此处也是 Control+C）停止。停止后刷新网页应连接失败；重新运行启动命令再刷新，应恢复。
+
+请求状态课使用 **8751** 端口，按那一课的命令和浏览器地址一起替换；不同数字只是为了避免与别的练习服务冲突。
 
 | 现象 | 先查什么 |
 | --- | --- |
-| 浏览器连接被拒绝 | 终端中的服务器是否还在运行，地址端口是否一致 |
-| 看到文件列表或 404 | 终端是否在含 `index.html` 的文件夹，URL 路径是否正确 |
-| 端口被占用 | 已有服务是否使用该端口；可换成 8745，同时修改浏览器地址 |
-| 请求失败 / CORS | 提供请求 URL、页面打开方式与 Console 错误；先判断文件模式还是服务端配置 |
+| `py` / `python3` 找不到 | 先按本节对应系统安装，再重开 VS Code、新终端，先通过版本检查 |
+| 浏览器连接被拒绝 | 服务器是否仍运行；地址端口是否与命令完全一致 |
+| 看到文件列表或 404 | 终端是否在含 `index.html` 的文件夹；文件名和 URL 路径是否正确 |
+| 端口被占用 | 可换成 8745，同时修改浏览器地址；不要结束不认识的系统进程 |
+| 请求失败 / CORS | 记录请求 URL、页面是 file 还是 http、Console 完整错误；先核对当前打开方式 |
 
 ## 7. 把证据带回课程
 

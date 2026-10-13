@@ -46,6 +46,25 @@ fs.mkdirSync(qa, { recursive: true });
     assert.equal(await page.locator('#assistant-result').isVisible(), false, 'changed context invalidates prompt');
     await page.locator('#assistant-form button').click();
     assert(!(await page.locator('#assistant-output').textContent()).includes(code));
+    await page.locator('#assistant-question').fill('第一行：预期显示标题');
+    await page.locator('#assistant-question').press('Enter');
+    await page.keyboard.type('第二行：实际没有变化');
+    assert.equal(await page.locator('#assistant-question').inputValue(), '第一行：预期显示标题\n第二行：实际没有变化', 'Enter writes a new line in a multi-line question');
+    assert.equal(await page.locator('#assistant-result').isVisible(), false, 'a normal Enter must not generate a question');
+    assert((await page.locator('#assistant-keyboard-hint').textContent()).includes('Enter 换行'));
+    await page.locator('#assistant-question').press('Control+Enter');
+    assert((await page.locator('#assistant-output').textContent()).includes('第一行：预期显示标题\n第二行：实际没有变化'), 'Ctrl+Enter generates the complete multi-line question');
+    await page.locator('#assistant-question').fill('Mac 快捷键提问');
+    await page.locator('#assistant-question').press('Meta+Enter');
+    assert((await page.locator('#assistant-output').textContent()).includes('Mac 快捷键提问'), 'Cmd+Enter generates a question');
+    await page.locator('#assistant-question').fill('正在使用中文输入法');
+    await page.locator('#assistant-question').evaluate(el => {
+      el.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true, cancelable: true }));
+      el.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true }));
+    });
+    assert.equal(await page.locator('#assistant-result').isVisible(), false, 'composition confirmation does not generate a question');
+    await page.locator('#assistant-question').fill('Web 专属问题');
     await go('#/lesson/go-01');
     assert.equal(await page.locator('#assistant-question').inputValue(), '');
     assert(!(await page.locator('#assistant-context-preview').textContent()).includes('Web 专属问题'));
@@ -115,11 +134,43 @@ fs.mkdirSync(qa, { recursive: true });
       }
     }
     await page.setViewportSize({ width: 1440, height: 1000 });
+    // A reader may use the fixed tabs after scrolling thousands of pixels into a guide.
+    // Each replacement panel and the selected keyboard tab must come back into view.
+    for (const width of [375, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(BASE + '#/lesson/go-02');
+      await page.locator('.knowledge-guide').first().waitFor({ state: 'attached' });
+      await page.locator('[data-lesson-tab="task"]').click();
+      for (const name of ['code', 'review']) {
+        await page.locator('[data-lesson-tab="task"]').click();
+        await page.evaluate(() => scrollTo({ top: 4000, behavior: 'instant' }));
+        await page.locator(`[data-lesson-tab="${name}"]`).click();
+        assert(await page.locator('#workbook-panel-' + name).evaluate(panel => {
+          const tabs = document.querySelector('.workbook-tabs').getBoundingClientRect();
+          const p = panel.getBoundingClientRect();
+          return p.top >= tabs.bottom && p.top < innerHeight && tabs.top >= 0;
+        }), 'new panel starts below visible tabs after deep reading: ' + width + ' ' + name);
+        assert.equal(await page.evaluate(() => document.activeElement.id), 'workbook-tab-' + name);
+      }
+      await page.locator('[data-lesson-tab="task"]').click();
+      await page.evaluate(() => scrollTo({ top: 4000, behavior: 'instant' }));
+      await page.locator('[data-lesson-tab="task"]').focus();
+      await page.keyboard.press('End');
+      assert.equal(await page.locator('[data-lesson-tab="review"]').getAttribute('aria-selected'), 'true');
+      assert(await page.locator('[data-lesson-tab="review"]').evaluate(el => {
+        const r = el.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight;
+      }), 'keyboard-selected tab retains visible focus: ' + width);
+      assert(await page.locator('#lesson-quiz h2').evaluate(el => {
+        const r = el.getBoundingClientRect(); const tabs = document.querySelector('.workbook-tabs').getBoundingClientRect();
+        return r.top >= tabs.bottom && r.bottom <= innerHeight;
+      }), 'keyboard switching reveals the question: ' + width);
+    }
+    await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(BASE);
     await page.locator('main h1').waitFor();
     await page.screenshot({ path: path.join(qa, 'workbench-home.png'), fullPage: true });
     assert.deepEqual(external, [], 'workbench must not call external model services');
     assert.deepEqual(errors, [], 'browser errors');
-    console.log('PASS: workbench tabs, per-lesson context/drafts, explicit preview, provider state, method page, keyboard/dialog/drawer, 7 widths, no external requests.');
+    console.log('PASS: workbench tabs/deep-scroll visibility, multi-line Enter/Ctrl/Cmd+Enter/IME, per-lesson context/drafts, explicit preview, provider state, method page, keyboard/dialog/drawer, 7 widths, no external requests.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

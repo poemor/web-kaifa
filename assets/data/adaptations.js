@@ -5,8 +5,92 @@
   );
   const image = (alt, width = 960) => `<img src="${illustration}" alt="${alt}" width="${width}" height="${width / 2}">`;
   const card = (title, index, withImage = false) => `<article class="card" id="activity-${index}">${withImage ? image('活动示意图：青绿色山丘和太阳') : ''}<div class="card-content"><h3>${title}</h3><p>周六下午，一起练习并交流遇到的问题。</p><a href="#activity-${index}">查看活动介绍</a></div></article>`;
+  const localForm = `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>社团留言：本地检查</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { max-width: 36rem; margin: 2rem auto; padding: 1rem; font: 1rem/1.7 sans-serif; }
+    label, input, textarea { display: block; }
+    input, textarea { width: 100%; padding: .6rem; margin-bottom: 1rem; }
+    button { padding: .6rem; }
+    :focus-visible { outline: 3px solid #164e80; outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <h1>社团留言</h1>
+  <p>演示表单暂不接受报名。这里只检查本地输入，不发送或保存信息。</p>
+  <form id="local-form">
+    <label for="student-name">称呼（必填）</label>
+    <input id="student-name" name="name" type="text" required maxlength="30">
+    <label for="message">你希望增加什么活动？（必填）</label>
+    <textarea id="message" name="message" rows="3" required maxlength="500"></textarea>
+    <button type="submit">检查表单字段</button>
+    <button type="button" id="clear-input">清空本地输入</button>
+  </form>
+  <p id="feedback" role="status">尚未检查。</p>
+  <script>
+    const form = document.querySelector('#local-form');
+    const feedback = document.querySelector('#feedback');
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      for (const id of ['student-name', 'message']) {
+        const field = document.getElementById(id);
+        if (!field.value.trim()) {
+          feedback.textContent = '必填内容不能只包含空格，请检查称呼与留言。';
+          field.focus();
+          return;
+        }
+      }
+      feedback.textContent = '字段通过本地检查，尚未提交或保存。';
+    });
+    form.addEventListener('input', function () {
+      feedback.textContent = '输入已修改，请重新检查。';
+    });
+    document.querySelector('#clear-input').addEventListener('click', function () {
+      form.reset();
+      feedback.textContent = '本地输入已清空，未发送数据。';
+      document.querySelector('#student-name').focus();
+    });
+  </script>
+</body>
+</html>`;
 
   window.LEARNING_ADAPTATIONS = {
+    webForm12: {
+      starterCode: localForm,
+      sourceMarkdown: `# 做一个诚实的表单界面
+
+本课在自己电脑上检查称呼和活动建议；没有后端，因此不会接收报名。仅写 form action="#" 仍可能产生带姓名与留言的请求，不能用注释代替阻止提交的代码。下面是完整本地演示，原教材在资料索引中保留供对照。
+
+## 在 VS Code 保存和运行
+
+1. 新建独立练习文件夹 web-form，使用“文件 → 打开文件夹”打开。
+2. 新建 index.html，复制下面完整代码，Ctrl+S（Mac 用 Cmd+S）保存。
+3. 在资源管理器中右键文件，选“在文件资源管理器中显示”（Mac 为 Finder），双击用浏览器打开。不需要编译 HTML，也不需要安装后端。
+4. 先点击 label，确认聚焦对应输入框；空输入点检查应出现原生必填提示。填写测试称呼与留言，点击检查，预期显示“尚未提交或保存”，浏览器地址不变。
+5. 修改一个字段，旧通过反馈立即失效；只填空格时提示修正并聚焦该字段。点击“清空本地输入”，两个字段变空，焦点回到称呼框。每次改代码都先保存再刷新。
+
+## 完整文件：index.html
+
+\`\`\`html
+${localForm}
+\`\`\`
+
+## 关键代码怎样连接
+
+label 的 for 和控件 id 配对；name 是提交数据的字段名，不是可见标签。required 检查空值，maxlength 控制长度，但空格需要脚本用 trim 再检查。监听表单的 submit 能处理按钮和键盘 Enter；event.preventDefault 阻止默认导航，随后才做本地检查。input 事件表示字段改变，要撤销旧反馈；清空按钮明确 type=button，不会提交。不要把控件 id/name 命名为 reset，否则可能遮蔽 form.reset() 方法。
+
+role=status 提供可感知的反馈；textContent 写入普通文字，不把用户内容当 HTML。Tab 应依次经过称呼、留言、检查、清空，Shift+Tab 返回，可见边框提示当前焦点。浏览器检查能被绕过；以后真正连接后端时，服务器仍必须校验和授权。
+
+## 独立修改与验收
+
+把问题改成你自己的社团需求，保持标签、焦点、空格检查和反馈真实。用普通内容、空字符串、全空格和很长文本各试一次，写下实际结果。能解释为什么显示“检查通过”却不能说“报名成功”，再按本课验收记录自己的成果。
+`
+    },
     goBeginner02: {
       title: '用循环和判断完成三个小练习',
       summary: '不需要C++基础：先求总和，再判断分数，最后让函数返回几个结果。',

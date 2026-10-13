@@ -23,13 +23,24 @@ Promise表示一个未来操作的结果：开始可能pending（等待中），
 
 1. 在自己的练习目录里新建 `web-fetch` 文件夹，例如放在 `exercises/web/` 下；不要在 materials 原教材中覆盖文件。打开 VS Code，选择“文件 → 打开文件夹”，选中这个新文件夹。
 2. 在左侧资源管理器用“新建文件”按下面清单创建文件。带 `/` 的名字表示子文件夹，例如 `assets/style.css` 需要 assets 文件夹，不能把斜杠当普通名字。逐个复制对应完整代码，Windows 用 Ctrl+S，macOS 用 Command+S 保存全部文件。
-3. 本例必须从本地 HTTP 地址打开。在 VS Code 菜单选“终端 → 新建终端”，先核对终端当前目录就是这个练习文件夹。确认已安装 Python 后输入下面命令。命令运行期间终端保持占用，不是卡住；浏览器访问 http://127.0.0.1:8751/。完成后回终端按 Ctrl+C 停止。若环境未准备好，先看安装与起步教程，不要跳过HTTP前置。
+3. 本例必须从本地 HTTP 地址打开。在 VS Code 菜单选“终端 → 新建终端”，先核对当前目录就是这个练习文件夹。Windows 用 `Get-Location`，macOS/Linux 用 `pwd`。还没装 Python 的人先打开 [Web 环境的完整安装与本地服务器教程](#/setup?topic=web)，从第 6 节按自己的系统安装并通过版本检查，再回到本课；不需要另外安装 pip 包。
+4. 按自己的系统只执行一条服务器命令。
+
+Windows PowerShell（先用 `py --version` 确认 Python 3）：
 
 ```powershell
-python -m http.server 8751 --bind 127.0.0.1
+py -m http.server 8751 --bind 127.0.0.1
 ```
 
-若提示python不存在，先按“安装与起步教程 → Web环境”的本地服务说明确认安装与命令路径；部分Windows环境可使用已安装的 `py -m http.server 8751 --bind 127.0.0.1`。若端口占用，换8752，并同时换浏览器地址。不要把命令写进HTML文件，也不要创建用于404测试的missing.json。
+macOS/Linux（先用 `python3 --version` 确认 Python 3）：
+
+```sh
+python3 -m http.server 8751 --bind 127.0.0.1
+```
+
+如果 Windows 仅 `python --version` 可用且确实输出 Python 3，则用 `python` 替换 `py`。命令运行期间终端保持占用，不是卡住。把 `http://127.0.0.1:8751/` 填入浏览器地址栏，应看到请求状态实验的五个按钮。若出现文件列表，说明目录不对或尚未保存 index.html；不要用双击 HTML 的 file 地址继续请求实验。
+
+完成后回终端按 Ctrl+C 停止。若端口占用，换8752，并同时改浏览器地址。不要把命令写进HTML文件，也不要创建用于404测试的missing.json。
 
 文件清单：
 

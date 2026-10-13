@@ -67,4 +67,39 @@ func main() {
 
 自查：你能指出终端当前目录、`go.mod` 的位置、程序入口和输出位置吗？能解释编辑器扩展、Go 编译器、源码、可执行文件的四个角色吗？运行成功只是环境证据；合上例子独立写出一个问候函数，才是掌握证据。
 
+## 可选：用 Git 留下源码，先检查再提交
+
+Git 用来记录文件的版本，不负责让 Go 程序运行。还没安装 Git 时，先保存 `main.go`、`go.mod` 和自己的运行记录，代码练习可以继续；需要版本管理时再安装、学习 Git。已经在资料仓库内练习时，应沿用仓库已有的 Git，不在练习目录再建一套嵌套仓库。
+
+`go build -o hello.exe .` 会留下编译产物。若随后直接执行 `git add .`，这个程序也可能进入暂存区；“我知道不能提交 exe”不会让 Git 自动排除它。暂存区是下次提交的候选文件，不是已经推送到网上。先在本练习目录新建 `.gitignore`，保存以下内容：
+
+```gitignore
+hello.exe
+hello
+*.exe
+.env
+```
+
+这份规则保护本例指定名称的构建产物与本机配置；换了输出文件名要同步加规则，不要误以为它覆盖所有项目。`.gitignore` 本身应保存进版本管理，`go.mod` 是源码依赖信息，也应保存。当前标准库示例不一定生成 `go.sum`；引入外部依赖后，存在的 `go.sum` 同样应保存。
+
+在 VS Code 集成终端、当前练习目录内执行：
+
+```powershell
+git --version
+git rev-parse --show-toplevel
+```
+
+第二条显示现有仓库根目录，说明这里已处在仓库中；不要再执行 `git init`。若它明确提示 `not a git repository`，且你准备把这个独立练习作为自己的仓库，再执行 `git init`。下面只暂存明确的源码文件：
+
+```powershell
+git add .gitignore main.go go.mod
+git diff --cached --name-only
+```
+
+预期暂存列表只有 `.gitignore`、`main.go`、`go.mod`，不应包含 `hello.exe` 或 `hello`。存在 `go.sum` 时，再用 `git add go.sum` 添加它。`git diff --cached` 可以检查将要记录的内容；确认后才执行自己的提交命令。不要为运行第一个程序而先解决远程登录、推送或发布。
+
+**如果编译产物已被暂存**，先运行 `git status`，然后在这个目录用 `git rm --cached -- hello.exe` 把它从 Git 候选记录中移除；`--cached` 表示保留磁盘文件。macOS/Linux 本例用 `git rm --cached -- hello`。随后重新查看暂存列表。若它已经在较早的提交中，`.gitignore` 不会自动停止跟踪，仍需要明确移除跟踪并检查差异。不要用删除整个目录来处理一个暂存问题。
+
+这里完成的是保存源码的准备，尚未替你提交或推送。参考：[Git 暂存](https://git-scm.com/docs/git-add)、[忽略规则](https://git-scm.com/docs/gitignore)。
+
 官方参考：[Go 起步教程](https://go.dev/doc/tutorial/getting-started)、[依赖管理](https://go.dev/doc/modules/managing-dependencies)、[go 命令说明](https://pkg.go.dev/cmd/go)。

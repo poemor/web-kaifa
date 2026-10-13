@@ -7,17 +7,91 @@
 ### 1. 字符串、数字、布尔值与空值
 `'HTML'`是字符串，20是数字，`20<=30`产生布尔值true。输入框的value即使看起来是30，读出来仍是字符串，需要显式Number转换。`'30'+1`得到字符串'301'，`Number('30')+1`得到31。特别注意Number('')得到0，因此本例先检查原始输入是否空白，不能把空输入当作用户选择了0分钟。NaN表示数值转换没得到有效数字，Number.isFinite再过滤NaN与无穷值。
 
+“没有内容”也要分开：`undefined` 常表示还没有赋值，或者读取了不存在的属性；`null` 通常是代码明确放入的“这里暂时没有值”；`''` 是已经存在的空字符串；`0` 是数字零。它们不等同。可以在浏览器 Console 逐行输入下面的观察代码，不要把它们贴进本例 HTML 的正文；重新练习时可刷新页面，避免重复声明同名变量。
+
+```javascript
+let waiting;
+const emptySelection = null;
+const emptyText = '';
+const zeroMinutes = 0;
+console.log(waiting);                 // undefined
+console.log(emptySelection);          // null
+console.log(emptyText.length);        // 0：字符串有长度，它恰好没有字符
+console.log(zeroMinutes === 0);        // true：合法数字零
+console.log({ title: 'HTML' }.hours);  // undefined：对象没有 hours 属性
+```
+
+`if` 会把条件转换成真假：`0`、`''`、null、undefined、NaN 会被当作假，而 `[]` 与 `{}` 会被当作真。所以不能仅写 `if (!limit)` 拒绝输入，它连合法的零分钟也会拒绝；也不能用 `if (titles)` 判断数组有没有项目，空数组仍为真。本例检查原始字符串、有限数字和范围，再用 `titles.length` 区分有结果与空结果。
+
 ### 2. 数组组织多个对象
 activities是数组，每项对象包含title与minutes两个属性；`item.minutes`读取某项时长。数组顺序与对象属性职责不同：数组可以有第0项、第1项，对象则以字段名表达意义。const让activities这个变量不能重新绑定到别的数组，但不自动冻结数组内部；直接改某项title仍可能改变原数据。不要把const误解为深度不可变。
 
+`let` 与 `const` 都是在声明变量，也就是为一个值起一个代码里能使用的名字。声明时用 `=` 把右边的值放到左边变量里。需要重新赋值时选 let；不需要重新绑定时优先 const。下面的代码只用于 Console 小实验：
+
+```javascript
+let practicedTimes = 0;
+practicedTimes = practicedTimes + 1;
+console.log(practicedTimes);  // 1：let 允许重新赋值
+const activity = { title: 'HTML', minutes: 20 };
+activity.title = 'HTML 入门';
+console.log(activity.title);  // HTML 入门：修改对象内容不等于重新绑定变量
+// activity = { title: 'CSS', minutes: 30 }; // 取消注释会报错：const 不允许重新绑定
+```
+
+变量名区分大小写：minutes 与 Minutes 是不同名字。函数或分支花括号中的 let/const 受所在作用域限制。本例按钮回调中的 raw、limit、titles 只在这一次回调内使用；页面数据 activities 定义在外面，回调可以读取它。第一次先明确“这个名字在哪儿声明、现在这行能不能访问它”，再学习更复杂的作用域规则。
+
 ### 3. filter挑选，map转换
 filter对每个活动执行判断，返回true的项保留在新数组中，<=使刚好30分钟的CSS活动也被包含。map把每个保留对象转换成title字符串。二者返回新数组，不会因这两步直接删除原数组项，但新数组里若仍是对象引用，并非深度复制。排序sort会修改原数组，想保留原顺序时需先复制数组；本课没有排序，先把筛选规则讲清楚。
+
+“回调函数”就是交给另一个函数、由它在约定时机调用的函数。filter 会遍历数组，对每一项调用你提供的函数；不需要你提前把每项传一遍。`item => item.minutes <= limit` 是箭头函数：箭头左边 item 是参数名，右边计算真假并把它返回。换成普通函数，作用可以写得更展开。下面这段可**替换完整示例中原有的 selectTitles 函数**，两种写法选一种，不要留下两个同名版本：
+
+```javascript
+function selectTitles(items, limit) {
+  const kept = items.filter(function (item) {
+    return item.minutes <= limit;
+  });
+  const titles = kept.map(function (item) {
+    return item.title;
+  });
+  return titles;
+}
+```
+
+调用 `selectTitles(activities, 30)` 时，filter 的实际过程如下。参数名 item 不神秘，它每次指向正在检查的那一项；limit 始终读取这次调用传入的30。
+
+| 当前 item | 判断 | 回调返回 | filter 是否保留 |
+| --- | --- | --- | --- |
+| `{ title: 'HTML', minutes: 20 }` | 20 <= 30 | true | 保留 |
+| `{ title: 'CSS', minutes: 30 }` | 30 <= 30 | true | 保留 |
+| `{ title: 'Go', minutes: 40 }` | 40 <= 30 | false | 排除 |
+
+kept 因而有两个对象。随后 map 对这两个对象各调用一次回调，取出 title，结果是 `['HTML', 'CSS']`。最终的 return 把这个数组交还调用者。连续写 `.filter(...).map(...)` 只是把两步接起来，不是让同一个回调同时负责两件事。
+
+短箭头右边只有表达式时会自动返回它；改成花括号函数体后要写 return：`item => { return item.minutes <= limit; }`。若写成 `item => { item.minutes <= limit; }`，返回值变成 undefined，filter 会把所有项都排除。`() => { ... }` 的空括号表示这里不使用参数；按钮事件发生后浏览器才调用它。本课普通函数与箭头函数的等价比较只针对这些不使用 this 的小回调，不表示两种函数在所有语言规则上完全相同。
 
 ### 4. 函数要明确参数与返回值
 selectTitles(items,limit)的items是活动数组，limit是数字。函数返回标题数组，不读取输入框、不改页面、不发请求，这使它容易用固定输入核对。函数体里的return把结果交给调用者；console.log只是打印，不能替代return。把计算与DOM分开以后，错误可能来自转换、筛选或显示，每一步都能单独观察，而不是把所有问题叫作“按钮坏了”。
 
 ### 5. 分支与结果显示
 if先拒绝空输入、非法数字与越界，再做计算。titles.length代表数量，join把多个标题拼成读得懂的一行。没有匹配时给空结果说明，不把空数组当异常。大括号、圆括号和比较符号都有语法意义；先格式化、看Console具体错误行，再修改。
+
+先分清三个符号：`=` 赋值，`===` 比较两边的类型与值，`<=` 比较数值是否小于或等于。`raw === ''` 是在问“原始输入是不是空字符串”，没有修改 raw。`'30' === 30` 为 false，因为一边字符串、一边数字；`Number('30') === 30` 才为 true。`==` 可能先做隐式转换，例如 `0 == false` 为 true，而 `0 === false` 为 false。本课优先用严格比较并主动转换输入，减少“看上去像数字”造成的猜测。
+
+`||` 表示这些条件中至少一个成立，`&&` 表示都成立，`!` 取反。示例的 `raw === '' || !Number.isFinite(limit) || limit < 0 || limit > 120` 因而是在列出任意一种要拒绝的情况。括号能帮助看清组合关系；不要把判断语句写成赋值，如 `if (raw = '')`，这会修改变量，而不是比较。
+
+反馈里的反引号字符串叫模板字符串：`` `匹配 ${titles.length} 项` `` 会先计算 `${...}` 中的值，再放进文字。若长度是2，结果就是“匹配 2 项”。普通引号 `'匹配 ${titles.length} 项'` 不会进行这个替换。`titles.join('、')` 则把数组中的标题用顿号连成“HTML、CSS”。你也可以用字符串拼接写 `'匹配 ' + titles.length + ' 项：' + titles.join('、')`。
+
+最后的 `条件 ? 成立时结果 : 不成立时结果` 叫条件表达式。本例使用 titles.length 作条件；非零时选匹配文字，零时选空结果说明。若还看不顺，可以将原例**最后一行 output.textContent 赋值**替换为下面的 if/else，其他代码保留，结果应相同：
+
+```javascript
+if (titles.length > 0) {
+  output.textContent = `匹配 ${titles.length} 项：${titles.join('、')}`;
+} else {
+  output.textContent = '没有匹配活动。';
+}
+```
+
+用30和0分别点击一次，验证两条分支。之后再读短写法，你应能把每个符号对应回相同的动作，而不只是记住整行代码。
 
 ## 在 VS Code 中创建、保存与运行
 
@@ -126,6 +200,9 @@ if先拒绝空输入、非法数字与越界，再做计算。titles.length代�
 - filter与map各返回什么？
 - return与console.log有什么区别？
 - const是否阻止对象属性被改？
+- filter如何把数组每一项交给回调，带花括号的箭头函数为什么需要return？
+- 为什么不能用if(!limit)拒绝非法输入，也不能用if(titles)判断数组是否非空？
+- 你能把模板字符串和三元表达式各改写为更展开的形式吗？
 - 刚好等于上限应怎样用例验证？
 
 能运行示例是起点，不等于已经学完。请先遮住参考答案，预测变化结果，再独立修改并记录实际结果。如果仍有问题，向AI提供目标、文件结构、自己的代码、具体操作、期待与实际结果、已尝试步骤；让它先定位最小问题，再自己验证修改。
@@ -135,3 +212,6 @@ if先拒绝空输入、非法数字与越界，再做计算。titles.length代�
 - [MDN：JavaScript首步](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/A_first_splash)
 - [MDN：filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
 - [MDN：Number.isFinite](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isFinite)
+- [MDN：箭头函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+- [MDN：严格相等](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)
+- [MDN：模板字符串](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
