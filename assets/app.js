@@ -38,11 +38,18 @@
   window.marked.use({ renderer: {
     html({ text }) { return escape(text); },
     link({ href, tokens }) {
-      const url = safeURL(href);
+      let ownHref = String(href || '');
+      if (/^(\.\.\/){2,3}assets\/downloads\/[\w-]+\.zip$/.test(ownHref)) ownHref = ownHref.replace(/^(\.\.\/)+/, '');
+      if (/^(\.\.\/){2,3}index\.html#\//.test(ownHref)) ownHref = ownHref.replace(/^(\.\.\/)+index\.html/, '');
+      const url = safeURL(ownHref);
       const label = this.parser.parseInline(tokens);
-      return url ? `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${label}</a>` : label;
+      return url ? `<a href="${escape(url)}"${url.startsWith('#/')?'':' target="_blank" rel="noopener noreferrer"'}${/^assets\/downloads\/[\w-]+\.zip$/.test(url)?' download':''}>${label}</a>` : label;
     },
-    image({ text }) { return `<span>${escape(text)}</span>`; }
+    image({ href, text }) {
+      const ownPath = String(href || '').replace(/^\.\.\/\.\.\//, '');
+      if (!/^assets\/images\/tutorials\/[a-zA-Z0-9_-]+\.(png|jpe?g|webp)$/.test(ownPath)) return `<span>${escape(text)}</span>`;
+      return `<a class="tutorial-image" href="${escape(ownPath)}" target="_blank" rel="noopener noreferrer"><img src="${escape(ownPath)}" alt="${escape(text)}" loading="lazy"><span>${escape(text)}（点击查看大图）</span></a>`;
+    }
   } });
   function markdown(source) {
     const template = document.createElement('template');
@@ -200,7 +207,12 @@
   function renderFollowup(track, index) {
     const item = courses[track]?.followups?.[index];
     if (!item) return renderMissing();
-    main.innerHTML = pageHeading(item.title, item.description) + `<div class="lesson-meta"><span>${escape(item.range)}</span><span>后续阶段 · 按掌握情况安排</span></div><section class="task-box"><h2>这阶段要做什么</h2><p>${escape(item.task)}</p></section>${sectionHead('检查做到了什么')}<ul>${item.checks.map(check => `<li>${escape(check)}</li>`).join('')}</ul><div class="callout">这部分是后续阶段的讲义与任务，暂不计入前 14 天的课时进度。可以把自己的成果和复盘保存在仓库里。</div>${window.LearningLab.followupMarkup(track, index)}<details><summary>展开完整阶段讲义</summary><div class="details-body markdown">${markdown(item.sourceSection)}</div></details><div class="button-row">${button('带着这个项目问 AI', '#/ai?template=project-breakdown', true)}${button('回到 Web 路线', '#/' + track)}</div>`;
+    const course = courses[track];
+    const previousIndex = index === 7 ? 2 : index - 1;
+    const previous = index > 0 ? button('← ' + course.followups[previousIndex].title, `#/followup/${track}/${previousIndex}`) : button('← 前两周课程', '#/web');
+    const nextIndex = index === 2 ? null : index === 6 || index === 11 ? null : index + 1;
+    const continuation = index === 2 ? `${button('进入前端路线 →', '#/followup/web/3', true)}${button('进入全栈路线 →', '#/followup/web/7')}` : nextIndex === null ? button('回到 Web 路线', '#/web') : button(course.followups[nextIndex].title + ' →', `#/followup/${track}/${nextIndex}`, true);
+    main.innerHTML = pageHeading(item.title, item.description) + `<div class="lesson-meta"><span>${escape(item.range)}</span><span>按掌握情况安排</span></div><section class="task-box"><h2>这阶段要做什么</h2><p>${escape(item.task)}</p></section>${window.LearningLab.followupGuideMarkup(track, index)}${sectionHead('用实际结果检查学会了什么')}<ul>${item.checks.map(check => `<li>${escape(check)}</li>`).join('')}</ul><p class="small hint">后续阶段不自动计入前14课进度。请在自己的练习目录保存代码与真实验收记录，阅读和复制示例不表示已掌握。</p>${window.LearningLab.followupMarkup(track, index)}<details class="followup-original"><summary>对照原教材的阶段清单</summary><div class="details-body markdown">${markdown(item.sourceSection)}</div></details><section class="followup-next"><h2>接着学哪一阶段</h2><div class="button-row">${previous}${continuation}<button class="button quiet" data-assist-preset="debug">带着本阶段提问 ↗</button></div></section>`;
   }
   function quizMarkup(lesson) {
     const selected = state.quiz[lesson.id];
@@ -341,10 +353,11 @@
     const results = normalized ? allLessons.map(lesson => effectiveLesson(lesson.id)).filter(lesson => [lesson.title, lesson.summary, lesson.task, ...lesson.concepts, lesson.sourceMarkdown].join(' ').toLowerCase().includes(normalized)) : [];
     const labResults = window.LearningLab.search(normalized);
     const setupResults = window.GettingStarted.search(normalized);
-    const hasResults = results.length || labResults.topics.length || labResults.exercises.length || setupResults.length;
-    main.innerHTML = pageHeading(normalized ? `查找“${query.slice(0, 60)}”` : '先写一个想找的词', normalized ? `找到 ${results.length} 节课程、${labResults.topics.length} 个知识主题、${labResults.exercises.length} 个练习、${setupResults.length} 篇起步教程。` : '可以搜索 HTML、切片、HTTP、测试或数据库。')
+    const followups = normalized ? courses.web.followups.map((item, index) => ({...item, index})).filter(item => [item.title, item.range, item.task, window.LEARNING_FOLLOWUP_GUIDES?.['web-' + String(item.index).padStart(2, '0')]?.markdown].filter(Boolean).join(' ').toLowerCase().includes(normalized)) : [];
+    const hasResults = results.length || labResults.topics.length || labResults.exercises.length || setupResults.length || followups.length;
+    main.innerHTML = pageHeading(normalized ? `查找“${query.slice(0, 60)}”` : '先写一个想找的词', normalized ? `找到 ${results.length} 节课程、${followups.length} 个后续阶段、${labResults.topics.length} 个知识主题、${labResults.exercises.length} 个练习、${setupResults.length} 篇起步教程。` : '可以搜索 HTML、切片、HTTP、测试或数据库。')
       + (results.length ? `<section><h2>相关课程 · ${results.length}</h2><div class="lesson-list">${results.map(lessonRow).join('')}</div></section>` : hasResults ? '' : `<div class="empty-state"><h2>${normalized ? '换个词再找找' : '课程也可以按路线找'}</h2><p>${normalized ? '试试更短的词，例如“表单”“error”或“SQL”。上方搜索框随时可以重试。' : 'Web 和 Go 路线里有全部课程。'}</p><div class="button-row">${button('Web 路线', '#/web', true)}${button('Go 路线', '#/go')}</div></div>`)
-      + window.LearningLab.searchMarkup(normalized) + window.GettingStarted.searchMarkup(normalized);
+      + (followups.length ? `<section class="followup-search-results"><h2>后续阶段 · ${followups.length}</h2><div class="followup-grid">${followups.map(item => `<a class="followup-card" href="#/followup/web/${item.index}"><small>${escape(item.range)}</small><h3>${escape(item.title)}</h3><p>${escape(item.description)}</p><span>学习讲解与完整示例 →</span></a>`).join('')}</div></section>` : '') + window.LearningLab.searchMarkup(normalized) + window.GettingStarted.searchMarkup(normalized);
   }
   function renderMissing() {
     main.innerHTML = pageHeading('这里还没有这节课', '链接可能不完整，先回路线中找找。') + `<div class="button-row">${button('Web 路线', '#/web', true)}${button('Go 路线', '#/go')}</div>`;

@@ -1,0 +1,20 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: #273c34; background: #f6f4ee; font: 1rem/1.7 system-ui, sans-serif; }
+main { max-width: 68rem; padding: 1rem; margin: auto; }
+section { margin-block: 1.5rem; padding: 1rem; background: #fff; border: 1px solid #ccd5cf; }
+label { display: block; }
+button, input, select { font: inherit; max-width: 100%; }
+button, select { padding: .5rem .75rem; }
+input:not([type="checkbox"]) { padding: .5rem; width: 100%; }
+button { background: #17624b; color: #fff; border: 1px solid #17624b; cursor: pointer; }
+button:hover:not(:disabled) { background: #0e4937; }
+button:disabled { color: #4b5c52; background: #e1e6e3; cursor: not-allowed; }
+:focus-visible { outline: 3px solid #873600; outline-offset: 4px; }
+form { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; }
+.field { flex: 1 1 12rem; min-width: 0; }
+.check { display: flex; align-items: center; gap: .5rem; }
+#results { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit,minmax(min(100%,18rem),1fr)); }
+#results li { padding: 1rem; border: 1px solid #bbc9c0; overflow-wrap: anywhere; }
+#results h3 { margin-top: 0; }
+summary { cursor: pointer; }
+#storage-heading ~ button { margin: .3rem; }

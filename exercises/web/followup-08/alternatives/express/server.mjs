@@ -1,0 +1,12 @@
+import express from 'express';
+const app=express();app.use(express.json({limit:'8kb'}));
+let next=2;const events=new Map([[1,{id:1,title:'图论训练',location:'教室 A'}]]);
+const fail=(res,status,code,message)=>res.status(status).json({error:{code,message}});
+const valid=body=>body&&typeof body.title==='string'&&body.title.trim().length>0&&body.title.trim().length<=100&&(body.location===undefined||typeof body.location==='string'&&body.location.length<=100)&&Object.keys(body).every(k=>['title','location'].includes(k));
+app.get('/api/events',(req,res)=>res.json([...events.values()]));
+app.get('/api/events/:id',(req,res)=>{const id=Number(req.params.id);if(!Number.isSafeInteger(id)||id<1)return fail(res,400,'invalid_id','id须为正整数');const e=events.get(id);if(!e)return fail(res,404,'not_found','活动不存在');res.json(e);});
+app.post('/api/events',(req,res)=>{if(!valid(req.body))return fail(res,400,'validation','标题/地点/字段无效');const e={id:next++,title:req.body.title.trim(),location:(req.body.location??'').trim()};events.set(e.id,e);res.location(`/api/events/${e.id}`).status(201).json(e);});
+app.patch('/api/events/:id',(req,res)=>{const id=Number(req.params.id),old=events.get(id);if(!Number.isSafeInteger(id)||id<1)return fail(res,400,'invalid_id','id须为正整数');if(!old)return fail(res,404,'not_found','活动不存在');const merged={title:old.title,location:old.location,...req.body};if(!valid(merged))return fail(res,400,'validation','标题/地点/字段无效');const e={id,title:merged.title.trim(),location:merged.location.trim()};events.set(id,e);res.json(e);});
+app.delete('/api/events/:id',(req,res)=>{const id=Number(req.params.id);if(!Number.isSafeInteger(id)||id<1)return fail(res,400,'invalid_id','id须为正整数');if(!events.delete(id))return fail(res,404,'not_found','活动不存在');res.status(204).end();});
+app.use((err,req,res,next)=>{if(err.type==='entity.too.large')return fail(res,413,'body_too_large','请求体过大');if(err instanceof SyntaxError)return fail(res,400,'invalid_json','JSON语法错误');fail(res,500,'internal','服务暂不可用');});
+app.listen(8768,'127.0.0.1',()=>console.log('Express内存版: http://127.0.0.1:8768；请先停止Go同端口服务'));

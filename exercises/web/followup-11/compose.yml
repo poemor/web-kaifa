@@ -1,0 +1,45 @@
+name: club-practice
+services:
+  db:
+    image: postgres:18.6
+    environment:
+      POSTGRES_DB: club_practice
+      POSTGRES_USER: club_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set your local database password in .env}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set a separate application database password}
+    volumes:
+      - club_data:/var/lib/postgresql
+      - ./deploy/init-app-role.sh:/docker-entrypoint-initdb.d/01-app-role.sh:ro
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U club_owner -d club_practice']
+      interval: 3s
+      timeout: 3s
+      retries: 15
+  migrate:
+    image: postgres:18.6
+    depends_on:
+      db: {condition: service_healthy}
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - ./migrations:/migrations:ro
+      - ./deploy/migrate.sh:/migrate.sh:ro
+    entrypoint: [sh, /migrate.sh]
+    restart: 'no'
+  app:
+    build: .
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    environment:
+      APP_ADDR: 0.0.0.0:8770
+      APP_ORIGIN: http://127.0.0.1:18770
+      APP_ENV: development
+      # pgx读取PGPASSWORD环境变量，密码不拼接进URL。
+      DATABASE_URL: postgres://club_app@db:5432/club_practice?sslmode=disable
+      PGPASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
+      ADMIN_USER: ${ADMIN_USER:?set ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD}
+    ports:
+      - '127.0.0.1:18770:8770'
+volumes:
+  club_data:

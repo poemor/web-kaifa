@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>山风社团 · 响应式练习</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="topbar">
+    <a class="brand" href="#top">山风社团</a>
+    <nav aria-label="主要导航"><a href="#activities">活动</a><a href="#notice">公告</a><a href="#contact">联系</a></nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <section class="intro"><p>本月一起动手</p><h1>从一张卡片，做出适合各种屏幕的页面</h1><p>页面有四张活动卡、公告侧栏和联系区。搜索表单只演示本地检查；下一阶段再实现筛选。</p></section>
+    <div class="layout">
+      <aside id="notice" class="notice"><h2>公告</h2><p>活动开放给初学者。请阅读活动详情；本页不接受报名。</p><a href="#contact">查看联系方法</a></aside>
+      <section id="activities" class="activity-section">
+        <h2>活动列表</h2>
+        <form id="search-form">
+          <div class="field"><label for="keyword">活动关键词</label><input id="keyword" name="keyword" required maxlength="40" placeholder="例如：摄影"></div>
+          <div class="field"><label for="city">所在城市</label><input id="city" name="city" required maxlength="30" placeholder="例如：台北"></div>
+          <button type="submit">检查条件</button>
+          <button type="button" disabled>报名暂未开放</button>
+        </form>
+        <p id="feedback" role="status">此表单仅在浏览器检查字段，不提交、不保存。</p>
+        <div class="cards">
+          <article class="card"><img src="./wide.svg" width="800" height="450" alt="山坡上的蓝色帐篷"><span class="badge">新活动</span><div class="card-body"><h3>周末户外摄影</h3><p>学习观察光线和构图。图片展示框是 16:9；换成竖图后仍不会拉伸。</p><details><summary>活动详情</summary><p>周六 09:00，集合地点：社团教室。需要自带手机。</p></details></div></article>
+          <article class="card"><img src="./tall.svg" width="450" height="800" alt="近处一棵树与远处山坡"><div class="card-body"><h3>认识城市里的植物</h3><p>本图本来是竖图。cover 会裁掉上下部分；若细节重要，应改用 contain 或调整构图。</p><details><summary>活动详情</summary><p>周日 14:00，图书馆门口。无需提前学习植物学。</p></details></div></article>
+          <article class="card"><img src="./wide.svg" width="800" height="450" alt="山坡上的蓝色帐篷" loading="lazy"><div class="card-body"><h3>写给第一次参加活动、还不知道准备什么的新同学的完整介绍</h3><p>这是用于检查长标题的卡片；没有强行限制标题高度。正文能随内容自然增高。</p><details><summary>活动详情</summary><p>周三 18:00，社团教室。可以先来旁听。</p></details></div></article>
+          <article class="card"><img src="./tall.svg" width="450" height="800" alt="近处一棵树与远处山坡" loading="lazy"><div class="card-body"><h3>第四张卡片无需手调宽度</h3><p>新增卡片只修改 HTML，Grid 负责排列。测试长英文地址：very-long-example-address-without-normal-word-breaks.example</p><details><summary>活动详情</summary><p>周五 19:00，线上交流；地址将在真实组织活动时另行提供。</p></details></div></article>
+        </div>
+      </section>
+    </div>
+    <section id="contact" class="contact"><h2>联系与使用边界</h2><p>这是本地教学页面。没有服务器、账号或报名功能；不要在练习表单填写真实隐私。模拟联系人：社团学习小组。</p><a href="mailto:club@example.invalid">示例邮箱（不可投递）</a></section>
+  </main>
+  <footer>四张卡片 · 三种屏幕 · 用键盘也能操作</footer>
+  <a class="back-top" href="#top" aria-label="回到页面顶部">回顶部</a>
+</body>
+</html>

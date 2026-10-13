@@ -1,0 +1,11 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: #263b33; background: #f6f4ee; font: 1rem/1.7 system-ui, sans-serif; }
+main { max-width: 65ch; margin: auto; padding: 1rem; }
+a { color: #17624b; }
+input, button { font: inherit; padding: .5rem; max-width: 100%; }
+label { display: block; }
+form { margin-block: 1rem; }
+button { cursor: pointer; background: #17624b; color: white; border: 1px solid #17624b; }
+button:disabled { color: #4b5b52; background: #e4e9e5; }
+:focus-visible { outline: 3px solid #873600; outline-offset: 4px; }
+li { overflow-wrap: anywhere; margin-block: .75rem; }

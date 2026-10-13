@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Go: 运行当前项目",
+      "type": "process",
+      "command": "go",
+      "args": ["run", "."],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": ["$go"],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    },
+    {
+      "label": "Go: 编译当前项目",
+      "type": "process",
+      "command": "go",
+      "args": ["build", "-o", "${workspaceFolder}/hello.exe", "."],
+      "linux": { "args": ["build", "-o", "${workspaceFolder}/hello", "."] },
+      "osx": { "args": ["build", "-o", "${workspaceFolder}/hello", "."] },
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "Go: 编译并运行",
+      "type": "process",
+      "command": "${workspaceFolder}/hello.exe",
+      "linux": { "command": "${workspaceFolder}/hello" },
+      "osx": { "command": "${workspaceFolder}/hello" },
+      "dependsOn": "Go: 编译当前项目",
+      "dependsOrder": "sequence",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    }
+  ]
+}

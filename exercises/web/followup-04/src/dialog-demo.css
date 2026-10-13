@@ -1,0 +1,17 @@
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 45%);
+}
+.dialog-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 500px);
+  max-height: 90vh;
+  overflow: auto;
+  background: white;
+  padding: 24px;
+  border-radius: 10px;
+}

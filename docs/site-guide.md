@@ -8,6 +8,8 @@
 
 教程还包含 VS Code 文件与终端原理、HTML/CSS 逐段解释、点击计数网页、Go 变量和输入、编译可执行程序与重新构建对照。代码框上方写明内容应放入文件还是终端；“预期输出”只供比对，不要当作命令输入。Go 第 6 节专门解释在 VS Code 终端里构建与启动程序，第 7 节演练输入称呼。
 
+VS Code 第8–13节继续教插件与工具安装、工作区层级、settings/tasks/launch/extensions 四个 JSON、任务菜单、编译快捷键、F5 断点与输入程序的调试位置。四张真实界面图可点击放大，完整 Go 起步包包含配置和源码。Windows cmd 用 `hello.exe` 或 `.\hello.exe`，PowerShell 用 `.\hello.exe`；Unix 用 `./hello`。先核对终端，不把 `./hello.exe` 当作通用 Windows 写法。
+
 课内“把本课的关键概念讲清楚”现在包含全部关联主题的详细讲义。第一个主题默认展开，可用章节按钮定位原理、示例、操作或练习；参考答案折叠，先做预测再查看。知识地图独立页面使用同一份正文，原短例放在“速查摘要与原短例”中。阅读、展开、跳转与复制不会完成课程；Go 示例需在电脑的独立模块里运行，数据库/容器内容按注明的环境准备条件验收。
 
 “学会问 AI”包含模糊问题与可排查问题的对照、六项证据骨架、收到回答后的验证方法，以及问题整理器。填写目标和实际结果后可生成文字，缺少的信息明确标为待补充；修改后旧结果收起，刷新前请自行复制。它只保存当前页面会话草稿，不调用模型、不写入课时进度。顶部搜索也能找到这些教程。
@@ -46,6 +48,10 @@
 
 ## 阅读与实际操作
 
+Web 后续12阶段按共同基础、前端、全栈衔接，每页默认显示完整补充讲义：原理、完整文件、操作步骤、预期结果、排错、独立练习与参考解答。原教材阶段清单保留作对照。左侧显示全部阶段，章节按钮可定位长文；源码 ZIP、README 与正文使用同一份参考代码。下载后全部解压，再打开包内独立项目，按 README 执行；不要在 ZIP 中编辑或在学习资料根目录初始化 Go 模块。
+
+第00阶段补 SVG 绘制、PNG 导出、透明背景、图片路径、尺寸与裁切；后续包含 JavaScript 状态、TypeScript 校验、React 与 Vue 等价示例、实际测试、Go 接口、PostgreSQL 约束/事务、用户权限与备份恢复。服务器与数据库在电脑上运行。阶段阅读、源码下载、复制及带上下文提问都不会修改42节课的完成状态；成果与复盘自行保存在仓库。
+
 课内分为“读懂任务”“动手写”“验收记录”三个标签。默认先显示任务，完整讲义和提示可以展开。课内侧栏优先显示当前课程目录，其他入口在“全部学习内容”中；手机通过顶部导航按钮展开目录。标签可用键盘左右方向键切换；切换保留本课草稿，并将新内容开头定位到标签下，读长讲义后也能看到验收题目。
 
 Web 的代码编辑区是真实 HTML / CSS / JavaScript 预览，运行于隔离页面；外部请求和页面导航受到限制。修改草稿后旧预览会收起，点击“运行预览”才执行新代码。课程需要完整项目、接口或服务器时，按讲义在本机操作。
@@ -73,6 +79,8 @@ Go / SQL 的片段不能在静态网站内执行。注意片段依赖、所在�
 课程数据在 `assets/data/curriculum.js`，零基础补充和预览底板在 `adaptations.js`，知识、练习与阶段验收在 `learning-lab.js`；AI 模板和资料列表各有单独文件。新增展示在 `assets/learning.js` 与 `assets/learning.css`。原教材保持原样，修改补充内容时更新审核说明。详细知识讲义与课时专用包教程由 `scripts/build_knowledge_guides.cjs` 生成到同一离线数据包；第1、6课和表单第12课的展示采用补充版，原文仍可从资料索引对照。
 
 运行 `node scripts/check_site.cjs` 检查课程覆盖和入口资源；运行 `python scripts/check_materials.py` 核对教材。浏览器交互检查需要 Playwright，可在依赖已安装的开发环境运行 `node scripts/test_site.cjs`，默认使用本机 Edge 和 `http://127.0.0.1:8743/`。其他浏览器通过 `PLAYWRIGHT_CHANNEL` 调整。
+
+后续讲义源在 `docs/followups`；修改配套或正文后依次运行 `python scripts/build_followup_examples.py`、`node scripts/build_knowledge_guides.cjs`、`node scripts/version_site_assets.cjs`。`test_followup.cjs` 覆盖12阶段×7宽度、章节焦点、复制、下载哈希、分支导航、阶段提问上下文、搜索、离线和进度不变。Go 起步包由 `build_vscode_starter.py` 生成，`check_site.cjs` 同时检查源码下载和截图资源。本轮逐项审核见 [完整审核](followup-completion-review.md)。
 
 工作台新增交互运行 `node scripts/test_workbench.cjs`，覆盖课程标签、侧栏上下文隔离、模型选择状态、键盘与窄屏窗口。`assets/workbench.js` 管理展示交互，`assets/app.js` 保持学习记录与验收逻辑；视觉变量统一在 `tokens.css`，工作台样式在 `assets/workbench.css`。设计规则见 [DESIGN.md](../DESIGN.md)，本轮审核见 [前端设计审核](frontend-design-review-2026-10-13.md)，历史记录见 [工作台改版说明](workbench-redesign.md)。
 

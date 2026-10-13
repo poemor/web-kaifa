@@ -15,9 +15,14 @@ new vm.Script(fs.readFileSync(path.join(root, 'assets/learning.js'), 'utf8'));
 new vm.Script(fs.readFileSync(path.join(root, 'assets/getting-started.js'), 'utf8'));
 require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_getting_started.cjs'), '--check'], { stdio: 'inherit' });
 require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_knowledge_guides.cjs'), '--check'], { stdio: 'inherit' });
+require('node:child_process').execFileSync('python', [path.join(__dirname, 'build_followup_examples.py'), '--check'], { stdio: 'inherit' });
+require('node:child_process').execFileSync('python', [path.join(__dirname, 'build_vscode_starter.py'), '--check'], { stdio: 'inherit' });
 require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'version_site_assets.cjs'), '--check'], { stdio: 'inherit' });
 assert.equal(context.window.GETTING_STARTED.length, 4);
 for (const guide of context.window.GETTING_STARTED) assert(guide.markdown.includes('##') && fs.existsSync(path.join(root, guide.source)));
+for (const guide of context.window.GETTING_STARTED) {
+  for (const image of guide.markdown.matchAll(/!\[[^\]]*\]\(\.\.\/\.\.\/(assets\/images\/tutorials\/[\w-]+\.png)\)/g)) assert(fs.existsSync(path.join(root,image[1])),'Missing tutorial screenshot '+image[1]);
+}
 const courses = context.window.LEARNING_CURRICULUM;
 const ids = new Set();
 for (const [track, count] of [['web', 14], ['go', 28]]) {
@@ -40,6 +45,14 @@ for (const [track, count] of [['web', 14], ['go', 28]]) {
 }
 assert.equal(courses.web.followups.length, 12);
 for (const followup of courses.web.followups) assert(followup.task && followup.checks.length && followup.sourceSection.length > 100);
+assert.equal(Object.keys(context.window.LEARNING_FOLLOWUP_GUIDES).length,12);
+for(let index=0;index<12;index++){
+  const id='web-'+String(index).padStart(2,'0'),guide=context.window.LEARNING_FOLLOWUP_GUIDES[id];
+  assert(guide&&fs.existsSync(path.join(root,guide.source)),id+' complete stage source');
+  assert(fs.existsSync(path.join(root,guide.examplePath,'README.md')),id+' runnable source README');
+  assert(fs.existsSync(path.join(root,guide.archivePath)),id+' complete source download');
+  assert(guide.markdown.includes('```') && guide.markdown.includes('## '),id+' teaching and examples');
+}
 const adaptation = context.window.LEARNING_ADAPTATIONS;
 assert.equal(adaptation.goBeginner02.checks.length, courses.go.lessons[1].checks.length);
 assert(!adaptation.goBeginner02.task.includes('熟悉的 C++'));

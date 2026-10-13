@@ -141,6 +141,9 @@
 }
 
 /* Setup tutorials use the same long-document typography and local-only forms. */
+.tutorial-image { display:block; margin:1.5rem 0; max-width:100%; }
+.tutorial-image img { display:block; width:100%; height:auto; border:1px solid var(--color-rule); border-radius:8px; }
+.tutorial-image span { display:block; margin-top:.55rem; font-size:.9rem; line-height:1.7; color:var(--color-muted); }
 .setup-entry { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-sm) var(--space-xl); font-size: 13px; margin-block: var(--space-md) var(--space-xl); color: var(--color-muted); }
 .setup-entry a { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
 .setup-nav { display: flex; flex-wrap: wrap; gap: var(--space-sm); border-block: 1px solid var(--color-rule); padding-block: var(--space-md); margin-block: var(--space-xl); }
@@ -172,6 +175,11 @@
 .knowledge-code > .button { margin-bottom: var(--space-xs); }
 .knowledge-code pre { margin-top: 0; }
 .knowledge-answer, .lab-short-reference { margin-block: var(--space-lg); border-block: 1px solid var(--color-rule); }
+.followup-start { margin-block: var(--space-xl); padding-block: var(--space-lg); border-block: 1px solid var(--color-rule); max-width: 85ch; }
+.followup-start h2 { margin-top: 0; }
+.followup-guide { margin-top: 0; }
+.followup-next { margin-top: var(--space-2xl); padding-top: var(--space-xl); border-top: 1px solid var(--color-rule); }
+.followup-original { margin-top: var(--space-xl); }
 @media(max-width:600px) { .knowledge-prose h2 { font-size: 19px; }.knowledge-prose th,.knowledge-prose td { padding: var(--space-sm); font-size: 13px; } }
 .setup-article h2 { margin-top: var(--space-2xl); font-size: 22px; }
 .setup-article pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; }

@@ -39,15 +39,14 @@
   function conceptMarkup(item, open = false) {
     return `<details class="lab-concept"${open ? ' open' : ''}><summary>${escape(item.title)}</summary><div class="details-body"><p>${escape(item.summary)}</p>${detailedGuide(item)}<a class="lab-text-link" href="#/topic/${item.id}">在知识地图单独阅读 →</a></div></details>`;
   }
-  function detailedGuide(item) {
-    const guide=window.LEARNING_KNOWLEDGE_GUIDES[item.id];
+  function detailedGuide(item, guide = window.LEARNING_KNOWLEDGE_GUIDES[item.id], scope = 'knowledge') {
     const fragment=document.createElement('template');
     fragment.innerHTML=api.markdown(guide.markdown.replace(/^# .+\n+/,''));
     const toc=[...fragment.content.querySelectorAll('h2')].map((heading,i)=>{
-      heading.id=`knowledge-${item.id}-${i}`;heading.tabIndex=-1;
+      heading.id=`${scope}-${item.id}-${i}`;heading.tabIndex=-1;
       return `<button type="button" data-knowledge-jump="${heading.id}">${escape(heading.textContent)}</button>`;
     }).join('');
-    [...fragment.content.querySelectorAll('h2,h3')].filter(h=>/参考答案|参考解答|练习答案/.test(h.textContent)).forEach(heading=>{
+    [...fragment.content.querySelectorAll('h2,h3')].filter(h=>/^(参考答案|参考解答|练习答案)/.test(h.textContent.trim())).forEach(heading=>{
       const details=document.createElement('details');details.className='knowledge-answer';if(heading.id){details.id=heading.id;details.tabIndex=-1;}
       const summary=document.createElement('summary');summary.textContent=heading.textContent;
       const body=document.createElement('div');body.className='details-body';
@@ -61,12 +60,20 @@
       const label=document.createElement('p');label.className='knowledge-code-label';
       const isOutput=['output','console'].includes(language);
       label.textContent=isOutput?'输出或界面示意 · 用来对照结果':['text','plaintext'].includes(language)?'文字或结构示意 · 用来阅读对照，按正文说明使用':language==='psql'?'psql 客户端命令 · 在已连接数据库的 SQL Shell 中执行':language==='sql'?'SQL 语句 · 按正文说明保存为文件或在已连接数据库中执行':['sh','shell','powershell','bash'].includes(language)?'终端命令 · 按正文说明在正确目录执行':'代码示例 · 按正文说明新建文件或替换片段';
-      pre.id=`knowledge-code-${item.id}-${i}`;
+      pre.id=`${scope}-code-${item.id}-${i}`;
       pre.replaceWith(wrapper);wrapper.append(label);
       if(!isOutput){const copy=document.createElement('button');copy.type='button';copy.className='button small';copy.dataset.knowledgeCopy=pre.id;copy.textContent='复制这段内容';copy.setAttribute('aria-label',`复制${item.title}的第 ${i+1} 段内容`);wrapper.append(copy);}
       wrapper.append(pre);
     });
-    return `<div class="knowledge-guide" data-knowledge-guide="${escape(item.id)}"><nav class="knowledge-toc" aria-label="${escape(item.title)}章节"><p>按步骤读懂，再运行验证</p>${toc}</nav><article class="markdown knowledge-prose">${fragment.innerHTML}</article></div>`;
+    return `<div class="knowledge-guide ${scope === 'followup' ? 'followup-guide' : ''}" data-${scope}-guide="${escape(item.id)}"><nav class="knowledge-toc" aria-label="${escape(item.title)}章节"><p>按步骤读懂，再运行验证</p>${toc}</nav><article class="markdown knowledge-prose">${fragment.innerHTML}</article></div>`;
+  }
+  function followupGuideMarkup(track, index) {
+    if (track !== 'web') return '';
+    const id = 'web-' + String(index).padStart(2, '0');
+    const guide = window.LEARNING_FOLLOWUP_GUIDES?.[id];
+    const lesson = window.LEARNING_CURRICULUM.web.followups[index];
+    if (!guide || !lesson) return '';
+    return `<section class="followup-start" aria-label="阶段学习与示例"><h2>从讲解到自己做出来</h2><p>按章节准备文件、运行并核对结果。下载后先解压 ZIP，在 VS Code 选择“文件 → 打开文件夹”，打开包里的 <code>followup-${String(index).padStart(2, '0')}</code> 文件夹，再按 README 的环境要求和启动步骤运行。也可以照正文在自己的新练习目录逐个创建文件。</p><div class="button-row"><a class="button primary" data-followup-download="${id}" href="${escape(guide.download)}" download>下载完整示例源码（ZIP）</a><a class="button quiet" href="https://github.com/zhouwu97/web-kaifa/tree/main/${escape(guide.examplePath)}" target="_blank" rel="noopener noreferrer">查看示例目录 ↗</a></div></section>` + detailedGuide({id, title: lesson.title}, guide, 'followup');
   }
   function lessonMarkup(lesson) {
     const relevant = data.topics.filter(item => item.lessonIds.includes(lesson.id));
@@ -171,5 +178,5 @@
       button.textContent = '重新运行起点';
     }
   });
-  window.LearningLab = { configure(value) { api = value; }, homeMarkup, trackMarkup, stageMarkup, lessonMarkup, followupMarkup, catalogueMarkup, topicMarkup, exerciseMarkup, search, searchMarkup };
+  window.LearningLab = { configure(value) { api = value; }, homeMarkup, trackMarkup, stageMarkup, lessonMarkup, followupMarkup, followupGuideMarkup, catalogueMarkup, topicMarkup, exerciseMarkup, search, searchMarkup };
 })();

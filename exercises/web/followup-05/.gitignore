@@ -1,0 +1,7 @@
+node_modules/
+dist/
+playwright-report/
+test-results/
+.env.local
+public/banner-original.svg
+public/banner-optimized.svg

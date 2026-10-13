@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>亲手制作素材</title><style>
+* { box-sizing: border-box; } body { margin: 0; padding: 1rem; color: #263b33; background: #f6f4ee; font: 1rem/1.7 system-ui; } main { max-width: 65ch; margin: auto; } img { display: block; max-width: 100%; height: auto; } .calendar { width: 48px; } .inline-link { color: #64368a; display: inline-flex; gap: .5rem; align-items: center; } .inline-link svg { width: 24px; height: 24px; } .inline-link:hover { color: #17624b; } button { font: inherit; margin-block: 1rem; padding: .5rem; } :focus-visible { outline: 3px solid #873600; outline-offset: 4px; }
+</style></head>
+<body><main><h1>自己制作SVG，并导出透明PNG</h1>
+<h2>外部SVG文件</h2><img class="calendar" src="./calendar.svg" width="24" height="24" alt="日历图标"><p>该图为透明背景，放大仍清楚；颜色在SVG文件中定义。</p>
+<h2>内联SVG继承文字颜色</h2><a class="inline-link" href="./index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 11h18"/></svg>查看活动页面</a>
+<h2>原始草稿</h2><img src="./poster-before.svg" width="360" height="200" alt="草稿：强烈黄底，三个大小间距不统一的彩色几何形">
+<h2>统一配色与间距后</h2><img src="./poster-after.svg" width="360" height="200" alt="改进：米色背景、绿色几何形、留白和统一圆角">
+<h2>导出2倍像素的透明PNG图标</h2><p>导出上方calendar.svg原图，包含日期点和你修改的线宽、圆角、配色。HTTP访问可以直接点击下载；双击本页时，先在下面选择自己保存的calendar.svg。修改后请重新选择文件，再导出。结果为96×96像素，网页显示48×48时有2倍像素；不会改写SVG。</p><label for="svg-file">选择自己编辑的SVG（双击本页时需要）</label><input id="svg-file" type="file" accept=".svg,image/svg+xml"><button id="download" type="button">下载96×96透明PNG</button><p id="status" role="status"></p>
+<a href="./index.html">返回作品</a>
+</main><script>
+// Export the actual source file, not the separate inline currentColor demo.
+const fileInput = document.querySelector('#svg-file');
+fileInput.addEventListener('change', () => {
+  document.querySelector('#status').textContent = fileInput.files[0]
+    ? `已选择${fileInput.files[0].name}，点击下载导出；修改源文件后请重新选择。`
+    : '未选择本地SVG；HTTP访问会读取上方calendar.svg。';
+});
+document.querySelector('#download').addEventListener('click', async () => {
+  const status = document.querySelector('#status');
+  try {
+    let source;
+    const chosen = fileInput.files[0];
+    if (chosen) {
+      if (!/\.svg$/i.test(chosen.name)) throw new Error('请选择.svg文件');
+      if (chosen.size > 128000) throw new Error('本练习只导出128KB以内的简单SVG');
+      source = await chosen.text();
+    } else {
+      if (location.protocol === 'file:') {
+        status.textContent = '请先选择自己保存的calendar.svg，再点击下载；双击打开时浏览器不允许直接导出本地跨文件画布。';
+        fileInput.focus();
+        return;
+      }
+      const response = await fetch(document.querySelector('.calendar').src, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`SVG读取失败：HTTP ${response.status}`);
+      source = await response.text();
+    }
+    const image = new Image();
+    const dataURL = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
+    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = dataURL; });
+    const canvas = document.createElement('canvas');
+    canvas.width = 96;
+    canvas.height = 96;
+    canvas.getContext('2d').drawImage(image, 0, 0, 96, 96);
+    canvas.toBlob(blob => {
+      if (!blob) { status.textContent = '导出失败，请保留SVG源文件。'; return; }
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'calendar-2x.png';
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      status.textContent = '已请求下载，请确认calendar-2x.png保存在下载文件夹。';
+    }, 'image/png');
+  } catch (error) { status.textContent = `导出失败：${error.message || 'SVG无法读取'}。保留源文件，检查保存状态和路径后再试。`; }
+});
+</script></body></html>

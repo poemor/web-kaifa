@@ -134,6 +134,12 @@
 
   function updateOutline(lesson) {
     const outline = $('#course-outline');
+    const match = location.hash.match(/^#\/followup\/web\/(\d+)(?:[?]|$)/);
+    if (!lesson && match && window.LEARNING_CURRICULUM.web.followups[Number(match[1])]) {
+      outline.hidden = false;
+      outline.innerHTML = `<p>WEB 开发 / 后续阶段目录</p><div class="outline-links">${window.LEARNING_CURRICULUM.web.followups.map((item, index) => `<a href="#/followup/web/${index}"${index === Number(match[1]) ? ' aria-current="page"' : ''} title="${escape(item.range)}"><span class="outline-number">${String(index + 1).padStart(2, '0')}</span><span class="outline-title">${escape(item.title)}</span></a>`).join('')}</div>`;
+      return;
+    }
     outline.hidden = !lesson;
     if (!lesson) { outline.replaceChildren(); return; }
     const completed = api.completed();
@@ -159,8 +165,12 @@
   });
   function learningContext(){
     if(currentLesson)return currentLesson;
-    const [kind,id]=location.hash.replace(/^#\/?/,'').split('?')[0].split('/');
+    const [kind,id,stage]=location.hash.replace(/^#\/?/,'').split('?')[0].split('/');
     const data=window.LEARNING_LAB;
+    if(kind==='followup' && id==='web' && /^\d+$/.test(stage||'')){
+      const index=Number(stage),item=window.LEARNING_CURRICULUM.web.followups[index];
+      if(item)return {id:'followup/web/'+index,title:item.title,task:item.task,checks:item.checks,starterCode:''};
+    }
     if(kind==='topic'){
       const item=data?.topics.find(item=>item.id===id);
       if(item)return {id:'topic/'+id,title:item.title,task:[item.summary,item.why,...item.points.map(([a,b])=>a+'：'+b)].join('\n'),checks:[item.recall[0]],starterCode:item.example};
@@ -338,9 +348,10 @@
     currentLesson = lesson;
     currentKey = learningContext()?.id || 'custom';
     draft = { ...(drafts.get(currentKey) || emptyDraft()) };
-    document.body.classList.toggle('lesson-view', Boolean(lesson));
+    const courseView = Boolean(lesson) || route === 'followup';
+    document.body.classList.toggle('lesson-view', courseView);
     document.body.dataset.route = route;
-    $('#site-navigation').open = !lesson;
+    $('#site-navigation').open = !courseView;
     updateOutline(lesson);
     syncDraft();
     setOpen(manualOpen ?? false);

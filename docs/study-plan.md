@@ -13,6 +13,8 @@
 
 逐日任务见 [Web 教材](../materials/web/学习路线.md)，打卡见 [Web 进度](../progress/web.md)。框架学习和阶段任务按所选路线进行，不需要一次学习全部分支。
 
+网站后续12阶段有 [补充完整讲义](followups) 与 `exercises/web/followup-00..11` 独立配套。先按共同基础00–02走，再选前端03–06或全栈07–11；每个项目按 README 配置环境、运行和验证，不把清单当作已完成课程。第00阶段同时教素材绘制、SVG/PNG、裁切与导出。
+
 ## Go：用刷题记录 API 贯穿 28 天
 
 | 阶段 | 重点 | 验收目标 |
@@ -23,6 +25,8 @@
 | Day 22–28 | 认证、用户隔离、安全、并发、Docker、CI | 两个用户无法互相操作私有数据，能够本机部署和演示 |
 
 逐日讲义见 [Go 教材](../materials/go/完整学习清单.md)，打卡见 [Go 进度](../progress/go.md)，阶段项目计划见 [刷题记录 API](../projects/go/problem-tracker/README.md)。先按照教材理解标准库 HTTP 和 SQL，再按需要扩展框架、ORM 或缓存。
+
+环境起步先看 [VS Code 图文与配置](tutorials/vscode.md) 第8–13节和 [Go 环境](tutorials/go-environment.md)。可在独立 [问候练习](../exercises/go/vscode-first-program/README.md) 里验证运行任务、编译和断点，熟悉输出与调试的区别后进入正式课程。cmd 与 PowerShell 按各自的启动命令操作。
 
 ## 两条路线如何衔接
 

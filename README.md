@@ -9,7 +9,7 @@
 ## 网页里可以做什么
 
 - 选择“第一次写代码”或“写过代码”，按自己的起点进入路线。
-- 学习 Web 前 14 天与 Go 28 天，每节有任务、完整讲义、提示、验收与小测。Web 后续前端 / 全栈阶段也有入口。
+- 学习 Web 前 14 天与 Go 28 天，每节有任务、完整讲义、提示、验收与小测。Web 后续 12 个阶段提供直接展开的详细讲义和独立源码 ZIP：从布局、JavaScript、Git 到 TypeScript、React/Vue、测试、Go API、SQL、认证和备份恢复。
 - 用知识地图阅读 24 个 Web / Go 详细主题：原理、前置概念、完整示例、VS Code 操作、预期结果、排错与变式练习；课内直接展示对应完整讲解，JavaScript、DOM 和请求专题衔接后续阶段。
 - 在练习工坊挑选 18 个分层任务，按起步提示、独立实现和加练要求练习，用输入输出表验收；四套配套 Web / Go 例子可在本机运行。
 - 修改 Web 示例，在隔离预览中看到真实效果；Go 和 SQL 按讲义在自己的电脑上运行。
@@ -29,6 +29,10 @@
 ## 从这里开始
 
 第一次准备环境可先打开网站的“安装与起步教程”：包含 VS Code 下载、Web / Go 环境检查、常见报错和六项 AI 提问练习。离线文字版：[安装 VS Code](docs/tutorials/vscode.md)、[Web 环境](docs/tutorials/web-environment.md)、[Go 环境](docs/tutorials/go-environment.md)、[学会问 AI](docs/tutorials/asking-ai.md)。
+
+Go 的 VS Code 第8–13节有真实界面截图、Go 插件与 gopls/dlv 安装步骤、四个完整工作区配置、任务运行和 F5 断点调试。可直接 [下载带配置的 Go 起步包](assets/downloads/vscode-go-starter.zip)，解压后打开独立项目，按 README 验证。cmd、PowerShell 与 macOS/Linux 的命令分开说明；复制代码与配置后仍需保存并主动运行。
+
+后续阶段的正文源在 [docs/followups](docs/followups)，配套在 `exercises/web/followup-00` 至 `followup-11`。每份 README 写明所需工具、启动、验证与边界；后端例子必须本机运行，静态学习网站不会替你启动数据库或服务器。素材制作、SVG/PNG 使用、响应式裁切与导出在第00阶段。[本轮完整审核](docs/followup-completion-review.md)
 
 | 路线 | 互动手册 | Markdown 教材 | 学习进度 |
 | --- | --- | --- | --- |
@@ -103,11 +107,17 @@ node scripts/test_learning.cjs
 node scripts/test_getting_started.cjs
 node scripts/test_site_assets.cjs
 node scripts/test_knowledge_guides.cjs
+node scripts/test_followup.cjs
+node scripts/test_vscode_starter.cjs
 ```
 
 浏览器集成检查位于 `scripts/test_site.cjs`，需要 Playwright 和本机 Edge，测试前先启动上述服务器。它覆盖课程入口、代码预览、完成规则、AI 上下文、记录备份和移动端布局；不要求学习者运行这些开发检查。
 
 起步教程以 `docs/tutorials/` 为源文件，修改后运行 `node scripts/build_getting_started.cjs` 同步离线网页数据。任何入口 JS/CSS 修改后运行 `node scripts/version_site_assets.cjs`，将内容哈希写入入口资源地址，避免旧路由脚本与新页面混用；`check_site.cjs` 会检查数据与版本是否同步。已有标签页需要刷新一次才能加载新代码，不会清除学习记录。`test_getting_started.cjs` 实际运行 HTML 交互、Go 编译/重建/输入示例，因此需要本机 Go 工具链；`test_site_assets.cjs` 覆盖旧脚本地址被缓存的故障。
+
+修改后续阶段先运行 `python scripts/build_followup_examples.py` 构建源码 ZIP 与校验清单，再运行 `node scripts/build_knowledge_guides.cjs` 同步正文与下载哈希。Go 起步包用 `python scripts/build_vscode_starter.py` 重建；四个配置源在 `docs/tutorials/configs/go`。打包只含源码、锁文件和教学素材，不含依赖目录、构建产物、真实环境变量或数据库数据。下载包与正文完整文件应保持一致。
+
+开发审核可用 `node scripts/test_vscode_starter.cjs` 真正执行下载包的任务/构建失败边界。`node scripts/test_vscode_starter_debug.cjs` 验证 Delve DAP 断点与变量，需先准备受支持的 Go 补丁版和 dlv；可用 `GO_TOOLCHAIN_EXE`、`VSCODE_QA_DLV` 指定独立工具路径。脚本不安装软件或修改全局设置，实际运行在忽略的 QA 目录中；初学者不需要运行这些网站维护检查。
 
 知识讲义源文件位于 `docs/knowledge/web/` 与 `docs/knowledge/go/`，修改后先运行 `node scripts/build_knowledge_guides.cjs`，再更新入口资源版本。每个目录的 `examples.json` 记录完整示例与可核对结果；示例内容必须与讲义同步。`test_knowledge_guides.cjs` 检查全部主题、课时映射、显示/复制/离线/学习状态，并实际运行独立 Web 和 Go 例子；数据库、容器、认证服务等额外环境的边界见讲义及 [知识内容审核](docs/knowledge-content-audit-2026-10-13.md)。
 

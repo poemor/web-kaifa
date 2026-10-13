@@ -31,7 +31,7 @@
       const button=document.createElement('button');button.type='button';button.className='button small';
       const language=pre.querySelector('code')?.className.replace('language-','')||'text';
       const label=document.createElement('p');label.className='setup-code-label';
-      label.textContent=language==='output'?'预期输出 / 界面示意 · 只对照，不要当命令输入':['sh','powershell'].includes(language)?'在 VS Code 底部终端输入，按 Enter 执行':['go','html'].includes(language)?'在文件编辑区编写并保存 · 按正文说明新建或替换':'文字示例 · 按自己的实际情况填写';
+      label.textContent=language==='output'?'预期输出 / 界面示意 · 只对照，不要当命令输入':['sh','powershell','bat'].includes(language)?'在 VS Code 底部终端输入，按 Enter 执行':['go','html','json'].includes(language)?'在文件编辑区编写并保存 · 按正文说明新建或替换':'文字示例 · 按自己的实际情况填写';
       button.dataset.setupSnippet=pre.id;button.textContent='复制这段内容';
       button.setAttribute('aria-label',`复制第 ${i+1} 段内容`);
       pre.replaceWith(wrapper);wrapper.append(label);

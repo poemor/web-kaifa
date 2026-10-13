@@ -1,0 +1,26 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const { createServer } = require('./server.cjs');
+test('静态文件、搜索和失败响应遵守约定', async t => {
+  const server = createServer();
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const page = await fetch(base + '/');
+  assert.equal(page.status, 200);
+  assert.match(await page.text(), /社团活动展示站/);
+  const response = await fetch(base + '/api/events?keyword=' + encodeURIComponent('算法'));
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get('content-type'), /application\/json/);
+  const data = await response.json();
+  assert.equal(data.count, 1);
+  assert.equal(data.items[0].title, '算法入门');
+  const empty = await fetch(base + '/api/events?keyword=nothing');
+  assert.equal((await empty.json()).count, 0);
+  const bad = await fetch(base + '/api/events?keyword=' + 'x'.repeat(41));
+  assert.equal(bad.status, 400);
+  assert.equal((await bad.json()).error, '关键词超过40字');
+  assert.equal((await fetch(base + '/missing.json')).status, 404);
+  assert.equal((await fetch(base + '/api/events', { method: 'POST' })).status, 405);
+  assert.equal((await fetch(base + '/package.json')).status, 404);
+});

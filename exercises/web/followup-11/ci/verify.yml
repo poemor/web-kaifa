@@ -1,0 +1,48 @@
+# 将独立项目作为自己的仓库时，复制为 .github/workflows/verify.yml。
+# 当前学习资料仓库不会因新增这个示例而自动部署后端。
+name: club-verify
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18.6
+        env:
+          POSTGRES_USER: tutorial
+          POSTGRES_PASSWORD: ci-only-disposable-password
+          POSTGRES_DB: club_ci_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U tutorial -d club_ci_test"
+          --health-interval 3s --health-timeout 3s --health-retries 15
+    env:
+      TEST_DATABASE_URL: postgres://tutorial:ci-only-disposable-password@127.0.0.1:5432/club_ci_test?sslmode=disable
+      DATABASE_URL: postgres://tutorial:ci-only-disposable-password@127.0.0.1:5432/club_ci_test?sslmode=disable
+      ADMIN_USER: club_admin
+      ADMIN_PASSWORD: ci-only-disposable-admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: go vet ./...
+      - run: go test -v ./...
+      - run: go build -o /tmp/club .
+      - run: |
+          for file in migrations/*.sql; do psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$file"; done
+          /tmp/club >/tmp/club.log 2>&1 &
+          for attempt in $(seq 1 30); do curl --fail http://127.0.0.1:8770/health && break; sleep 1; done
+          curl --fail -H 'Content-Type: application/json' -d '{"username":"club_admin","password":"ci-only-disposable-admin"}' -c /tmp/cookie http://127.0.0.1:8770/api/login > /tmp/login.json
+          csrf=$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/login.json","utf8")).csrfToken')
+          curl --fail -H 'Content-Type: application/json' -H "X-CSRF-Token: $csrf" -b /tmp/cookie -d '{"title":"CI 活动","location":"练习环境"}' http://127.0.0.1:8770/api/events
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

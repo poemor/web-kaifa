@@ -132,4 +132,275 @@ PS C:\my-learning\exercises\go\setup-check>
 
 **自查结果**：你能找到并保存一个文件，能说出当前终端在哪个目录。然后选择“Web 环境”或“Go 环境”。阅读教程不会自动完成课程。
 
+## 8. 安装 Go 插件：要找哪一个，装完还缺什么
+
+这一节到第13节给 **Go 路线**。Web 用户先去“Web 环境”运行 HTML；内置 HTML/CSS/JavaScript 支持已经可以编辑第一张网页，后续框架项目按各阶段 README 安装依赖。不要为了网页运行而装 Go 插件。
+
+Go 的四个角色先分清：**Go SDK** 提供 go 命令与编译器；**Go 扩展** 把编辑器接到这些工具；**gopls** 提供补全、跳转和诊断；**dlv（Delve）** 负责断点调试。只装扩展不会得到一个完整 Go SDK；`go run .` 能运行也不代表 dlv 已安装。
+
+1. 确认“Go 环境”中的 `go version` 已成功。安装 Go 官网当前受支持的补丁版本，不照截图固定安装旧版。
+2. 在 VS Code 左侧点击四小块的 **Extensions（扩展）** 图标；或按 `Ctrl+Shift+X`，Mac 用 `Cmd+Shift+X`。
+3. 在扩展搜索框输入 **`@id:golang.go`**，点击名称 **Go**、发布者 **Go Team** 的条目，核对唯一标识 `golang.go`。在这里输入搜索词，不在底部终端输入。
+4. 点击 **Install（安装）**，等按钮变成管理齿轮、Disable/Uninstall（禁用/卸载）等已安装操作。若已经安装无需重复；若提示 Reload Window（重新加载窗口），按提示重新加载。只有核实发布者与来源后才接受对应信任提示。[Go 扩展官方入口](https://marketplace.visualstudio.com/items?itemName=golang.go)
+5. 打开 `main.go`，右下角语言模式应显示 **Go**。若是 Plain Text（纯文本），点击语言名称选择 Go，确认文件名真的是 `main.go`，不是 `main.go.txt`。
+6. 按 `Ctrl+Shift+P`，在**顶部命令面板**搜索 **`Go: Install/Update Tools`**，回车；勾选 **gopls** 和 **dlv**，点击 OK。等待下载与构建完成，到底部“输出”面板选择 **Go**，检查成功或完整错误；不要只看安装按钮点过没有。
+
+![VS Code 的扩展视图：搜索 golang.go，核对 Go Team 与已安装状态](../../assets/images/tutorials/vscode-go-extension.png)
+
+图是实际 VS Code 截图，审核机已经安装，所以出现卸载/禁用按钮；新安装时对应位置是 Install。界面语言和主题可以不同，认清扩展 ID 与操作位置即可。可选中文语言包搜索 `MS-CEINTL.vscode-language-pack-zh-hans`（Microsoft）；它只翻译编辑器菜单，不翻译你的程序输出。
+
+![VS Code 命令面板：Go: Install/Update Tools 是编辑器功能，不是终端命令](../../assets/images/tutorials/vscode-go-tools.png)
+
+**工具下载失败怎么处理？** 先复制 Go 输出面板里的工具名、失败命令和错误，再记录 `go version`。Go SDK 找不到时彻底关闭、重新打开 VS Code，让它读取新 PATH；SDK 能用但工具下载超时属于网络/工具安装问题。不要重复安装多套 Code Runner、全局乱改代理或关闭证书校验。若只想先看到结果，继续用 `go run .`；稍后再修补全或调试工具。[扩展安装与管理](https://code.visualstudio.com/docs/configure/extensions/extension-marketplace)
+
+### 看到 The "dlv" command is not available，具体怎么做
+
+这条提示表示编辑器没有找到 **调试工具**，不表示 main.go 语法有错。通知右下角的 **Install** 可以安装缺少的 dlv；也可以用上面的 `Go: Install/Update Tools` 勾选 dlv 安装。安装期间等待 Go 输出面板，只有明确成功后才重试 F5。通知消失本身不是成功证据。
+
+若命令面板方式失败，官方提示也给出手工安装命令。下面一行在 **VS Code 终端** 执行，不放进 main.go 或 JSON；它从 Go 模块来源下载并构建 Delve，可能需要联网：
+
+```powershell
+go install -v github.com/go-delve/delve/cmd/dlv@latest
+```
+
+成功时可能打印包名，也可能没有额外文字；失败时保留从失败命令到最后一行的完整输出。安装完成后用下面命令查看 Go 工具放在哪里（不是要求你另建这些目录）：
+
+```powershell
+go env GOBIN GOPATH
+```
+
+GOBIN 有值时工具放那里；为空时通常是 GOPATH 下的 bin。不要把 `go env GOPATH` 的路径整体当作 dlv.exe 文件。重新打开 VS Code，用命令面板 **Go: Locate Configured Go Tools** 查看编辑器实际找到的 dlv 路径；若终端能安装但编辑器仍找不到，先查这里，再针对实际工具目录修 PATH。初学者优先让 Go 扩展的安装功能处理路径；手工安装不需要覆盖整条 PATH 或设置一个猜测的 GOROOT。
+
+`fmt` 下红线怎么查？鼠标悬停红线，或菜单 View → Problems（查看 → 问题）读取完整诊断；确认独立项目已有 go.mod、main.go 已保存、gopls 已安装，再用终端 `go run .` 区分编译器错误与编辑器诊断。只看到 main.go 而没看到 go.mod 时先按第9节建立模块；已有模块不重复初始化。编译成功但红线未更新，可用命令面板 **Go: Restart Language Server** 刷新语言服务。不要因 fmt 是红色就另装一个名叫 fmt 的插件。
+
+## 9. 打开正确项目，建立 .vscode 文件夹
+
+最稳妥的跟做方式：**[下载完整 Go 起步包](../../assets/downloads/vscode-go-starter.zip)** → 全部解压缩 → VS Code“文件 → 打开文件夹” → 选择解压后的 **`vscode-first-program`**。它已有源码、模块和四个配置，不需要再初始化。这个独立例子不会覆盖你已写的程序。
+
+想手工建立则新建一个空的 `vscode-first-program` 文件夹，用 VS Code直接打开它。新建 `main.go`，贴入下面完整内容并保存；在这个文件夹的终端执行一次 `go mod init example.com/learn/vscode-first-program`。**已有 go.mod 的项目跳过初始化**。在资源管理器中右键最上方项目名 → 新建文件夹，命名 **`.vscode`**（开头的点要保留），再在它下面新建第10–12节的四个 JSON 文件。
+
+```go
+package main
+
+import "fmt"
+
+func greeting(name string) string {
+	return "你好，" + name
+}
+
+func main() {
+	name := "Go"
+	message := greeting(name)
+	fmt.Println(message)
+	fmt.Println("编译后的程序也能独立运行")
+}
+```
+
+最后目录必须是：
+
+```text
+vscode-first-program/       ← VS Code 打开的文件夹
+  main.go                  ← 你的源码
+  go.mod                   ← Go 模块信息
+  .vscode/                 ← 本项目的编辑器配置
+    settings.json
+    tasks.json
+    launch.json
+    extensions.json
+```
+
+这里 `${workspaceFolder}` 是 VS Code 的变量，会被替换为**当前打开的文件夹路径**，不是让你新建同名文件夹。如果打开的是整套学习资料，配置放在 `exercises/go/.../.vscode`，任务可能找不到；本教程直接打开独立 Go 项目，避免这个层级问题。文件名不能写成 `tasks.json.txt`；每个文件只贴它自己的一个完整 JSON，不贴 Markdown 的三反引号。
+
+VS Code 有“用户设置”和“工作区设置”。本教程的 `.vscode/settings.json` 只作用于这个项目；不要为了一个练习去覆盖所有项目的用户设置。已有配置先保留或备份，合并键值，不把两个 `{ ... }` 并排贴在同一个文件；JSON 的引号用英文双引号，逗号放在相邻项之间。
+
+## 10. settings.json：选终端与保存格式
+
+打开 `.vscode/settings.json`，完整粘贴并保存：
+
+```json
+{
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.autoSave": "off",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": false
+  },
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": { "source": "PowerShell" },
+    "cmd (教程)": { "path": "${env:windir}\\System32\\cmd.exe" }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
+}
+```
+
+| 配置 | 实际作用 | 如何观察 |
+| --- | --- | --- |
+| files.encoding / files.eol | 新文件使用 UTF-8、LF | 底部状态栏显示 UTF-8 与 LF，中文输出不会因文件编码混乱 |
+| files.autoSave: off | 练习时明确手动保存 | 修改后标签出现未保存点，Ctrl/Cmd+S 后消失 |
+| [go] 的 defaultFormatter / formatOnSave | 用 Go 扩展格式化 Go 文件，保存时整理缩进 | 故意乱缩进后保存，gopls 安装成功时格式整理；格式化不是自动运行 |
+| terminal 的 profiles / defaultProfile | Windows 默认新终端使用 PowerShell | 关闭旧终端，再“终端 → 新建终端”，下拉列表应选中 PowerShell |
+
+![VS Code 配置文件：在 .vscode/settings.json 中选择 PowerShell 与 Go 格式化](../../assets/images/tutorials/vscode-go-settings.png)
+
+**默认终端改了，旧 cmd 还在？** 这是正常的：设置只影响新终端。先停止旧终端正在运行的程序，再点终端垃圾桶关闭这一终端，重新新建；若默认配置不能识别已安装的 PowerShell，按 `Ctrl+Shift+P` → **Terminal: Select Default Profile（终端：选择默认配置文件）**，选实际列出的 PowerShell，再新建。macOS/Linux 不应用 `*.windows` 设置，保留系统 zsh/bash 即可。
+
+| 你现在看到的终端 | 查看当前目录 | 查看文件 | Windows hello.exe / Unix hello 的启动方式 |
+| --- | --- | --- | --- |
+| PowerShell，通常有 `PS C:\...>` | `Get-Location` 或 `pwd` | `Get-ChildItem` 或 `ls` | `.\hello.exe` |
+| cmd，通常只有 `C:\...>` | `cd`（不带参数） | `dir` | `hello.exe` 或 `.\hello.exe` |
+| macOS/Linux zsh/bash | `pwd` | `ls` | `./hello` |
+
+截图中 cmd 输入 `./hello.exe` 报“`.` 不是内部或外部命令”，先改成 cmd 的启动写法，**不需要修改 Go 函数或重装编辑器**。还报找不到 hello.exe 时检查是否构建成功和当前目录；`go run .` 能成功时也可以先用它继续学。
+
+## 11. tasks.json：用菜单运行，用快捷键编译
+
+打开 `.vscode/tasks.json`，完整粘贴并保存：
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Go: 运行当前项目",
+      "type": "process",
+      "command": "go",
+      "args": ["run", "."],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": ["$go"],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    },
+    {
+      "label": "Go: 编译当前项目",
+      "type": "process",
+      "command": "go",
+      "args": ["build", "-o", "${workspaceFolder}/hello.exe", "."],
+      "linux": { "args": ["build", "-o", "${workspaceFolder}/hello", "."] },
+      "osx": { "args": ["build", "-o", "${workspaceFolder}/hello", "."] },
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "Go: 编译并运行",
+      "type": "process",
+      "command": "${workspaceFolder}/hello.exe",
+      "linux": { "command": "${workspaceFolder}/hello" },
+      "osx": { "command": "${workspaceFolder}/hello" },
+      "dependsOn": "Go: 编译当前项目",
+      "dependsOrder": "sequence",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    }
+  ]
+}
+```
+
+任务就是给 VS Code 保存一组明确命令。`label` 是菜单里的名字，`command` 是执行的工具，`args` 是传给工具的参数，`cwd` 是工作目录。这里 `type: process` 直接启动工具，避免 cmd/PowerShell 对斜杠和引号的解释差异；配置不会在粘贴或保存时自动执行。
+
+三个任务分别做什么：**运行当前项目**执行 `go run .`；**编译当前项目**只生成 hello.exe（Windows）或 hello（Mac/Linux）；**编译并运行**先成功编译，再启动新的程序。`dependsOn` 建立先后关系，构建失败时不会当成新程序成功运行；不用手动记“改了源码还要重建旧 exe”。Windows 路径含空格也交给进程参数处理，不需要自己拼一串引号。配置不指定你电脑的 GOROOT 或某个固定 C 盘路径。
+
+现在真的运行一次：
+
+1. 打开并保存 `main.go`。按 `Ctrl+Shift+P`（Mac 为 Cmd+Shift+P），搜索 **Tasks: Run Task（任务：运行任务）**。用上下箭头或鼠标选中**准确名称 Tasks: Run Task** 再回车；搜索结果第一项可能是 Rerun All Running Tasks，不要只看搜索词就直接回车。
+2. 从列表选 **Go: 运行当前项目**，回车。若询问扫描任务，选择本工作区已有任务；只有核实自己创建的配置后才运行。
+3. 结果出现在底部 **Terminal（终端）**，应有下面两行。任务结束的说明和 Go 输出分开看；短程序打印后退出是正常现象。
+4. 把 `name := "Go"` 改成 `name := "小林"`，保存，再运行同一任务，第一行应变成“你好，小林”。这才证明你跑了自己的新代码。
+5. 按 **Ctrl+Shift+B**（Mac 为 Cmd+Shift+B）执行默认编译任务，成功时项目文件区出现 hello.exe/hello，**不会自动显示问候**。再用运行任务菜单选择 **Go: 编译并运行**，确认显示新的问候。
+
+```output
+你好，Go
+编译后的程序也能独立运行
+```
+
+![任务搜索的真实界面：应选择图中第4项 Tasks: Run Task，第一项是相似命令](../../assets/images/tutorials/vscode-go-tasks.png)
+
+本图展示功能入口，不是终端命令。图中默认高亮第一项 **Rerun All Running Tasks**；本教程需要选择第4项 **Tasks: Run Task** 再回车，列表顺序随版本可能变化，应按准确名称选择。找不到三个 Go 任务时先核对项目层级、文件名与 JSON 语法，不继续在根目录随处粘贴配置。出现 `go` 找不到时检查 SDK/PATH；出现 `go.mod file not found` 时核对 cwd 目录；出现源码错误时先修具体文件行号，再重跑。右上角来源不明的三角按钮可能由其他扩展提供，先使用这里名字明确的任务。
+
+### extensions.json：推荐插件，不替用户自动安装
+
+`.vscode/extensions.json` 完整内容：
+
+```json
+{
+  "recommendations": ["golang.go"]
+}
+```
+
+它告诉打开此项目的人“推荐 golang.go”。推荐列表不是已安装列表，也不会把 gopls、dlv 自动装齐；第8节的安装和验收仍要做。分享项目时可带这份推荐文件；本仓库的个人 `.vscode` 默认不提交，配置源单独保存在 docs，下载包已组合好。
+
+## 12. launch.json：F5 调试，停下来观察变量
+
+打开 `.vscode/launch.json`，完整粘贴并保存：
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Go: 调试当前项目",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole"
+    },
+    {
+      "name": "Go: 调试需要输入的程序",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}
+```
+
+`type: go` 选择 Go 扩展的调试器；`request: launch` 表示启动新的调试程序；`mode: debug` 由调试器构建当前源码；`program` 与 `cwd` 都使用当前独立项目。调试不是继续启动你昨天编译的 hello.exe，也不需要先点击“编译”才 F5。[Go 扩展官方调试说明](https://github.com/golang/vscode-go/blob/master/docs/debugging.md)
+
+1. 按 `Ctrl+S` 保存 `main.go`，确定第8节 dlv 安装成功。左侧点击 **Run and Debug（运行和调试，带小虫的三角图标）**，顶部下拉选择 **Go: 调试当前项目**。
+2. 在 `fmt.Println(message)` 这一行点行号左侧空白区域，或把光标放该行按 **F9**；应该出现红色断点点。笔记本功能键需 Fn 时按 Fn+F9，也可用 Run 菜单的 Toggle Breakpoint（切换断点）。
+3. 按 **F5**（或 Run → Start Debugging）。第一次若提示 dlv 缺失，先安装对应工具，完成后重新 F5；不要把这一提示当成源码错误。
+4. 程序应在这一行**执行之前暂停**，有当前行标记。左侧 **Variables（变量）** 展开 Locals，可看到 `name` 为 Go、`message` 为“你好，Go”；若前一节改成小林，这里也应对应变化。
+5. 按 **F10**（Step Over，逐过程）执行这一行，在底部 **Debug Console（调试控制台）** 看到问候；再 F10 执行第二行。F5 是继续执行到下一个断点或结束，**Shift+F5** 停止。
+6. 想看 greeting 内部，把断点设在 `message := greeting(name)`：F5 暂停，**F11**（Step Into，单步进入）进入 greeting，看参数，**Shift+F11**（Step Out，单步跳出）返回调用者。每次只用一个动作，观察当前行与变量变化。
+
+| 现象 | 先检查什么 |
+| --- | --- |
+| F5 要求选择环境，没有 Go | Go 扩展是否已启用、是否在自己的项目、launch.json 是否保存 |
+| Could not find dlv / failed to launch | Go 输出面板里是否有 dlv 安装失败、SDK/工具路径是否可用 |
+| 断点空心或没停 | 断点是否在会执行的语句上、源码是否保存、是否启动了这个项目，而不是注释/空白/另一个目录 |
+| Variables 看不到局部值 | 程序是否真正暂停、是否选中 main 的调用栈帧 |
+| 程序输出到 Debug Console | 这是第一个配置指定的输出位置，不需要去 Output 面板找 |
+
+### fmt.Scan 程序需要输入：换第二个调试配置
+
+第一个配置的 internalConsole 用来查看调试输出，**不提供程序的标准输入**。跟“Go 环境”的输入程序做 fmt.Scan 时，选 **Go: 调试需要输入的程序** 再 F5，在底部 **Terminal** 中输入称呼、回车；不要往 Debug Console 表达式框输入名字。Go 扩展目前把 integratedTerminal 调试列为实验能力，遇到兼容性问题先用 `Go: 运行当前项目` 任务或终端 `go run .` 验证输入，再带 Go/扩展/dlv 版本排查调试。
+
+## 13. 做完自查，并把真正的问题交给 AI
+
+不要以“我粘贴过配置”作为完成标准。依次验证：插件 ID/安装状态正确；gopls/dlv 的输出明确成功；独立文件夹中有四个 JSON；任务运行显示两行；改名保存后输出变化；编译生成文件；F5 断点暂停，能看到 message。哪一步失败就停在那一步记录证据，不重复乱装所有环境。
+
+下面是排错时自己填写的文字模板，**不是 AI 已给出的回复**。个人用户名、密码、令牌和私有路径可以打码；保留路径层级、终端类型与错误原文：
+
+```text
+我在 Windows 的 VS Code 学 Go，当前终端是 cmd/PowerShell（填写实际类型）。
+目标：运行 vscode-first-program 的问候程序。
+工作区文件树：main.go、go.mod、.vscode 下四个 JSON（填写自己的实际目录）。
+环境：go version 的实际输出；Go 扩展版本；gopls/dlv 安装成功或失败的原文。
+执行动作：Tasks: Run Task → Go: 编译并运行（或自己的完整命令）。
+预期：终端显示“你好，Go”和“编译后的程序也能独立运行”。
+实际：粘贴完整报错与终端提示符，说明输出出现在哪个面板。
+已尝试：我检查并保存 main.go，确认当前目录有 go.mod；写出实际结果。
+请先判断卡在终端写法、工作区路径、插件工具还是源码，给一个最小检查步骤。
+不要直接重写整个项目；解释为什么这样查，以及正常时应该看到什么。
+```
+
+得到建议后，每次只改一处，保存并重新验证同一操作，把“失败原文 → 修改 → 实际成功输出”写入笔记。生成或复制问题不会替你完成课程。调试理解的是程序怎么走到结果；运行正确一次以后，还要用自己的输入和边界检验。
+
 官方链接核对日期：2026-10-13。菜单语言、安装界面可能随版本变化，出现差异时对照官方说明与实际界面。

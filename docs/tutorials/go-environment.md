@@ -161,6 +161,16 @@ go build -o hello.exe .
 
 这时才应该显示当前程序的打印结果。`.\` 表示“当前目录中的”，PowerShell 通常不会仅凭 `hello.exe` 就自动从当前目录寻找程序。不要在 VS Code 中打开 exe 当文本编辑，也不建议双击观察输出：短程序执行结束后窗口可能马上关闭。
 
+### Windows cmd（提示符是 C:\某个目录>）
+
+cmd 不支持上文的 `pwd`/`ls`：用 `cd`（不带参数）查看当前位置，用 `dir` 列出文件。先运行 `go build -o hello.exe .`，成功后输入：
+
+```bat
+hello.exe
+```
+
+也可输入 `.\hello.exe`。**不要在 cmd 中输入 `./hello.exe`**，它会把点误当成命令，出现“`.` 不是内部或外部命令”。这个错误与 Go 源码无关；先检查文件存在，再按实际终端选择写法。切换终端必须新开一个 PowerShell，旧 cmd 不会因为改了默认设置就自动变成 PowerShell。
+
 ### macOS / Linux
 
 先编译生成当前目录中的 `hello`：
@@ -224,7 +234,13 @@ func main() {
 
 试着换一个称呼，预测它如何出现在结果中。然后自己把问候句改成“欢迎开始 Go 练习”，再运行验证。你现在接触了输入、变量、处理和输出这四个程序基本环节。
 
-## 8. 常见问题：先定位到哪一层
+## 8. 插件、配置与 F5 调试，从哪里继续
+
+已经能运行 `go run .` 后，继续 [VS Code 插件与配置图文教程](../../index.html#/setup?topic=editor) 第8–13节：安装 Go Team 的 Go 扩展，安装 gopls/dlv，在**独立 Go 项目**的 `.vscode` 中保存 settings/tasks/launch/extensions 四个配置，再实际运行任务、设置断点、F5 看变量。也可 [下载带配置的完整 Go 起步包](../../assets/downloads/vscode-go-starter.zip)，解压后打开 `vscode-first-program`，按 README 操作。
+
+配置是给编辑器明确运行位置与操作方式；`go run .` 本身不依赖这些 JSON。不要因为发现缺一个配置文件就重装已经能工作的 Go。已有源码先保留，用下载包的独立目录跟着做，再把确认适合自己的配置复制回去。
+
+## 9. 常见问题：先定位到哪一层
 
 | 完整报错或现象 | 含义与下一步 |
 | --- | --- |

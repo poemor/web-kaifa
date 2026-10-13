@@ -1,0 +1,8 @@
+{
+  "name": "club-release-practice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zero-dependency static website and local HTTP learning server",
+  "scripts": { "start": "node server.cjs", "test": "node --test server.test.cjs" },
+  "engines": { "node": ">=22" }
+}

@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>社团活动 · 发布练习</title><link rel="stylesheet" href="./style.css"><script src="./app.js" defer></script></head>
+<body><main>
+<h1>社团活动展示站</h1><p>活动数据来自同目录JSON；本页可以发布到GitHub Pages。没有真实报名、账号或数据库。</p>
+<nav aria-label="页内导航"><a href="#search">搜索</a> · <a href="#about">说明</a></nav>
+<section id="search"><h2>搜索活动</h2><form id="search-form"><label for="keyword">关键词（留空显示全部）</label><input id="keyword" maxlength="40"><button type="submit">搜索</button></form><button id="reload" type="button">重新读取</button><p id="status" role="status">尚未读取</p><ul id="events"></ul></section>
+<section id="about"><h2>已实现与边界</h2><p>已实现加载、搜索、空结果、失败重试和键盘操作。Node服务器仅用于本机学习；Pages只分发静态文件，不运行server.cjs。</p></section>
+</main></body></html>

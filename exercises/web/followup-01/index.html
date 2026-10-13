@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>活动搜索 · JavaScript 练习</title><link rel="stylesheet" href="./style.css"><script src="./app.js" defer></script></head>
+<body>
+<main>
+  <h1>活动搜索与本地收藏</h1>
+  <p>从 JSON 文件读取活动；收藏只存本浏览器，不能当作真实报名。</p>
+  <section aria-labelledby="request-heading">
+    <h2 id="request-heading">1. 读取数据</h2>
+    <label for="source">测试数据</label>
+    <select id="source"><option value="./events.json">正常数据</option><option value="./empty.json">空数组</option><option value="./missing.json">不存在：404</option><option value="./broken.json">JSON 语法错误</option><option value="./wrong.json">JSON 结构错误</option></select>
+    <button id="load" type="button">读取数据</button>
+    <p id="request-status" role="status">尚未读取，请点击“读取数据”。</p>
+  </section>
+  <section aria-labelledby="filter-heading">
+    <h2 id="filter-heading">2. 搜索与筛选</h2>
+    <form id="filter-form"><div class="field"><label for="keyword">关键词（最多40字，留空显示全部）</label><input id="keyword" maxlength="40" placeholder="例如：算法"></div><div class="field"><label for="category">类别</label><select id="category"><option value="all">全部</option><option value="算法">算法</option><option value="Web">Web</option></select></div><label class="check"><input id="favorites-only" type="checkbox">只看收藏</label><button type="submit">应用条件</button></form>
+    <p id="filter-message" role="status">读取后可筛选；只填空格会要求重新输入。</p>
+    <p id="count" role="status"></p>
+    <ul id="results" aria-busy="false"></ul>
+  </section>
+  <section aria-labelledby="storage-heading">
+    <h2 id="storage-heading">3. 检查本地保存</h2>
+    <p id="storage-status" role="status"></p>
+    <button id="export-storage" type="button">导出当前原始记录</button>
+    <button id="reset-storage" type="button">重新建立空收藏</button>
+    <button id="undo-storage" type="button" disabled>撤销重建</button>
+    <p>发现损坏数据时停止自动写入，原文保留；先导出备份，再决定是否重建。撤销按钮只在本次打开页面有效。</p>
+  </section>
+</main>
+</body></html>

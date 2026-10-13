@@ -1,0 +1,20 @@
+# 仅在完成云主机/域名/防火墙/外部备份后使用；不会帮你创建云账户或DNS。
+services:
+  app:
+    ports: !reset []
+    environment:
+      APP_ENV: production
+      APP_ORIGIN: https://${DOMAIN:?set a domain that points to your server}
+  proxy:
+    image: caddy:2
+    depends_on: [app]
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN}
+    ports: ['80:80', '443:443']
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:

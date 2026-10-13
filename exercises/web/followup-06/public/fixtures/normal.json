@@ -1,0 +1,25 @@
+[
+  {
+    "id": 1,
+    "title": "图论训练",
+    "start_time": "2026-11-01 14:00",
+    "location": "教室 A"
+  },
+  {
+    "id": 2,
+    "title": "算法交流",
+    "start_time": "2026-11-02 10:00"
+  },
+  {
+    "id": 3,
+    "title": "Web 分享",
+    "start_time": "2026-11-03 15:00",
+    "location": "线上"
+  },
+  {
+    "id": 4,
+    "title": "Go 入门",
+    "start_time": "2026-11-04 15:00",
+    "location": "教室 B"
+  }
+]

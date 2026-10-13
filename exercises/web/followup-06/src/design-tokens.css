@@ -1,0 +1,9 @@
+:root {
+  --brand: #164d85;
+  --text: #252525;
+  --background: #f7f5ef;
+  --surface: #ffffff;
+  --space: 16px;
+  --radius: 10px;
+  --button-height: 48px;
+}

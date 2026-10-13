@@ -1,0 +1,15 @@
+{
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.autoSave": "off",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": false
+  },
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": { "source": "PowerShell" },
+    "cmd (教程)": { "path": "${env:windir}\\System32\\cmd.exe" }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
+}

@@ -12,7 +12,7 @@
 
 1. 建立 `exercises/go/go-tools` 文件夹，在 VS Code 选择“文件 → 打开文件夹”，打开这个目录。
 2. 左侧资源管理器点“新建文件”，命名为 `main.go`，贴入下面**完整程序**，按 `Ctrl+S`。
-3. 新建终端，Windows PowerShell 输入 `Get-Location`，macOS/Linux 输入 `pwd`。最后目录必须是 `go-tools`，而不是上一级 `go`。
+3. 新建终端，Windows PowerShell 输入 `Get-Location`，cmd 输入 `cd`（不带参数），macOS/Linux 输入 `pwd`。最后目录必须是 `go-tools`，而不是上一级 `go`。提示符以 `PS` 开头通常是 PowerShell；`C:\...>` 通常是 cmd，启动 exe 的写法不同。
 4. 首次执行 `go mod init example.com/learn/go-tools`。左侧应出现 `go.mod`。再逐行输入下面命令；命令不写进 `main.go`。
 
 ```powershell
@@ -20,11 +20,19 @@ go fmt ./...
 go run .
 go test ./...
 go vet ./...
-go build -o hello.exe .
-./hello.exe
 ```
 
-最后两个命令是 Windows 演示；macOS/Linux 可改用 `go build -o hello .` 和 `./hello`。`go fmt` 整理缩进，成功时可能显示被修改文件名。`go run .` 编译当前包并运行临时程序。`go build` 生成独立程序，编译成功通常不打印消息；旧程序不会随源文件自动更新。`go test` 运行测试；本例没有测试时会显示 `[no test files]`，这不是失败。`go vet` 做静态检查，未发现问题时通常安静结束，也不等于全面正确。
+这些 Go 命令在三种终端中相同。构建和启动则按下面选择，**不要把不同终端的启动命令混用**：
+
+| 终端 | 先编译 | 再启动 | 查看文件 |
+| --- | --- | --- | --- |
+| Windows PowerShell | `go build -o hello.exe .` | `.\hello.exe` | `Get-ChildItem` |
+| Windows cmd | `go build -o hello.exe .` | `hello.exe` 或 `.\hello.exe` | `dir` |
+| macOS/Linux zsh/bash | `go build -o hello .` | `./hello` | `ls` |
+
+cmd 中输入 `./hello.exe` 可能报“`.` 不是内部或外部命令”。这首先是终端写法问题，不需要重装 Go；确认编译成功、目录有 hello.exe，再输入上表的 cmd 命令。想固定使用 PowerShell、用菜单运行或 F5 逐行调试，到 [安装 VS Code 的插件与配置教程](../../../index.html#/setup?topic=editor)，按第8–13节配置；里面有真实截图、完整 JSON 和独立练习下载。
+
+`go fmt` 整理缩进，成功时可能显示被修改文件名。`go run .` 编译当前包并运行临时程序。`go build` 生成独立程序，编译成功通常不打印消息；旧程序不会随源文件自动更新。`go test` 运行测试；本例没有测试时会显示 `[no test files]`，这不是失败。`go vet` 做静态检查，未发现问题时通常安静结束，也不等于全面正确。
 
 ## 完整程序：main.go
 

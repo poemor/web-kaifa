@@ -21,6 +21,15 @@ const normalized=value=>value.replace(/\r\n/g,'\n');
     assert.equal(crypto.createHash('sha256').update(content).digest('hex').slice(0,12),match[2],match[1]+' content hash');
     assets.push({path:match[1],version:match[2]});
   }
+  const downloads=JSON.parse(fs.readFileSync(path.join(root,'assets/downloads/followup-manifest.json'),'utf8')).examples.map(item=>item.download);
+  const binaries=[...downloads,'assets/downloads/vscode-go-starter.zip',...fs.readdirSync(path.join(root,'assets/images/tutorials')).filter(name=>/\.(png|jpe?g|webp)$/.test(name)).map(name=>'assets/images/tutorials/'+name)];
+  const payloads=await Promise.all(binaries.map(async file=>{
+    const response=await fetch(BASE+file+'?release='+encodeURIComponent(commit));
+    assert(response.ok,file+' published payload responds');
+    const bytes=Buffer.from(await response.arrayBuffer()),expected=fs.readFileSync(path.join(root,file));
+    assert.equal(bytes.compare(expected),0,file+' published bytes match reviewed source');
+    return {path:file,bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
+  }));
   const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'msedge',headless:true});
   const routes=[],errors=[],failed=[];
   try {
@@ -49,9 +58,9 @@ const normalized=value=>value.replace(/\r\n/g,'\n');
     assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('web-kaifa-study-v1')).completed.length),0,'reading does not complete lessons');
     assert.deepEqual(errors,[],'no runtime errors');
     assert.deepEqual(failed,[],'no failed page requests');
-    const evidence={url:BASE,commit,verifiedAt:new Date().toISOString(),assets,routes,errors,failedRequests:failed};
+    const evidence={url:BASE,commit,verifiedAt:new Date().toISOString(),assets,payloads,routes,errors,failedRequests:failed};
     fs.mkdirSync(path.join(root,'.qa'),{recursive:true});
     fs.writeFileSync(path.join(root,'.qa/deployment-verification.json'),JSON.stringify(evidence,null,2)+'\n');
-    console.log(`PASS: published entry and ${assets.length} files match ${commit.slice(0,7)}; ${routes.length} learning destinations render without runtime errors or failed requests.`);
+    console.log(`PASS: published entry, ${assets.length} scripts/styles and ${payloads.length} downloads/screenshots match ${commit.slice(0,7)}; ${routes.length} learning destinations render without runtime errors or failed requests.`);
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
