@@ -14,8 +14,8 @@
   const relatedExercises = topicId => data.exercises.filter(item => item.topicIds.includes(topicId));
   const codeBlock = (language, code) => `<div class="lab-code"><span class="lab-code-language">${escape(language.toUpperCase())}</span><pre><code>${escape(code)}</code></pre></div>`;
   const itemMeta = item => `<div class="lab-meta"><span>${trackLabel(item.track)}</span><span>${levels[item.level]}</span><span>${escape(item.group || `约 ${item.minutes} 分钟`)}</span></div>`;
-  const topicRow = item => `<article class="knowledge-item">${itemMeta(item)}<h2><a href="#/topic/${escape(item.id)}">${escape(item.title)}</a></h2><p>${escape(item.summary)}</p><a class="lab-text-link" href="#/topic/${escape(item.id)}">读懂这个概念 →</a></article>`;
-  const exerciseRow = item => `<article class="exercise-item">${itemMeta(item)}<h2><a href="#/exercise/${escape(item.id)}">${escape(item.title)}</a></h2><p>${escape(item.goal)}</p><div class="lab-item-bottom"><span>${item.files ? '有配套文件' : '有任务与验收'} · ${item.checks.length} 项检查</span><a class="lab-text-link" href="#/exercise/${escape(item.id)}">开始动手 →</a></div></article>`;
+  const topicRow = item => `<article class="knowledge-item">${itemMeta(item)}<div class="lab-list-copy"><h2><a href="#/topic/${escape(item.id)}">${escape(item.title)}</a></h2><p>${escape(item.summary)}</p></div><a class="lab-text-link" href="#/topic/${escape(item.id)}">读懂这个概念 →</a></article>`;
+  const exerciseRow = item => `<article class="exercise-item">${itemMeta(item)}<div class="lab-list-copy"><h2><a href="#/exercise/${escape(item.id)}">${escape(item.title)}</a></h2><p>${escape(item.goal)}</p><span class="small hint">${item.files ? '有配套文件' : '有任务与验收'} · ${item.checks.length} 项检查</span></div><a class="lab-text-link" href="#/exercise/${escape(item.id)}">开始动手 →</a></article>`;
   const sourceLinks = ids => `<ul class="lab-sources">${ids.map(id => sources.get(id)).filter(Boolean).map(item => `<li><a href="${escape(item.url)}" target="_blank" rel="noopener noreferrer">${escape(item.title)} ↗</a><p>${escape(item.use)}</p></li>`).join('')}</ul>`;
   const lessonLinks = item => (item.lessonIds || []).map(id => {
     const course = window.LEARNING_CURRICULUM[id.startsWith('go-') ? 'go' : 'web'];
@@ -24,7 +24,7 @@
   }).join('') + (Number.isInteger(item.followup) ? link('对应后续阶段', '#/followup/web/' + item.followup) : '');
   function heading(title, description) { return `<header class="page-heading lab-heading"><h1>${escape(title)}</h1><p>${escape(description)}</p></header>`; }
   function homeMarkup() {
-    return `<section class="lab-home"><div><h2>今天想补概念，还是直接开练？</h2><p>按课程学，也可以从一个具体问题开始。看例子、改输入，再用结果检查自己的理解。</p></div><div class="lab-home-links"><a href="#/knowledge"><strong>知识地图 <span aria-hidden="true">→</span></strong><span>${data.topics.length} 个主题 · 解释、短例子与常见误区</span></a><a href="#/practice"><strong>练习工坊 <span aria-hidden="true">→</span></strong><span>${data.exercises.length} 个练习 · 起步、独立完成与加练</span></a></div></section>`;
+    return `<section class="lab-home" aria-label="补充学习"><div class="lab-home-links"><a href="#/knowledge"><strong>查一个知识点 <span aria-hidden="true">→</span></strong><span>${data.topics.length} 个主题 · 解释、例子与误区</span></a><a href="#/practice"><strong>挑一个练习 <span aria-hidden="true">→</span></strong><span>${data.exercises.length} 个任务 · 起步、独立完成与加练</span></a></div></section>`;
   }
   function trackMarkup(track) {
     const count = data.topics.filter(item => item.track === track).length;
@@ -37,12 +37,41 @@
     return `<div class="stage-evidence"><p><strong>这一阶段留下：</strong>${escape(milestone.outcome)}</p><p><strong>怎样验收：</strong>${escape(milestone.evidence)}</p><div class="stage-practice-links">${milestone.exerciseIds.map(id => `<a href="#/exercise/${id}">${escape(exercises.get(id).title)} →</a>`).join('')}</div></div>`;
   }
   function conceptMarkup(item, open = false) {
-    return `<details class="lab-concept"${open ? ' open' : ''}><summary>${escape(item.title)}</summary><div class="details-body"><p>${escape(item.summary)}</p><dl class="lab-points">${item.points.map(([term, explanation]) => `<div><dt>${escape(term)}</dt><dd>${escape(explanation)}</dd></div>`).join('')}</dl><p class="lab-pitfall"><strong>容易踩的坑：</strong>${escape(item.pitfall)}</p><a class="lab-text-link" href="#/topic/${item.id}">看例子与自问自答 →</a></div></details>`;
+    return `<details class="lab-concept"${open ? ' open' : ''}><summary>${escape(item.title)}</summary><div class="details-body"><p>${escape(item.summary)}</p>${detailedGuide(item)}<a class="lab-text-link" href="#/topic/${item.id}">在知识地图单独阅读 →</a></div></details>`;
+  }
+  function detailedGuide(item) {
+    const guide=window.LEARNING_KNOWLEDGE_GUIDES[item.id];
+    const fragment=document.createElement('template');
+    fragment.innerHTML=api.markdown(guide.markdown.replace(/^# .+\n+/,''));
+    const toc=[...fragment.content.querySelectorAll('h2')].map((heading,i)=>{
+      heading.id=`knowledge-${item.id}-${i}`;heading.tabIndex=-1;
+      return `<button type="button" data-knowledge-jump="${heading.id}">${escape(heading.textContent)}</button>`;
+    }).join('');
+    [...fragment.content.querySelectorAll('h2,h3')].filter(h=>/参考答案|参考解答|练习答案/.test(h.textContent)).forEach(heading=>{
+      const details=document.createElement('details');details.className='knowledge-answer';if(heading.id){details.id=heading.id;details.tabIndex=-1;}
+      const summary=document.createElement('summary');summary.textContent=heading.textContent;
+      const body=document.createElement('div');body.className='details-body';
+      let next=heading.nextElementSibling;
+      while(next&&!(/^H[1-3]$/.test(next.tagName)&&Number(next.tagName[1])<=Number(heading.tagName[1]))&&!(next.tagName==='P'&&/^(自查|官方参考|参考资料|继续学习)/.test(next.textContent.trim()))){const following=next.nextElementSibling;body.append(next);next=following;}
+      heading.replaceWith(details);details.append(summary,body);
+    });
+    fragment.content.querySelectorAll('pre').forEach((pre,i)=>{
+      const language=pre.querySelector('code')?.className.replace('language-','')||'text';
+      const wrapper=document.createElement('div');wrapper.className='knowledge-code';
+      const label=document.createElement('p');label.className='knowledge-code-label';
+      const isOutput=['output','console'].includes(language);
+      label.textContent=isOutput?'输出或界面示意 · 用来对照结果':['text','plaintext'].includes(language)?'文字或结构示意 · 用来阅读对照，按正文说明使用':['sh','shell','powershell','bash'].includes(language)?'终端命令 · 按正文说明在正确目录执行':'代码示例 · 按正文说明新建文件或替换片段';
+      pre.id=`knowledge-code-${item.id}-${i}`;
+      pre.replaceWith(wrapper);wrapper.append(label);
+      if(!isOutput){const copy=document.createElement('button');copy.type='button';copy.className='button small';copy.dataset.knowledgeCopy=pre.id;copy.textContent='复制这段内容';copy.setAttribute('aria-label',`复制${item.title}的第 ${i+1} 段内容`);wrapper.append(copy);}
+      wrapper.append(pre);
+    });
+    return `<div class="knowledge-guide" data-knowledge-guide="${escape(item.id)}"><nav class="knowledge-toc" aria-label="${escape(item.title)}章节"><p>按步骤读懂，再运行验证</p>${toc}</nav><article class="markdown knowledge-prose">${fragment.innerHTML}</article></div>`;
   }
   function lessonMarkup(lesson) {
     const relevant = data.topics.filter(item => item.lessonIds.includes(lesson.id));
     const practice = data.exercises.filter(item => item.lessonIds.includes(lesson.id)).slice(0, 2);
-    return `<section class="lab-lesson"><h2>把本课的关键概念讲清楚</h2><p class="small hint">先用自己的话解释，再改一个输入检验。下面是补充讲解，完整教材仍在本课讲义里。</p>${relevant.slice(0, 2).map((item, i) => conceptMarkup(item, i === 0)).join('')}${practice.length ? `<div class="lab-lesson-practice"><strong>想再练一个小任务？</strong>${practice.map(item => `<a href="#/exercise/${item.id}">${escape(item.title)} <span>约 ${item.minutes} 分钟 →</span></a>`).join('')}</div>` : ''}</section>`;
+    return `<section class="lab-lesson"><h2>把本课的关键概念讲清楚</h2><p class="small hint">每个主题包含原理、完整例子、运行步骤、预期结果、排错和练习。先读当前需要的主题，亲手修改一处，再核对结果。</p>${relevant.map((item, i) => conceptMarkup(item, i === 0)).join('')}${practice.length ? `<div class="lab-lesson-practice"><strong>想再练一个小任务？</strong>${practice.map(item => `<a href="#/exercise/${item.id}">${escape(item.title)} <span>约 ${item.minutes} 分钟 →</span></a>`).join('')}</div>` : ''}</section>`;
   }
   function followupMarkup(track, index) {
     if (track !== 'web') return '';
@@ -51,7 +80,7 @@
     return relevant.length || practice.length ? `<section class="lab-related"><h2>把这个阶段拆成小步</h2><div class="button-row">${relevant.map(item => link(item.title, '#/topic/' + item.id)).join('')}</div><div class="exercise-grid">${practice.map(exerciseRow).join('')}</div></section>` : '';
   }
   function searchable(item) {
-    return [item.title, item.summary, item.goal, item.task, item.group, item.pitfall, ...(item.points || []).flat(), ...(item.topicIds || []).map(id => topics.get(id)?.title)].filter(Boolean).join(' ').toLowerCase();
+    return [item.title, item.summary, item.goal, item.task, item.group, item.pitfall, window.LEARNING_KNOWLEDGE_GUIDES[item.id]?.markdown, ...(item.points || []).flat(), ...(item.topicIds || []).map(id => topics.get(id)?.title)].filter(Boolean).join(' ').toLowerCase();
   }
   function search(query) {
     const q = query.trim().toLowerCase();
@@ -74,9 +103,9 @@
     catalogue = { kind, track: ['web', 'go'].includes(params.get('track')) ? params.get('track') : 'all', level: Object.hasOwn(levels, params.get('level')) ? params.get('level') : 'all', q: (params.get('q') || '').trim().slice(0, 200) };
     const knowledge = kind === 'knowledge';
     const items = filteredItems();
-    return heading(knowledge ? '把知识连成一张地图' : '挑一个任务，留下实际结果', knowledge ? '从基础到应用与综合主题，每个知识点都配解释、短例子、易错点和复习问题。按薄弱点回看，或接着做对应练习。' : '每个练习都有起步提示、独立任务、加练要求和可核对的输入输出。时间只是参考，能解释并通过验收再向前。')
+    return heading(knowledge ? '把知识连成一张地图' : '挑一个任务，留下实际结果', knowledge ? '从基础到应用与综合主题，每个主题从原理讲到完整例子、VS Code 操作、运行结果、排错和变化练习。按薄弱点回看，或接着做对应练习。' : '每个练习都有起步提示、独立任务、加练要求和可核对的输入输出。时间只是参考，能解释并通过验收再向前。')
       + `<div class="lab-catalogue-note">${knowledge ? '零基础先选“基础”；写过代码可以直看例子与易错点。JavaScript 专题衔接 Web 后续阶段。' : '先自己尝试，再展开提示。配套文件是参考起点；阅读或运行它们不会自动完成任何课程。'}</div>`
-      + `<form id="lab-catalogue" class="lab-toolbar" role="search" aria-label="${knowledge ? '知识' : '练习'}筛选"><div class="field"><label for="lab-track">方向</label><select id="lab-track">${Object.entries({ all: '全部方向', web: 'Web 开发', go: 'Go 后端' }).map(([key, label]) => `<option value="${key}"${catalogue.track === key ? ' selected' : ''}>${label}</option>`).join('')}</select></div><div class="field"><label for="lab-level">难度</label><select id="lab-level">${Object.entries({ all: '全部难度', ...levels }).map(([key, label]) => `<option value="${key}"${catalogue.level === key ? ' selected' : ''}>${label}</option>`).join('')}</select></div><div class="field lab-query"><label for="lab-query">关键词</label><input type="search" id="lab-query" maxlength="200" placeholder="例如：切片、表单、404" value="${escape(catalogue.q)}" aria-describedby="lab-result-count"></div><button type="button" class="button quiet" data-lab-clear>清除筛选</button></form>`
+      + `<form id="lab-catalogue" class="lab-toolbar" role="search" aria-label="${knowledge ? '知识' : '练习'}筛选"><div class="field lab-query"><label for="lab-query">关键词</label><input type="search" id="lab-query" maxlength="200" placeholder="例如：切片、表单、404" value="${escape(catalogue.q)}" aria-describedby="lab-result-count"></div><div class="field"><label for="lab-track">方向</label><select id="lab-track">${Object.entries({ all: '全部方向', web: 'Web 开发', go: 'Go 后端' }).map(([key, label]) => `<option value="${key}"${catalogue.track === key ? ' selected' : ''}>${label}</option>`).join('')}</select></div><div class="field"><label for="lab-level">难度</label><select id="lab-level">${Object.entries({ all: '全部难度', ...levels }).map(([key, label]) => `<option value="${key}"${catalogue.level === key ? ' selected' : ''}>${label}</option>`).join('')}</select></div><button type="button" class="button quiet" data-lab-clear>清除筛选</button></form>`
       + `<p id="lab-result-count" class="lab-result-count" role="status" aria-live="polite">显示 ${items.length} 个${knowledge ? '知识主题' : '练习'}${catalogue.track !== 'all' ? ' · ' + trackLabel(catalogue.track) : ''}</p><div id="lab-results" class="${knowledge ? 'knowledge-grid' : 'exercise-grid'}">${resultMarkup(items)}</div>`
       + `<section class="lab-reading-path"><h2>${knowledge ? '读懂之后，换个输入试一次' : '一个任务可以练三遍'}</h2><ol>${(knowledge ? ['先预测例子的结果，再展开解释。', '改一个数据或条件，观察行为是否符合预期。', '合上例子做对应练习，记录原因与边界。'] : ['需要起步：先按提示完成最小的一步。', '独立完成：收起提示，按任务与验收从头写。', '继续加练：加入新约束，再验证原来的功能。']).map(text => `<li>${escape(text)}</li>`).join('')}</ol><div class="button-row">${link(knowledge ? '去练习工坊' : '回知识地图', knowledge ? '#/practice' : '#/knowledge')}${link('按课程顺序学习', '#/web')}${link('查看 Go 路线', '#/go')}</div></section>`;
   }
@@ -85,7 +114,7 @@
     if (!item) return null;
     const practice = relatedExercises(id);
     return `<div class="lab-back">${link('← 知识地图', '#/knowledge?track=' + item.track)}</div>` + heading(item.title, item.summary) + itemMeta(item)
-      + `<article class="topic-article"><section><h2>什么时候会用到</h2><p>${escape(item.why)}</p></section><section><h2>先弄清这几件事</h2><dl class="lab-points">${item.points.map(([term, explanation]) => `<div><dt>${escape(term)}</dt><dd>${escape(explanation)}</dd></div>`).join('')}</dl></section><section><h2>读一段小例子，先预测结果</h2>${codeBlock(item.language, item.example)}<details class="lab-recall"><summary>查看预期结果与运行条件</summary><div class="details-body">${escape(item.expected)}</div></details></section><section class="lab-pitfall"><h2>容易踩的坑</h2><p>${escape(item.pitfall)}</p></section><section><h2>合上例子，问问自己</h2><p>${escape(item.recall[0])}</p><details class="lab-recall"><summary>展开参考解释</summary><div class="details-body">${escape(item.recall[1])}</div></details></section></article>`
+      + detailedGuide(item) + `<details class="lab-short-reference"><summary>速查摘要与原短例</summary><article class="topic-article"><section><h2>什么时候会用到</h2><p>${escape(item.why)}</p></section><section><h2>先弄清这几件事</h2><dl class="lab-points">${item.points.map(([term, explanation]) => `<div><dt>${escape(term)}</dt><dd>${escape(explanation)}</dd></div>`).join('')}</dl></section><section><h2>读一段小例子，先预测结果</h2>${codeBlock(item.language, item.example)}<details class="lab-recall"><summary>查看预期结果与运行条件</summary><div class="details-body">${escape(item.expected)}</div></details></section><section class="lab-pitfall"><h2>容易踩的坑</h2><p>${escape(item.pitfall)}</p></section><section><h2>合上例子，问问自己</h2><p>${escape(item.recall[0])}</p><details class="lab-recall"><summary>展开参考解释</summary><div class="details-body">${escape(item.recall[1])}</div></details></section></article></details>`
       + `<section class="lab-related"><h2>接着练，或回到课程里</h2>${item.prerequisites.length ? `<p class="small hint">前置知识：${item.prerequisites.map(id => `<a href="#/topic/${id}">${escape(topics.get(id).title)}</a>`).join(' · ')}</p>` : '<p class="small hint">可以从这个主题开始，不要求先学另一门语言。</p>'}<div class="button-row">${lessonLinks(item)}</div><div class="exercise-grid">${practice.map(exerciseRow).join('')}</div></section><section class="lab-related"><h2>想再查一查</h2>${sourceLinks(item.sourceIds)}</section>`;
   }
   function exerciseMarkup(id) {
@@ -115,6 +144,11 @@
   document.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button || button.disabled) return;
+    if(button.dataset.knowledgeJump){
+      const target=document.getElementById(button.dataset.knowledgeJump);
+      if(target){const disclosure=target.closest('details');if(disclosure)disclosure.open=true;target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'});}
+    }
+    if(button.dataset.knowledgeCopy&&api){const code=document.getElementById(button.dataset.knowledgeCopy);if(code)await api.copy(code.textContent,button);}
     if (button.hasAttribute('data-lab-clear')) {
       document.querySelector('#lab-track').value = document.querySelector('#lab-level').value = 'all';
       document.querySelector('#lab-query').value = '';

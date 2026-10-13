@@ -1,5 +1,7 @@
 # 学习工作台改版与审核
 
+> 历史记录（2026-10-12）。当前布局与复审见 [2026-10-13 前端设计审核](frontend-design-review-2026-10-13.md)：助教默认收起，1200px 以下按正文后、页脚前排列，带返回入口；不再使用本记录中的手机模态抽屉方案。
+
 日期：2026-10-12。设计依据：用户确认的 `projects/web/ai-workbook-reference/index.html`。
 开发分支：`codex/learning-workbench`。目标分支：`main`。
 

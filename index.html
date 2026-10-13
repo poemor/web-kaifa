@@ -8,20 +8,23 @@
   <meta http-equiv="Content-Security-Policy" content="frame-src 'self' chrome-extension:; object-src 'none'; base-uri 'none'">
   <title>开发练习册 · Web 与 Go</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="tokens.css">
-  <link rel="stylesheet" href="assets/styles.css">
-  <link rel="stylesheet" href="assets/workbench.css">
-  <link rel="stylesheet" href="assets/learning.css">
-  <script defer src="assets/vendor/marked.umd.js"></script>
-  <script defer src="assets/data/curriculum.js"></script>
-  <script defer src="assets/data/adaptations.js"></script>
-  <script defer src="assets/data/resources.js"></script>
-  <script defer src="assets/data/ai-guide.js"></script>
-  <script defer src="assets/data/learning-lab.js"></script>
-  <script defer src="assets/learning.js"></script>
-  <script defer src="assets/workbench.js"></script>
-  <script defer src="assets/assistant-connection.js"></script>
-  <script defer src="assets/app.js"></script>
+  <link rel="stylesheet" href="tokens.css?v=ee066a9d65ae">
+  <link rel="stylesheet" href="assets/styles.css?v=b9bda5bc4224">
+  <link rel="stylesheet" href="assets/workbench.css?v=b9ecffe8dea8">
+  <link rel="stylesheet" href="assets/learning.css?v=0f2d48ff01d5">
+  <script defer src="assets/vendor/marked.umd.js?v=0db7abc826b5"></script>
+  <script defer src="assets/data/curriculum.js?v=a4be18b5c7b9"></script>
+  <script defer src="assets/data/adaptations.js?v=26248a668146"></script>
+  <script defer src="assets/data/resources.js?v=9677d5a93f44"></script>
+  <script defer src="assets/data/ai-guide.js?v=8f77845f93ed"></script>
+  <script defer src="assets/data/learning-lab.js?v=3ad8ffbabd93"></script>
+  <script defer src="assets/data/knowledge-guides.js?v=f8adb94139cc"></script>
+  <script defer src="assets/data/getting-started.js?v=96b2c8c4e019"></script>
+  <script defer src="assets/getting-started.js?v=dc6a71cadcb0"></script>
+  <script defer src="assets/learning.js?v=bb195da74cf1"></script>
+  <script defer src="assets/workbench.js?v=f1e45b77fbea"></script>
+  <script defer src="assets/assistant-connection.js?v=807da25f0a27"></script>
+  <script defer src="assets/app.js?v=fadd104a0b29"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到正文</a>
@@ -31,11 +34,15 @@
         <svg viewBox="0 0 36 36" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="9"/><path d="m15 11-7 7 7 7m6-14 7 7-7 7"/></svg>
         <span>开发练习册<small>WEB & GO / 边写边学</small></span>
       </a>
-      <button class="icon-button menu-toggle" id="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="site-nav">☰</button>
+      <button class="icon-button menu-toggle" id="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="side-content">☰</button>
     </div>
     <div class="side-content" id="side-content">
+      <nav id="course-outline" aria-label="当前路线课程" hidden></nav>
+      <details class="site-navigation" id="site-navigation" open>
+      <summary>全部学习内容</summary>
       <nav id="site-nav" aria-label="主要导航">
         <a href="#/home" data-nav="home"><span aria-hidden="true">⌂</span>开始学习</a>
+        <a href="#/setup" data-nav="setup"><span aria-hidden="true">01</span>安装与起步教程</a>
         <a href="#/ai-method" data-nav="ai-method" class="ai-nav"><span aria-hidden="true">↗</span>怎样用 AI 开发</a>
         <a href="#/ai" data-nav="ai"><span aria-hidden="true">＋</span>提问模板与工具</a>
         <p class="nav-label">学习路线</p>
@@ -47,7 +54,7 @@
         <a href="#/resources" data-nav="resources"><span aria-hidden="true">↗</span>资料与参考</a>
         <a href="#/progress" data-nav="progress"><span aria-hidden="true">✓</span>我的进度</a>
       </nav>
-      <nav id="course-outline" aria-label="当前路线课程" hidden></nav>
+      </details>
       <div class="side-progress" id="side-progress"></div>
       <div class="side-note">不用登录，学到哪就记到哪。<br>换电脑前记得导出记录。</div>
       <a class="repo-link" href="https://github.com/zhouwu97/web-kaifa" target="_blank" rel="noopener noreferrer">GitHub · 看源码与反馈 ↗</a>
@@ -64,14 +71,16 @@
       <button class="button small" id="assistant-toggle" aria-controls="assistant-panel" aria-expanded="false">AI 助教 ↗</button>
     </header>
     <div id="storage-note" class="storage-note" hidden role="status"></div>
-    <main id="main" tabindex="-1"></main>
+    <div class="learning-workspace">
+      <main id="main" tabindex="-1"></main>
+      <div id="assistant-root"></div>
+    </div>
     <footer class="site-footer">
       <div><strong>开发练习册</strong><p>留下一版自己的代码，问题就有了起点。</p></div>
       <div><span>继续动手</span><a href="#/web">Web 路线</a><a href="#/go">Go 路线</a><a href="#/ai">AI 提问台</a></div>
       <div><span>查资料与保存</span><a href="#/resources">资料与参考</a><a href="#/progress">导出学习记录</a><a href="materials/README.md">原始教材索引</a></div>
     </footer>
   </div>
-  <div id="assistant-root"></div>
   <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
   <noscript><div class="noscript">网页需要开启 JavaScript 才能使用练习和进度功能。你也可以直接阅读 <a href="materials/web/学习路线.md">Web 教材</a> 与 <a href="materials/go/完整学习清单.md">Go 教材</a>。</div></noscript>
 </body>

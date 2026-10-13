@@ -21,15 +21,24 @@ fs.mkdirSync(qa, { recursive: true });
   await page.waitForSelector('main h1');
   const curriculum = await page.evaluate(() => window.LEARNING_CURRICULUM);
   const adaptations = await page.evaluate(() => window.LEARNING_ADAPTATIONS);
-  assert.equal(await page.locator('main h1').textContent(), '和 AI 一起学会写代码');
+  assert.equal(await page.locator('main h1').textContent(), '今天，写一点能运行的代码。');
   await page.screenshot({ path: path.join(qa, 'home-desktop.png'), fullPage: true });
+  await page.locator('[data-home-track="go"]').click();
+  assert.equal(await page.locator('.home-start .primary').getAttribute('href'), '#/lesson/go-01');
+  assert.equal(await page.locator('[data-home-track="go"]').evaluate(el => el===document.activeElement), true);
+  await page.locator('[data-home-track="web"]').click();
+  assert.equal(await page.locator('.home-start .primary').getAttribute('href'), '#/lesson/web-01');
   await page.locator('#audience').selectOption('experienced');
   await navigate('/lesson/go-02', curriculum.go.lessons[1].title);
-  await navigate('/home', '和 AI 一起学会写代码');
+  await navigate('/home', '今天，写一点能运行的代码。');
+  await page.locator('[data-home-track="web"]').click();
+  assert.equal(await page.locator('.home-start .primary').getAttribute('href'), '#/lesson/web-01', 'direction overrides last lesson from another track');
+  await page.locator('[data-home-track="go"]').click();
+  assert.equal(await page.locator('.home-start .primary').getAttribute('href'), '#/lesson/go-02', 'return to real last lesson');
   await page.locator('#audience').selectOption('new');
   await navigate('/lesson/go-02', adaptations.goBeginner02.title);
   assert((await page.locator('.task-box').textContent()).includes('SumTo'));
-  await navigate('/home', '和 AI 一起学会写代码');
+  await navigate('/home', '今天，写一点能运行的代码。');
   for (const [track, course] of Object.entries(curriculum)) {
     for (const lesson of course.lessons) {
       const title = lesson.id === 'go-02' ? adaptations.goBeginner02.title : lesson.title;
@@ -113,15 +122,15 @@ fs.mkdirSync(qa, { recursive: true });
   await page.reload(); await page.waitForSelector('main h1');
   assert.equal(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).lastLesson, KEY), '');
   await navigate('/lesson/toString', '这里还没有这节课');
-  await page.route('**/assets/data/curriculum.js', async route => {
+  await page.route('**/assets/data/curriculum.js*', async route => {
     const response = await route.fetch();
     const body = await response.text();
     await route.fulfill({ response, body: body + '\nwindow.LEARNING_CURRICULUM.web.lessons[0].sourceMarkdown = ' + JSON.stringify('[unsafe](<java\tscript:alert(1)>)\n\n<script>window.parent.attack=true</script>') + ';' });
   });
   await page.reload(); await page.waitForSelector('main h1');
   await navigate('/lesson/web-01', curriculum.web.lessons[0].title);
-  assert.equal(await page.locator('.markdown a').count(), 0, 'dangerous URL must not be linked');
-  assert.equal(await page.locator('.markdown script').count(), 0, 'source HTML must be escaped');
+  assert.equal(await page.locator('#lesson-source a').count(), 0, 'dangerous URL must not be linked');
+  assert.equal(await page.locator('#lesson-source script').count(), 0, 'source HTML must be escaped');
   let externalNavigations = 0;
   await page.route('https://example.invalid/**', async route => { externalNavigations++; await route.abort(); });
   await page.locator('[data-lesson-tab="code"]').click();
@@ -129,7 +138,7 @@ fs.mkdirSync(qa, { recursive: true });
   await page.locator('[data-action="run-preview"]').click();
   await page.waitForTimeout(300);
   assert.equal(externalNavigations, 0, 'preview navigation must not send external requests');
-  await page.unroute('**/assets/data/curriculum.js');
+  await page.unroute('**/assets/data/curriculum.js*');
   await page.evaluate(key => localStorage.setItem(key, '{broken'), KEY);
   await page.reload(); await page.waitForSelector('main h1');
   assert.equal(await page.evaluate(key => localStorage.getItem(key + '-recovery'), KEY), '{broken');
@@ -141,14 +150,14 @@ fs.mkdirSync(qa, { recursive: true });
   await page.screenshot({ path: path.join(qa, 'ai-desktop.png'), fullPage: true });
   for (const width of [320, 375, 414, 768]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const [hash, title] of [['/home', '和 AI 一起学会写代码'], ['/ai', '学到哪儿，问到哪儿'], ['/lesson/web-05', curriculum.web.lessons[4].title], ['/progress', '留下自己做过的事']]) {
+    for (const [hash, title] of [['/home', '今天，写一点能运行的代码。'], ['/ai', '学到哪儿，问到哪儿'], ['/lesson/web-05', curriculum.web.lessons[4].title], ['/progress', '留下自己做过的事']]) {
       await navigate(hash, title);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       assert(overflow <= 1, `${width}px ${hash}: horizontal overflow ${overflow}`);
     }
   }
   await page.setViewportSize({ width: 375, height: 900 });
-  await navigate('/home', '和 AI 一起学会写代码');
+  await navigate('/home', '今天，写一点能运行的代码。');
   await page.screenshot({ path: path.join(qa, 'home-mobile.png'), fullPage: true });
   await page.locator('#menu-toggle').click();
   assert.equal(await page.locator('#menu-toggle').getAttribute('aria-expanded'), 'true');

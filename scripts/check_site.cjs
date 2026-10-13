@@ -5,13 +5,19 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
 const context = vm.createContext({ window: {} });
-for (const name of ['curriculum', 'adaptations', 'resources', 'ai-guide', 'learning-lab']) {
+for (const name of ['curriculum', 'adaptations', 'resources', 'ai-guide', 'learning-lab', 'getting-started', 'knowledge-guides']) {
   const source = fs.readFileSync(path.join(root, 'assets/data', name + '.js'), 'utf8');
   vm.runInContext(source, context, { filename: name + '.js' });
 }
 new vm.Script(fs.readFileSync(path.join(root, 'assets/app.js'), 'utf8'));
 new vm.Script(fs.readFileSync(path.join(root, 'assets/workbench.js'), 'utf8'));
 new vm.Script(fs.readFileSync(path.join(root, 'assets/learning.js'), 'utf8'));
+new vm.Script(fs.readFileSync(path.join(root, 'assets/getting-started.js'), 'utf8'));
+require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_getting_started.cjs'), '--check'], { stdio: 'inherit' });
+require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_knowledge_guides.cjs'), '--check'], { stdio: 'inherit' });
+require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'version_site_assets.cjs'), '--check'], { stdio: 'inherit' });
+assert.equal(context.window.GETTING_STARTED.length, 4);
+for (const guide of context.window.GETTING_STARTED) assert(guide.markdown.includes('##') && fs.existsSync(path.join(root, guide.source)));
 const courses = context.window.LEARNING_CURRICULUM;
 const ids = new Set();
 for (const [track, count] of [['web', 14], ['go', 28]]) {
@@ -63,6 +69,9 @@ for (const item of [...lab.topics, ...lab.exercises]) {
   if (item.followup !== undefined) assert(item.track === 'web' && Number.isInteger(item.followup) && courses.web.followups[item.followup], item.id + ' followup');
 }
 for (const topic of lab.topics) {
+  const guide=context.window.LEARNING_KNOWLEDGE_GUIDES[topic.id];
+  assert(guide&&fs.existsSync(path.join(root,guide.source)),topic.id+' detailed lesson source');
+  assert(guide.markdown.includes('```')&&guide.markdown.includes('## '),topic.id+' examples and explanation');
   for (const field of ['title', 'group', 'summary', 'why', 'example', 'expected', 'pitfall']) assert(typeof topic[field] === 'string' && topic[field].trim(), topic.id + ' ' + field);
   assert(topic.points.length >= 3 && topic.points.every(pair => pair.length === 2 && pair.every(Boolean)));
   assert(topic.recall.length === 2 && topic.recall.every(Boolean));
@@ -70,6 +79,7 @@ for (const topic of lab.topics) {
   for (const id of topic.sourceIds) assert(sourceIds.has(id), topic.id + ' source');
   assert(lab.exercises.some(exercise => exercise.topicIds.includes(topic.id)), topic.id + ' linked exercise');
 }
+assert.equal(Object.keys(context.window.LEARNING_KNOWLEDGE_GUIDES).length,lab.topics.length);
 function visitTopic(id, pathIds = new Set()) {
   assert(!pathIds.has(id), 'cyclic prerequisites at ' + id);
   const next = new Set(pathIds); next.add(id);
@@ -100,7 +110,7 @@ const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 for (const match of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
   const reference = match[1];
   if (/^(?:#|https?:|data:)/.test(reference)) continue;
-  assert(fs.existsSync(path.resolve(root, reference)), 'missing asset: ' + reference);
+  assert(fs.existsSync(path.resolve(root, reference.split(/[?#]/)[0])), 'missing asset: ' + reference);
 }
 assert(fs.existsSync(path.join(root, '.nojekyll')));
 console.log('PASS: 42 lessons, 12 followups, 24 knowledge topics, 18 exercises, 23 resources, 10 AI templates; linked learning coverage and all entry assets.');

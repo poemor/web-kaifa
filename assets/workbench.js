@@ -28,13 +28,19 @@
       ['带证据排查报错', '提供相关代码、完整报错、预期结果和实际结果。让 AI 给出原因与验证方法，自己运行后反馈。', '预期：点击按钮增加一行。实际：没有变化。我的代码和控制台报错如下……请先提出一个可验证的猜测。', 'debug'],
       ['检查改动，自己运行验证', '先看 AI 改了哪些内容，再测试正常情况、边界输入和手机尺寸。能解释关键部分后，再完成课内验收。', '这是我修改后的代码和实际测试结果……请检查还漏掉哪些边界，再问我两个问题，确认我能解释实现。', 'review']
     ];
-    return `<header class="page-heading method-intro"><span class="workbook-eyebrow">LEARN TO BUILD WITH AI</span><h1>怎样用 AI 开发</h1><p>你决定目标、检查改动和验证结果。让 AI 在每一步帮你想清楚，而不是替你跳过理解。</p></header><ol class="method-list">${steps.map((step, i) => `<li><span class="method-number">0${i + 1}</span><div><h2>${step[0]}</h2><p>${step[1]}</p><pre class="method-example">${step[2]}</pre><button class="button quiet" data-assist-preset="${step[3]}">在侧栏练习这个问法 ↗</button></div></li>`).join('')}</ol><div class="callout"><strong>保留自己判断的那一步。</strong><p>不要粘贴密码或令牌。AI 给出的代码先检查，再运行；提问、复制或阅读回答都不等于完成课程。</p></div><div class="button-row"><a class="button primary" href="#/web">从 Web 第一课开始</a><a class="button" href="#/go">从 Go 第一课开始</a><a class="button quiet" href="#/ai">查看更多场景模板 ↗</a></div>`;
+    return `<header class="page-heading method-intro"><span class="workbook-eyebrow">LEARN TO BUILD WITH AI</span><h1>怎样用 AI 开发</h1><p>你决定目标、检查改动和验证结果。让 AI 在每一步帮你想清楚，而不是替你跳过理解。</p></header><p class="setup-entry"><a href="#/setup?topic=ask">先学会组织问题：六项提问骨架 →</a></p><ol class="method-list">${steps.map((step, i) => `<li><span class="method-number">0${i + 1}</span><div><h2>${step[0]}</h2><p>${step[1]}</p><pre class="method-example">${step[2]}</pre><button class="button quiet" data-assist-preset="${step[3]}">在侧栏练习这个问法 ↗</button></div></li>`).join('')}</ol><div class="callout"><strong>保留自己判断的那一步。</strong><p>不要粘贴密码或令牌。AI 给出的代码先检查，再运行；提问、复制或阅读回答都不等于完成课程。</p></div><div class="button-row"><a class="button primary" href="#/web">从 Web 第一课开始</a><a class="button" href="#/go">从 Go 第一课开始</a><a class="button quiet" href="#/ai">查看更多场景模板 ↗</a></div>`;
   }
 
   function mountLesson(lesson) {
     const grid = $('.lesson-grid');
     if (!grid || grid.dataset.workbench) return;
     grid.dataset.workbench = 'true';
+    if (lesson.day === 1) {
+      const setup = document.createElement('p');
+      setup.className = 'setup-entry';
+      setup.innerHTML = `<a href="#/setup?topic=${lesson.track}">先检查 ${lesson.track === 'web' ? 'Web' : 'Go'} 环境 →</a><a href="#/setup?topic=editor">安装 VS Code →</a><a href="#/setup?topic=ask">遇到问题怎么问 →</a>`;
+      grid.before(setup);
+    }
     const content = grid.querySelector('.lesson-main');
     const sections = [...content.children];
     const codeSection = sections.find(section => section.querySelector('#lesson-code'));
@@ -45,7 +51,7 @@
     tabList.className = 'workbook-tabs';
     tabList.setAttribute('role', 'tablist');
     tabList.setAttribute('aria-label', '本课学习步骤');
-    const names = [['task', '本课任务'], ['code', '动手写代码'], ['review', '验收与笔记']];
+    const names = [['task', '1　读懂任务'], ['code', '2　动手写'], ['review', '3　验收记录']];
     tabList.innerHTML = names.map(([name, label]) => `<button type="button" id="workbook-tab-${name}" role="tab" data-lesson-tab="${name}" aria-controls="workbook-panel-${name}" aria-selected="false" tabindex="-1">${label}</button>`).join('');
     grid.before(tabList);
     const panels = Object.fromEntries(names.map(([name]) => {
@@ -104,14 +110,14 @@
         previewStatus.textContent = '草稿已保存；修改后的代码需手动运行。';
         const frame = $('#code-preview');
         if (frame) { frame.removeAttribute('srcdoc'); frame.hidden = true; }
-        updateContext();
+        updateContext(true);
       });
       grid.addEventListener('click', event => {
         if (event.target.closest('[data-action="run-preview"], [data-action="reset-code"]')) {
           const frame = $('#code-preview'); if (frame) frame.hidden = false;
           previewStatus.textContent = frame ? '已运行当前代码，请检查实际结果。' : '已恢复参考片段；请按讲义在本机运行。';
           // app.js handles the action later in the same event propagation.
-          queueMicrotask(updateContext);
+          queueMicrotask(() => updateContext(true));
         }
       });
     }
@@ -256,12 +262,18 @@
     if (label) label.textContent = api.completed().includes(id) ? '✓ 已完成' : '待练习';
   }
 
-  function updateContext() {
+  function invalidatePrompt() {
+    if (!draft.output) return;
+    draft.output = '';
+    $('#assistant-output').textContent = '';
+    $('#assistant-result').hidden = true;
+    $('#assistant-status').textContent = '内容已修改，请重新整理后复制。';
+  }
+  function updateContext(invalidate = false) {
     publishCourse();
     if (!$('#assistant-context-preview')) return;
     $('#assistant-context-preview').textContent = contextText() || '本次只包含你在输入框中填写的问题。';
-    // A previously generated prompt must never silently gain new code/context.
-    if (draft.output) $('#assistant-status').textContent = '下方提问是上次整理的快照；修改上下文后请重新整理。';
+    if (invalidate) invalidatePrompt();
   }
 
   function syncDraft() {
@@ -277,7 +289,7 @@
     updateContext();
   }
 
-  function modalLayout() { return matchMedia('(max-width: 1279px)').matches; }
+  function stackedLayout() { return matchMedia('(max-width: 1199px)').matches; }
   function setOpen(open, manual = false) {
     if (manual) manualOpen = open;
     document.body.classList.toggle('assistant-open', open);
@@ -291,9 +303,11 @@
 
   function openAssistant() {
     if(courseParent){publishCourse();parent.postMessage({type:'workbook:course-open',nonce:courseParent.nonce},courseParent.origin);return;}
-    returnFocus = document.activeElement;
+    if (!document.activeElement.closest('#assistant-panel, dialog')) returnFocus = document.activeElement;
     setOpen(true, true);
-    if(embeddedAssistant?.ready)embeddedAssistant.frame.focus();else $('#assistant-question').focus();
+    if (embeddedAssistant?.ready) embeddedAssistant.frame.focus({ preventScroll: true });
+    else $('#assistant-title').focus({ preventScroll: true });
+    if (stackedLayout()) $('#assistant-panel').scrollIntoView({ block: 'start', behavior: 'instant' });
   }
   function closeAssistant() {
     setOpen(false, true);
@@ -305,9 +319,10 @@
     openAssistant();
     if(embeddedAssistant?.ready){publishCourse();sendAssistant({type:'workbook:course-preset',mode,includeCode:code});return;}
     if (code && currentLesson) draft.code = true;
+    draft.output = '';
     draft.question = (currentLesson ? `我正在学习“${currentLesson.title}”。\n` : '') + modes[mode];
     syncDraft();
-    $('#assistant-question').focus();
+    if (!stackedLayout()) $('#assistant-question').focus();
   }
 
   function routeChanged(route, lesson) {
@@ -316,9 +331,11 @@
     currentKey = learningContext()?.id || 'custom';
     draft = { ...(drafts.get(currentKey) || emptyDraft()) };
     document.body.classList.toggle('lesson-view', Boolean(lesson));
+    document.body.dataset.route = route;
+    $('#site-navigation').open = !lesson;
     updateOutline(lesson);
     syncDraft();
-    setOpen(manualOpen ?? (Boolean(learningContext()) && !modalLayout() && !new URLSearchParams(location.search).has('bridge')));
+    setOpen(manualOpen ?? false);
   }
 
   function configure(bridge) {
@@ -335,6 +352,13 @@
       <dialog class="workbook-dialog" id="connection-dialog" aria-labelledby="connection-title"><div class="assistant-row"><h2 id="connection-title">连接官网对话扩展</h2><button class="assistant-close" data-close-dialog="connection-dialog" aria-label="关闭连接说明">×</button></div><p>连接后就在右侧对话，使用你自己的官网账号；对应 AI 标签页需保持打开，可以放在后台。</p><section id="connection-state" class="connection-state" data-phase="idle" role="status" aria-live="polite"><strong id="connection-state-title">连接你的扩展</strong><p id="connection-detail">已安装扩展可以直接连接，无需重新安装。</p></section><div class="button-row"><button class="button primary" type="button" id="connection-retry">连接已安装扩展</button><button class="button" data-close-dialog="connection-dialog">稍后连接</button></div><details id="connection-install-guide"><summary>还没有安装？查看安装方法</summary><ol><li>下载仓库中的 ai-browser-bridge 文件夹。</li><li>打开浏览器的扩展管理，开启开发者模式，选择“加载已解压的扩展程序”。</li><li>选取包含 manifest.json 的文件夹，再点扩展图标回到本页。</li></ol><p>当前是开发原型，尚未上架扩展商店，浏览器不能由网页自动安装。</p></details><a class="button quiet small" href="projects/web/ai-browser-bridge/README.md" target="_blank" rel="noopener">扩展说明与排查步骤 ↗</a></dialog>`;
     $('#assistant-toggle').addEventListener('click', () => document.body.classList.contains('assistant-open') ? closeAssistant() : openAssistant());
     $('#assistant-close').addEventListener('click', closeAssistant);
+    const returnButton = document.createElement('button');
+    returnButton.id = 'assistant-return';
+    returnButton.className = 'button assistant-return';
+    returnButton.textContent = '↑ 收起并回到刚才的位置';
+    returnButton.addEventListener('click', closeAssistant);
+    $('#assistant-panel').append(returnButton);
+    $('#assistant-title').tabIndex = -1;
     $('#assistant-backdrop').addEventListener('click', closeAssistant);
     if(new URLSearchParams(location.search).get('assistant')==='1')setOpen(true,true);
     $('#assistant-provider').addEventListener('click', () => $('#provider-dialog').showModal());
@@ -359,9 +383,10 @@
     $('#assistant-question').addEventListener('input', event => {
       draft.question = event.target.value;
       event.target.removeAttribute('aria-invalid');
-      $('#assistant-status').textContent = draft.output ? '问题已修改，请重新整理后复制。' : '';
+      $('#assistant-status').textContent = '';
+      invalidatePrompt();
     });
-    for (const field of ['task', 'code']) $('#assistant-' + field).addEventListener('change', event => { draft[field] = event.target.checked; updateContext(); });
+    for (const field of ['task', 'code']) $('#assistant-' + field).addEventListener('change', event => { draft[field] = event.target.checked; updateContext(true); });
     $('#assistant-form').addEventListener('submit', event => {
       event.preventDefault();
       if (!draft.question.trim()) {
@@ -385,7 +410,7 @@
       if (!document.body.classList.contains('assistant-open') || $('dialog[open]')) return;
       if (event.key === 'Escape') { event.preventDefault(); closeAssistant(); }
     });
-    matchMedia('(max-width: 1279px)').addEventListener('change', () => {
+    matchMedia('(max-width: 1199px)').addEventListener('change', () => {
       setOpen(document.body.classList.contains('assistant-open'));
     });
   }

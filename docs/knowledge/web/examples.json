@@ -1,0 +1,227 @@
+[
+  {
+    "id": "web-files",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>文件与路径练习</title>\n    <link rel=\"stylesheet\" href=\"./assets/style.css\">\n  </head>\n  <body>\n    <h1>周末编程社</h1>\n    <p>蓝色标题说明外部样式文件已加载。</p>\n    <a href=\"./pages/about.html\">认识我们</a>\n  </body>\n</html>\n",
+      "assets/style.css": "body {\n  max-width: 40rem;\n  margin: 2rem auto;\n  padding: 1rem;\n  font-family: sans-serif;\n  line-height: 1.7;\n}\nh1 {\n  color: #164e80;\n}\n",
+      "pages/about.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>关于我们</title>\n    <link rel=\"stylesheet\" href=\"../assets/style.css\">\n  </head>\n  <body>\n    <h1>关于周末编程社</h1>\n    <p>每周一起写一个小程序。</p>\n    <a href=\"../index.html\">返回首页</a>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "周末编程社"
+      },
+      {
+        "selector": "a",
+        "text": "认识我们"
+      }
+    ]
+  },
+  {
+    "id": "web-html",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>社团介绍</title>\n  </head>\n  <body>\n    <header>\n      <nav aria-label=\"页内导航\">\n        <a href=\"#events\">本周活动</a>\n        <a href=\"#contact\">联系方式</a>\n      </nav>\n    </header>\n    <main>\n      <h1>周末编程社</h1>\n      <p>我们从能运行的小程序开始。</p>\n      <section id=\"events\">\n        <h2>本周活动</h2>\n        <ul>\n          <li>周六：制作介绍页</li>\n          <li>周日：互相检查页面</li>\n        </ul>\n      </section>\n      <section id=\"contact\">\n        <h2>联系方式</h2>\n        <p>到学校活动室找我们。</p>\n      </section>\n    </main>\n    <footer>\n      <p>这是一份本地练习页面。</p>\n    </footer>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "周末编程社"
+      },
+      {
+        "selector": "#events h2",
+        "text": "本周活动"
+      }
+    ]
+  },
+  {
+    "id": "web-css",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>样式优先级实验</title>\n    <style>\n    :root {\n      --accent: #164e80;\n    }\n    body {\n      font: 1rem/1.7 sans-serif;\n      padding: 1rem;\n    }\n    p {\n      color: #167038;\n    } .card {\n      max-width: 32rem;\n      padding: 1rem;\n      border: 1px solid #aaa;\n    } .card .note {\n      color: var(--accent, #164e80);\n    } .note {\n      color: #8e3b25;\n    } .note {\n      font-weight: 700;\n    }\n    a:focus-visible {\n      outline: 3px solid #164e80;\n      outline-offset: 3px;\n    }\n    </style>\n  </head>\n  <body>\n    <h1>样式优先级实验</h1>\n    <article class=\"card\">\n      <h2>周六活动</h2>\n      <p class=\"note\">这行文字应该是蓝色加粗。</p>\n      <a href=\"#end\">跳到结尾</a>\n    </article>\n    <p id=\"end\">这是普通绿色段落。</p>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "样式优先级实验"
+      },
+      {
+        "selector": ".note",
+        "text": "这行文字应该是蓝色加粗。"
+      }
+    ]
+  },
+  {
+    "id": "web-box",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>盒模型测量</title>\n    <style>\n    body{\n      font:1rem/1.7 sans-serif;\n      margin:1rem\n    }.card{\n      width:200px;\n      padding:12px;\n      border:1px solid #333;\n      margin:16px 0;\n      background:#e4eef5\n    }.content{\n      box-sizing:content-box\n    }.border{\n      box-sizing:border-box\n    }\n    #result{\n      white-space:pre-wrap;\n      overflow-wrap:anywhere\n    }\n    </style>\n  </head>\n  <body>\n    <h1>盒模型测量</h1>\n    <div class=\"card content\">\n      content-box\n    </div>\n    <div class=\"card border\">\n      border-box\n    </div>\n    <button type=\"button\" id=\"measure\">测量边框外宽</button>\n    <pre id=\"result\" aria-live=\"polite\">点击按钮，核对你的预测。</pre>\n    <script>\n    document.querySelector('#measure').addEventListener('click',()=>{\n      const a=document.querySelector('.content').getBoundingClientRect().width;\n      const b=document.querySelector('.border').getBoundingClientRect().width;\n      document.querySelector('#result').textContent=[`content-box：${a}px`, `border-box：${b}px`].join('\\n');\n    });\n    </script>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "盒模型测量"
+      },
+      {
+        "selector": "#result",
+        "text": "点击按钮，核对你的预测。"
+      }
+    ]
+  },
+  {
+    "id": "web-flex",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Flex 两条轴</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      font:1rem/1.7 sans-serif;\n      margin:1rem\n    }.bar{\n      display:flex;\n      flex-wrap:wrap;\n      justify-content:space-between;\n      align-items:center;\n      gap:12px;\n      max-width:640px;\n      min-height:140px;\n      padding:16px;\n      border:2px solid #164e80\n    }.bar a{\n      padding:8px;\n      background:#e5eef5\n    }.column{\n      flex-direction:column;\n      justify-content:center;\n      align-items:flex-start\n    }\n    button{\n      margin-block:16px;\n      max-width:100%;\n      white-space:normal\n    }\n    </style>\n  </head>\n  <body>\n    <h1>Flex 两条轴</h1>\n    <nav class=\"bar\" aria-label=\"实验导航\">\n      <a href=\"#intro\">简介</a>\n      <a href=\"#events\">这周有哪些活动</a>\n      <a href=\"#join\">加入社团</a>\n    </nav>\n    <button id=\"toggle\" type=\"button\">切换为纵向</button>\n    <p id=\"axis\">当前 row：主轴横向，交叉轴纵向。</p>\n    <p id=\"intro\">简介：从小程序开始。</p>\n    <p id=\"events\">活动：制作网页。</p>\n    <p id=\"join\">加入：下周来活动室。</p>\n    <script>\n    document.querySelector('#toggle').addEventListener('click',()=>{\n      const column=document.querySelector('.bar').classList.toggle('column');\n      document.querySelector('#toggle').textContent=column?'切换为横向':'切换为纵向';\n      document.querySelector('#axis').textContent=column?'当前 column：主轴纵向，交叉轴横向。':'当前 row：主轴横向，交叉轴纵向。';\n    });\n    </script>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "Flex 两条轴"
+      },
+      {
+        "selector": "#axis",
+        "text": "当前 row：主轴横向，交叉轴纵向。"
+      }
+    ]
+  },
+  {
+    "id": "web-grid",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>活动卡片网格</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      font:1rem/1.7 sans-serif;\n      margin:1rem\n    }.cards{\n      display:grid;\n      grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));\n      gap:16px;\n      max-width:960px\n    }.card{\n      min-width:0;\n      overflow-wrap:anywhere;\n      border:1px solid #999;\n      padding:16px\n    }.card h2{\n      font-size:1.2rem;\n      margin-top:0\n    }\n    </style>\n  </head>\n  <body>\n    <h1>活动卡片网格</h1>\n    <div class=\"cards\">\n      <article class=\"card\">\n        <h2>HTML 入门</h2>\n        <p>从标题、段落和链接开始。</p>\n      </article>\n      <article class=\"card\">\n        <h2>CSS 排版</h2>\n        <p>先让内容容易阅读，再设计布局。</p>\n      </article>\n      <article class=\"card\">\n        <h2>长内容测试</h2>\n        <p>verylongfilenamewithoutspacesforgridtesting.html</p>\n      </article>\n    </div>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "活动卡片网格"
+      },
+      {
+        "selector": ".card:first-child h2",
+        "text": "HTML 入门"
+      }
+    ]
+  },
+  {
+    "id": "web-responsive",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>窄屏内容测试</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      margin:0;\n      font:1rem/1.7 sans-serif\n    }.page{\n      width:100%;\n      max-width:960px;\n      margin-inline:auto;\n      padding:16px\n    }.layout{\n      display:grid;\n      grid-template-columns:1fr;\n      gap:16px\n    }.panel{\n      min-width:0;\n      overflow-wrap:anywhere;\n      padding:16px;\n      border:1px solid #888\n    }\n    img{\n      display:block;\n      max-width:100%;\n      height:auto\n    }\n    @media(min-width:720px){\n      .layout{\n        grid-template-columns:repeat(2,minmax(0,1fr))\n      }\n    }\n    </style>\n  </head>\n  <body>\n    <main class=\"page\">\n      <h1>窄屏内容测试</h1>\n      <div class=\"layout\">\n        <section class=\"panel\">\n          <h2>长标题与长地址</h2>\n          <p>this-is-a-very-long-filename-with-no-natural-breakpoint-for-a-small-screen.html</p>\n        </section>\n        <section class=\"panel\">\n          <h2>宽图片</h2>\n          <img src=\"./banner.svg\" alt=\"蓝色背景中的白色横幅：图片跟随容器缩放\">\n          <p>图片原宽 900，屏幕变窄时仍应完整可见。</p>\n        </section>\n      </div>\n    </main>\n  </body>\n</html>\n",
+      "banner.svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"900\" height=\"300\" viewBox=\"0 0 900 300\"><rect width=\"900\" height=\"300\" fill=\"#164e80\"/><rect x=\"80\" y=\"100\" width=\"740\" height=\"100\" fill=\"white\"/></svg>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "窄屏内容测试"
+      },
+      {
+        "selector": ".panel:first-child h2",
+        "text": "长标题与长地址"
+      }
+    ]
+  },
+  {
+    "id": "web-forms",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>本地报名信息检查</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      font:1rem/1.7 sans-serif;\n      max-width:36rem;\n      margin:1rem auto;\n      padding:1rem\n    }\n    label,input{\n      display:block\n    }\n    input{\n      width:100%;\n      padding:10px;\n      margin-bottom:16px\n    }\n    button{\n      padding:10px;\n      white-space:normal\n    }\n    input:focus-visible,button:focus-visible{\n      outline:3px solid #164e80;\n      outline-offset:3px\n    }\n    </style>\n  </head>\n  <body>\n    <h1>本地报名信息检查</h1>\n    <p>本页只检查输入，不发送报名信息。</p>\n    <form id=\"form\">\n      <label for=\"name\">称呼（必填）</label>\n      <input id=\"name\" name=\"name\" required maxlength=\"30\">\n      <label for=\"email\">邮箱（必填）</label>\n      <input id=\"email\" name=\"email\" type=\"email\" required>\n      <button type=\"submit\">检查信息</button>\n      <button type=\"button\" id=\"reset\">清空本地输入</button>\n    </form>\n    <p id=\"feedback\" role=\"status\">尚未检查。</p>\n    <script>\n    const form=document.querySelector('#form');\n    const feedback=document.querySelector('#feedback');\n    form.addEventListener('submit',event=>{\n      event.preventDefault();\n      const name=document.querySelector('#name').value.trim();\n      if(!name){\n        feedback.textContent='称呼不能只包含空格。';\n        document.querySelector('#name').focus();\n        return;\n      }\n      feedback.textContent=`${name}，信息通过本地检查，尚未提交或保存。`;\n    });\n    form.addEventListener('input',()=>{\n      feedback.textContent='输入已修改，请重新检查。';\n    });\n    document.querySelector('#reset').addEventListener('click',()=>{\n      form.reset();\n      feedback.textContent='本地输入已清空，未发送数据。';\n      document.querySelector('#name').focus();\n    });\n    </script>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "本地报名信息检查"
+      },
+      {
+        "selector": "#feedback",
+        "text": "尚未检查。"
+      }
+    ]
+  },
+  {
+    "id": "web-js",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>活动时长筛选</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      font:1rem/1.7 sans-serif;\n      max-width:36rem;\n      margin:1rem auto;\n      padding:1rem\n    }\n    input,button{\n      max-width:100%;\n      padding:8px\n    }\n    pre{\n      white-space:pre-wrap;\n      overflow-wrap:anywhere\n    }\n    </style>\n  </head>\n  <body>\n    <h1>活动时长筛选</h1>\n    <label for=\"limit\">最多有几分钟（0—120）</label>\n    <input id=\"limit\" type=\"number\" value=\"30\" min=\"0\" max=\"120\">\n    <button type=\"button\" id=\"run\">计算</button>\n    <pre id=\"output\" aria-live=\"polite\">点击计算，查看筛选结果。</pre>\n    <script>\n    const activities=[{\n      title:'HTML',minutes:20\n    },{\n      title:'CSS',minutes:30\n    },{\n      title:'Go',minutes:40\n    }];\n    function selectTitles(items,limit){\n      return items.filter(item=>item.minutes<=limit).map(item=>item.title);\n    }\n    document.querySelector('#run').addEventListener('click',()=>{\n      const raw=document.querySelector('#limit').value.trim();\n      const limit=Number(raw);\n      const output=document.querySelector('#output');\n      if(raw===''||!Number.isFinite(limit)||limit<0||limit>120){\n        output.textContent='请输入 0—120 之间的有限数字。';\n        return;\n      }\n      const titles=selectTitles(activities,limit);\n      output.textContent=titles.length?`匹配 ${titles.length} 项：${titles.join('、')}`:'没有匹配活动。';\n    });\n    </script>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "活动时长筛选"
+      },
+      {
+        "selector": "#output",
+        "text": "点击计算，查看筛选结果。"
+      }
+    ]
+  },
+  {
+    "id": "web-dom",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>活动搜索</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      font:1rem/1.7 sans-serif;\n      max-width:36rem;\n      margin:1rem auto;\n      padding:1rem\n    }\n    input{\n      width:100%;\n      padding:10px\n    }\n    li{\n      overflow-wrap:anywhere\n    }\n    </style>\n  </head>\n  <body>\n    <h1>活动搜索</h1>\n    <label for=\"keyword\">标题关键词</label>\n    <input id=\"keyword\" type=\"search\">\n    <p id=\"count\" role=\"status\"></p>\n    <ul id=\"list\">\n    </ul>\n    <p>输入后即时筛选，本例不会发送输入。</p>\n    <script>\n    const items=['HTML 入门','CSS 排版','JavaScript 事件'];\n    const input=document.querySelector('#keyword');\n    const list=document.querySelector('#list');\n    const count=document.querySelector('#count');\n    function render(){\n      const keyword=input.value.trim().toLowerCase();\n      const matches=items.filter(title=>title.toLowerCase().includes(keyword));\n      list.replaceChildren();\n      for(const title of matches){\n        const li=document.createElement('li');\n        li.textContent=title;\n        list.append(li);\n      }\n      count.textContent=matches.length?`找到 ${matches.length} 项`:'没有匹配项，请换一个关键词。';\n    }\n    input.addEventListener('input',render);\n    render();\n    </script>\n  </body>\n</html>\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "活动搜索"
+      },
+      {
+        "selector": "#count",
+        "text": "找到 3 项"
+      }
+    ]
+  },
+  {
+    "id": "web-fetch",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>请求状态实验</title>\n    <style>\n    *{\n      box-sizing:border-box\n    }\n    body{\n      font:1rem/1.7 sans-serif;\n      max-width:40rem;\n      margin:1rem auto;\n      padding:1rem\n    }\n    button{\n      padding:8px;\n      margin:4px;\n      max-width:100%;\n      white-space:normal\n    }\n    li{\n      overflow-wrap:anywhere\n    }\n    </style>\n  </head>\n  <body>\n    <h1>请求状态实验</h1>\n    <p>只在点击后请求本地练习文件，不访问外部接口。</p>\n    <div>\n      <button type=\"button\" data-file=\"items.json\">正常数据</button>\n      <button type=\"button\" data-file=\"empty.json\">空数组</button>\n      <button type=\"button\" data-file=\"missing.json\">404</button>\n      <button type=\"button\" data-file=\"broken.json\">坏 JSON</button>\n      <button type=\"button\" data-file=\"wrong.json\">结构错误</button>\n    </div>\n    <p id=\"status\" role=\"status\">请选择一种响应情况。</p>\n    <ul id=\"list\">\n    </ul>\n    <script>\n    const status=document.querySelector('#status');\n    const list=document.querySelector('#list');\n    let latest=0;\n    async function load(file){\n      const version=++latest;\n      status.textContent='正在加载…';\n      list.replaceChildren();\n      try{\n        const response=await fetch(`./${file}`,{\n          cache:'no-store'\n        });\n        if(!response.ok)throw new Error(`HTTP ${response.status}`);\n        const items=await response.json();\n        if(!Array.isArray(items)||!items.every(item=>item&&typeof item.title==='string'))throw new Error('数据结构错误：期待带 title 字符串的对象数组');\n        if(version!==latest)return;\n        for(const item of items){\n          const li=document.createElement('li');\n          li.textContent=item.title;\n          list.append(li);\n        }\n        status.textContent=items.length?`加载成功：${items.length} 项`:'加载成功，但目前没有活动。';\n      }\n      catch(error){\n        if(version!==latest)return;\n        status.textContent=`加载失败：${error.message}。请检查后重试。`;\n      }\n    }\n    document.querySelectorAll('[data-file]').forEach(button=>button.addEventListener('click',()=>load(button.dataset.file)));\n    </script>\n  </body>\n</html>\n",
+      "items.json": "[\n  {\n    \"title\": \"HTML 入门\"\n  },\n  {\n    \"title\": \"CSS 排版\"\n  }\n]\n",
+      "empty.json": "[]\n",
+      "broken.json": "{ this is not json }\n",
+      "wrong.json": "{\n  \"title\": \"不是数组\"\n}\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "请求状态实验"
+      },
+      {
+        "selector": "#status",
+        "text": "请选择一种响应情况。"
+      }
+    ]
+  },
+  {
+    "id": "web-quality",
+    "kind": "html",
+    "entry": "index.html",
+    "files": {
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>调试与交付验收</title>\n    <link rel=\"stylesheet\" href=\"./style.css\">\n  </head>\n  <body>\n    <main>\n      <h1>调试与交付验收</h1>\n      <p>点击按钮应使数量加一。</p>\n      <button id=\"add\" type=\"button\">增加一次</button>\n      <p id=\"count\" role=\"status\">当前数量：0</p>\n    </main>\n    <script src=\"./main.js\">\n\n    </script>\n  </body>\n</html>\n",
+      "style.css": "*{\n  box-sizing:border-box\n}\nbody{\n  margin:0;\n  font:1rem/1.7 sans-serif\n}\nmain{\n  max-width:40rem;\n  margin:1rem auto;\n  padding:1rem\n}\nbutton{\n  padding:12px;\n  max-width:100%;\n  white-space:normal\n}\nbutton:focus-visible{\n  outline:3px solid #164e80;\n  outline-offset:3px\n}\n",
+      "main.js": "let total = 0;\nconst button = document.querySelector('#add');\nconst output = document.querySelector('#count');\nbutton.addEventListener('click', () => {\n  total += 1;\n  output.textContent = `当前数量：${total}`;\n});\n"
+    },
+    "checks": [
+      {
+        "selector": "h1",
+        "text": "调试与交付验收"
+      },
+      {
+        "selector": "#count",
+        "text": "当前数量：0"
+      }
+    ]
+  }
+]

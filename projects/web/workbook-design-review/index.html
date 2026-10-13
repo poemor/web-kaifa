@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>开发练习册 · 设计预览</title>
+  <link rel="stylesheet" href="../../../tokens.css">
+  <link rel="stylesheet" href="preview.css">
+  <script defer src="../../../assets/data/curriculum.js"></script>
+  <script defer src="../../../assets/data/learning-lab.js"></script>
+  <script defer src="preview.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <div class="review-banner"><strong>设计预览</strong><span>交互试用 · 不写入学习记录</span><a href="../../../index.html">打开现有站点 ↗</a></div>
+  <aside class="rail">
+    <a class="brand" href="#home"><span aria-hidden="true">〈/〉</span>开发练习册<small>WEB & GO · 边写边学</small></a>
+    <nav aria-label="预览页面"><a href="#home" data-view="home">开始学习</a><a href="#lesson" data-view="lesson">课内工作台</a><a href="#catalogue" data-view="catalogue">查找知识</a></nav>
+    <div id="outline"></div>
+    <div class="rail-end"><strong>留下一版自己的代码。</strong><p>读懂一个概念，改动一个地方，<br>用真实结果验证。</p><a href="../../../index.html#/progress">记录与备份 ↗</a></div>
+  </aside>
+  <div class="shell">
+    <header class="topbar"><span id="breadcrumb">开始学习</span><a href="#catalogue">查找知识</a><button id="open-help" aria-expanded="false" aria-controls="help">整理提问 ↗</button></header>
+    <main id="main" tabindex="-1"></main>
+    <footer>开发练习册 <span>从一个能运行的小作品开始。</span><a href="../../../materials/README.md">原始教材 ↗</a></footer>
+  </div>
+  <template id="help-template">
+    <aside class="help" id="help" aria-labelledby="help-title" hidden>
+      <div class="help-head"><div><span class="eyebrow">需要一点帮助时</span><h2 id="help-title">把问题说清楚</h2></div><button id="close-help" aria-label="收起提问">×</button></div>
+      <p class="mode">本地提问工具 · 未连接 AI 服务</p>
+      <p>整理课程、尝试和报错，复制后到你使用的 AI 工具提问。</p>
+      <form id="help-form" novalidate><label for="question">你卡在哪一步？</label><textarea id="question" rows="5" placeholder="例如：修改标题后，浏览器还是显示旧内容。" aria-describedby="help-status" required></textarea><label class="check"><input type="checkbox" id="with-task" checked>附上当前课的任务</label><button class="primary" type="submit">生成提问文字</button></form>
+      <p id="help-status" class="status" role="status">只生成文字，不会发送给模型。</p><section id="prompt-result" hidden><h3>可以复制的提问</h3><pre id="prompt"></pre><button id="copy-prompt">复制提问</button></section>
+      <button class="return-link" id="return-lesson">↑ 回到刚才的位置</button>
+    </aside>
+  </template>
+</body>
+</html>

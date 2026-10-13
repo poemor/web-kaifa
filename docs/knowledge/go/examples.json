@@ -1,0 +1,169 @@
+[
+  {
+    "id": "go-tools",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport \"fmt\"\n\nfunc greeting(name string) string {\n\treturn \"你好，\" + name\n}\n\nfunc main() {\n\tfmt.Println(greeting(\"Go\"))\n\tfmt.Println(\"编译后的程序也能独立运行\")\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "你好，Go\n编译后的程序也能独立运行\n"
+  },
+  {
+    "id": "go-control",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport \"fmt\"\n\nfunc SumTo(n int) (int, error) {\n\tif n < 0 {\n\t\treturn 0, fmt.Errorf(\"n 不能为负数\")\n\t}\n\ttotal := 0\n\tfor i := 1; i <= n; i++ {\n\t\ttotal += i\n\t}\n\treturn total, nil\n}\n\nfunc Average(scores []int) (float64, error) {\n\tif len(scores) == 0 {\n\t\treturn 0, fmt.Errorf(\"没有分数\")\n\t}\n\ttotal := 0\n\tfor index, score := range scores {\n\t\tif score < 0 || score > 100 {\n\t\t\treturn 0, fmt.Errorf(\"第 %d 个分数越界\", index+1)\n\t\t}\n\t\ttotal += score\n\t}\n\treturn float64(total) / float64(len(scores)), nil\n}\n\nfunc main() {\n\tvar count int\n\tvar ready bool\n\tvar title string\n\tfmt.Printf(\"零值：%d %t %q\\n\", count, ready, title)\n\tfor _, n := range []int{3, 0, -1} {\n\t\tvalue, err := SumTo(n)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"SumTo(%d)：%v\\n\", n, err)\n\t\t\tcontinue\n\t\t}\n\t\tfmt.Printf(\"SumTo(%d)=%d\\n\", n, value)\n\t}\n\tfor _, scores := range [][]int{{60, 80}, {0}, {}, {101}} {\n\t\tvalue, err := Average(scores)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"Average(%v)：%v\\n\", scores, err)\n\t\t\tcontinue\n\t\t}\n\t\tfmt.Printf(\"Average(%v)=%.1f\\n\", scores, value)\n\t}\n\tremaining := 3\n\tfor remaining > 0 {\n\t\tremaining--\n\t}\n\tfmt.Println(\"条件循环剩余：\", remaining)\n\ttotal := 10\n\tif true {\n\t\ttotal := 20\n\t\tfmt.Println(\"内层：\", total)\n\t}\n\tfmt.Println(\"外层：\", total)\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "零值：0 false \"\"\nSumTo(3)=6\nSumTo(0)=0\nSumTo(-1)：n 不能为负数\nAverage([60 80])=70.0\nAverage([0])=0.0\nAverage([])：没有分数\nAverage([101])：第 1 个分数越界\n条件循环剩余： 0\n内层： 20\n外层： 10\n"
+  },
+  {
+    "id": "go-collections",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"fmt\"\n\t\"sort\"\n\t\"strings\"\n\t\"unicode/utf8\"\n)\n\nfunc main() {\n\ta := []int{1, 2, 3}\n\tb := a[:2]\n\tb[0] = 9\n\tc := make([]int, len(a))\n\tcopy(c, a)\n\tc[0] = 7\n\tfmt.Println(\"共享：\", a, b)\n\tfmt.Println(\"复制：\", a, c)\n\tcounts := make(map[string]int)\n\tfor _, word := range strings.Fields(\"Go go WEB\") {\n\t\tcounts[strings.ToLower(word)]++\n\t}\n\tkeys := make([]string, 0, len(counts))\n\tfor word := range counts {\n\t\tkeys = append(keys, word)\n\t}\n\tsort.Slice(keys, func(i, j int) bool {\n\t\tif counts[keys[i]] != counts[keys[j]] {\n\t\t\treturn counts[keys[i]] > counts[keys[j]]\n\t\t}\n\t\treturn keys[i] < keys[j]\n\t})\n\tfor _, word := range keys {\n\t\tfmt.Printf(\"%s:%d\\n\", word, counts[word])\n\t}\n\tvalue, exists := counts[\"rust\"]\n\tfmt.Printf(\"rust：%d，存在=%t\\n\", value, exists)\n\ttext := \"Go你好\"\n\tfmt.Printf(\"字节=%d，码点=%d\\n\", len(text), utf8.RuneCountInString(text))\n\tfor offset, ch := range text {\n\t\tfmt.Printf(\"偏移 %d：%c\\n\", offset, ch)\n\t}\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "共享： [9 2 3] [9 2]\n复制： [9 2 3] [7 2 3]\ngo:2\nweb:1\nrust：0，存在=false\n字节=8，码点=4\n偏移 0：G\n偏移 1：o\n偏移 2：你\n偏移 5：好\n"
+  },
+  {
+    "id": "go-models",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n)\n\ntype Problem struct {\n\tTitle  string `json:\"title\"`\n\tSolved bool   `json:\"solved\"`\n\tnote   string\n}\n\nfunc (p Problem) PreviewSolved() { p.Solved = true }\nfunc (p *Problem) MarkSolved()   { p.Solved = true }\nfunc (p Problem) Name() string  { return p.Title }\n\ntype Namer interface { Name() string }\n\nfunc Describe(n Namer) string { return \"记录：\" + n.Name() }\n\nfunc main() {\n\tp := Problem{Title: \"两数之和\", note: \"内部备注\"}\n\tp.PreviewSolved()\n\tfmt.Println(\"值方法后：\", p.Solved)\n\tp.MarkSolved()\n\tfmt.Println(\"指针方法后：\", p.Solved)\n\tdata, err := json.Marshal(p)\n\tif err != nil {\n\t\tfmt.Println(\"编码失败：\", err)\n\t\treturn\n\t}\n\tfmt.Println(string(data))\n\tfmt.Println(Describe(p))\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "值方法后： false\n指针方法后： true\n{\"title\":\"两数之和\",\"solved\":true}\n记录：两数之和\n"
+  },
+  {
+    "id": "go-errors",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"encoding/json\"\n\t\"errors\"\n\t\"fmt\"\n\t\"io\"\n\t\"strings\"\n\t\"unicode/utf8\"\n)\n\nvar ErrTitle = errors.New(\"标题需为 1–40 个码点\")\n\ntype Input struct { Title string `json:\"title\"` }\n\nfunc Parse(raw string) (Input, error) {\n\tvar input Input\n\tif len(raw) > 256 {\n\t\treturn input, errors.New(\"输入超过 256 字节\")\n\t}\n\tdec := json.NewDecoder(strings.NewReader(raw))\n\tdec.DisallowUnknownFields()\n\tif err := dec.Decode(&input); err != nil {\n\t\treturn Input{}, fmt.Errorf(\"解析：%w\", err)\n\t}\n\tvar extra any\n\tif err := dec.Decode(&extra); !errors.Is(err, io.EOF) {\n\t\treturn Input{}, errors.New(\"只允许一个 JSON 值\")\n\t}\n\tinput.Title = strings.TrimSpace(input.Title)\n\tn := utf8.RuneCountInString(input.Title)\n\tif n < 1 || n > 40 {\n\t\treturn Input{}, fmt.Errorf(\"校验：%w\", ErrTitle)\n\t}\n\treturn input, nil\n}\n\nfunc main() {\n\tfor _, raw := range []string{\n\t\t`{\"title\":\"  练习  \"}`,\n\t\t`{\"title\":\"   \"}`,\n\t\t`{\"title\":\"练习\",\"owner_id\":1}`,\n\t\t`{\"title\":\"a\"} {\"title\":\"b\"}`,\n\t\t`{title:练习}`,\n\t} {\n\t\tinput, err := Parse(raw)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"拒绝：%s；标题错误=%t\\n\", raw, errors.Is(err, ErrTitle))\n\t\t\tcontinue\n\t\t}\n\t\tfmt.Println(\"接受：\", input.Title)\n\t}\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "接受： 练习\n拒绝：{\"title\":\"   \"}；标题错误=true\n拒绝：{\"title\":\"练习\",\"owner_id\":1}；标题错误=false\n拒绝：{\"title\":\"a\"} {\"title\":\"b\"}；标题错误=false\n拒绝：{title:练习}；标题错误=false\n"
+  },
+  {
+    "id": "go-tests",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n\t\"net/http\"\n)\n\nfunc SumTo(n int) (int, error) {\n\tif n < 0 || n > 10000 { return 0, errors.New(\"n 超出范围\") }\n\ttotal := 0\n\tfor i := 1; i <= n; i++ { total += i }\n\treturn total, nil\n}\n\nfunc Health(w http.ResponseWriter, r *http.Request) {\n\tw.Header().Set(\"Content-Type\", \"application/json\")\n\tw.WriteHeader(http.StatusOK)\n\tfmt.Fprintln(w, `{\"status\":\"ok\"}`)\n}\n\nfunc main() {\n\tvalue, err := SumTo(3)\n\tfmt.Println(value, err)\n}\n",
+      "main_test.go": "package main\n\nimport (\n\t\"net/http\"\n\t\"net/http/httptest\"\n\t\"testing\"\n)\n\nfunc TestSumTo(t *testing.T) {\n\tcases := []struct {\n\t\tname string\n\t\tn, want int\n\t\twantErr bool\n\t}{\n\t\t{\"zero\", 0, 0, false},\n\t\t{\"three\", 3, 6, false},\n\t\t{\"negative\", -1, 0, true},\n\t\t{\"too_large\", 10001, 0, true},\n\t}\n\tfor _, tc := range cases {\n\t\tt.Run(tc.name, func(t *testing.T) {\n\t\t\tgot, err := SumTo(tc.n)\n\t\t\tif (err != nil) != tc.wantErr {\n\t\t\t\tt.Fatalf(\"SumTo(%d) err=%v, wantErr=%t\", tc.n, err, tc.wantErr)\n\t\t\t}\n\t\t\tif got != tc.want {\n\t\t\t\tt.Errorf(\"SumTo(%d)=%d, want %d\", tc.n, got, tc.want)\n\t\t\t}\n\t\t})\n\t}\n}\n\nfunc TestHealth(t *testing.T) {\n\tr := httptest.NewRequest(http.MethodGet, \"/health\", nil)\n\tw := httptest.NewRecorder()\n\tHealth(w, r)\n\tif w.Code != http.StatusOK { t.Errorf(\"status=%d\", w.Code) }\n\tif got := w.Header().Get(\"Content-Type\"); got != \"application/json\" {\n\t\tt.Errorf(\"Content-Type=%q\", got)\n\t}\n\tif got := w.Body.String(); got != \"{\\\"status\\\":\\\"ok\\\"}\\n\" {\n\t\tt.Errorf(\"body=%q\", got)\n\t}\n}\n"
+    },
+    "command": [
+      "test",
+      "-v",
+      "./..."
+    ],
+    "contains": [
+      "TestSumTo/zero",
+      "TestSumTo/three",
+      "TestSumTo/negative",
+      "TestSumTo/too_large",
+      "TestHealth",
+      "PASS"
+    ]
+  },
+  {
+    "id": "go-http",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"net/http\"\n\t\"net/http/httptest\"\n\t\"os\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nfunc reply(w http.ResponseWriter, status int, data any) {\n\tw.Header().Set(\"Content-Type\", \"application/json; charset=utf-8\")\n\tw.WriteHeader(status)\n\tif err := json.NewEncoder(w).Encode(data); err != nil {\n\t\tfmt.Fprintln(os.Stderr, \"响应写入失败：\", err)\n\t}\n}\n\nfunc routes() *http.ServeMux {\n\tmux := http.NewServeMux()\n\tmux.HandleFunc(\"GET /health\", func(w http.ResponseWriter, r *http.Request) {\n\t\treply(w, 200, map[string]string{\"status\": \"ok\"})\n\t})\n\tmux.HandleFunc(\"GET /add\", func(w http.ResponseWriter, r *http.Request) {\n\t\tq := r.URL.Query()\n\t\tif len(q[\"a\"]) != 1 || len(q[\"b\"]) != 1 {\n\t\t\treply(w, 400, map[string]string{\"error\": \"a 和 b 必须各出现一次\"})\n\t\t\treturn\n\t\t}\n\t\ta, errA := strconv.Atoi(q.Get(\"a\"))\n\t\tb, errB := strconv.Atoi(q.Get(\"b\"))\n\t\tif errA != nil || errB != nil || a < -1000 || a > 1000 || b < -1000 || b > 1000 {\n\t\t\treply(w, 400, map[string]string{\"error\": \"a 和 b 必须为 -1000 到 1000 的整数\"})\n\t\t\treturn\n\t\t}\n\t\treply(w, 200, map[string]int{\"sum\": a + b})\n\t})\n\treturn mux\n}\n\nfunc main() {\n\tmux := routes()\n\tif len(os.Args) > 1 && os.Args[1] == \"serve\" {\n\t\tfmt.Println(\"监听 http://127.0.0.1:8753，Ctrl+C 停止\")\n\t\tif err := http.ListenAndServe(\"127.0.0.1:8753\", mux); err != nil {\n\t\t\tfmt.Fprintln(os.Stderr, err)\n\t\t\tos.Exit(1)\n\t\t}\n\t\treturn\n\t}\n\tfor _, path := range []string{\"/health\", \"/add?a=2&b=3\", \"/add?a=x&b=3\", \"/add?a=1&a=2&b=3\"} {\n\t\tr := httptest.NewRequest(http.MethodGet, path, nil)\n\t\tw := httptest.NewRecorder()\n\t\tmux.ServeHTTP(w, r)\n\t\tfmt.Printf(\"%s => %d %s\\n\", path, w.Code, strings.TrimSpace(w.Body.String()))\n\t}\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "/health => 200 {\"status\":\"ok\"}\n/add?a=2&b=3 => 200 {\"sum\":5}\n/add?a=x&b=3 => 400 {\"error\":\"a 和 b 必须为 -1000 到 1000 的整数\"}\n/add?a=1&a=2&b=3 => 400 {\"error\":\"a 和 b 必须各出现一次\"}\n"
+  },
+  {
+    "id": "go-sql",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc NormalizeTitle(raw string) (string, error) {\n\ttitle := strings.TrimSpace(raw)\n\tif title == \"\" { return \"\", fmt.Errorf(\"标题不能为空\") }\n\treturn title, nil\n}\n\nfunc main() {\n\tfor _, raw := range []string{\"  练习  \", \"   \", \"Alice's note\"} {\n\t\ttitle, err := NormalizeTitle(raw)\n\t\tif err != nil { fmt.Println(\"拒绝：\", err); continue }\n\t\tfmt.Println(\"接受：\", title)\n\t}\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "接受： 练习\n拒绝： 标题不能为空\n接受： Alice's note\n"
+  },
+  {
+    "id": "go-sql-postgresql",
+    "topicId": "go-sql",
+    "kind": "manual",
+    "files": {
+      "dbmain.go": "package main\n\nimport (\n\t\"context\"\n\t\"database/sql\"\n\t\"errors\"\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n\t\"github.com/jackc/pgx/v5/pgconn\"\n\t_ \"github.com/jackc/pgx/v5/stdlib\"\n)\n\nfunc run() error {\n\tdsn := os.Getenv(\"DATABASE_URL\")\n\tif dsn == \"\" { return fmt.Errorf(\"请先设置测试库 DATABASE_URL\") }\n\tctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)\n\tdefer cancel()\n\tdb, err := sql.Open(\"pgx\", dsn)\n\tif err != nil { return err }\n\tdefer db.Close()\n\tif err := db.PingContext(ctx); err != nil { return fmt.Errorf(\"连接失败：%w\", err) }\n\tconn, err := db.Conn(ctx)\n\tif err != nil { return err }\n\tdefer conn.Close()\n\t_, err = conn.ExecContext(ctx, `CREATE TEMP TABLE practice_problems (\n\t\tid BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n\t\ttitle TEXT NOT NULL UNIQUE CHECK (length(trim(title)) > 0)\n\t)`)\n\tif err != nil { return err }\n\tvar id int64\n\terr = conn.QueryRowContext(ctx,\n\t\t\"INSERT INTO practice_problems(title) VALUES ($1) RETURNING id\", \"Alice's note\").Scan(&id)\n\tif err != nil { return err }\n\tvar title string\n\terr = conn.QueryRowContext(ctx, \"SELECT title FROM practice_problems WHERE id=$1\", id).Scan(&title)\n\tif err != nil { return err }\n\tfmt.Println(\"参数绑定读取：\", title)\n\ttx, err := conn.BeginTx(ctx, nil)\n\tif err != nil { return err }\n\tdefer tx.Rollback()\n\tif _, err = tx.ExecContext(ctx, \"INSERT INTO practice_problems(title) VALUES ($1)\", \"事务记录\"); err != nil { return err }\n\t_, err = tx.ExecContext(ctx, \"INSERT INTO practice_problems(title) VALUES ($1)\", \"事务记录\")\n\tvar pgErr *pgconn.PgError\n\tif !errors.As(err, &pgErr) || pgErr.Code != \"23505\" { return fmt.Errorf(\"预期 UNIQUE SQLSTATE 23505，实际：%v\", err) }\n\tif err := tx.Rollback(); err != nil { return err }\n\tvar count int\n\tif err := conn.QueryRowContext(ctx, \"SELECT count(*) FROM practice_problems WHERE title=$1\", \"事务记录\").Scan(&count); err != nil { return err }\n\tfmt.Println(\"失败事务回滚后：\", count)\n\t_, err = conn.ExecContext(ctx, \"INSERT INTO practice_problems(title) VALUES ($1)\", \"   \")\n\tif !errors.As(err, &pgErr) || pgErr.Code != \"23514\" { return fmt.Errorf(\"预期 CHECK SQLSTATE 23514，实际：%v\", err) }\n\tfmt.Println(\"普通空格标题被约束拒绝：\", true)\n\ttx2, err := conn.BeginTx(ctx, nil)\n\tif err != nil { return err }\n\tdefer tx2.Rollback()\n\tif _, err := tx2.ExecContext(ctx, \"INSERT INTO practice_problems(title) VALUES ($1)\", \"成功事务\"); err != nil { return err }\n\tif err := tx2.Commit(); err != nil { return err }\n\tif err := conn.QueryRowContext(ctx, \"SELECT count(*) FROM practice_problems WHERE title=$1\", \"成功事务\").Scan(&count); err != nil { return err }\n\tfmt.Println(\"成功事务提交后：\", count)\n\treturn nil\n}\n\nfunc main() {\n\tif err := run(); err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "reason": "需要已启动的PostgreSQL专用测试库、DATABASE_URL与pgx外部驱动；纯逻辑例不能代替数据库实验。",
+    "expected": "参数绑定读取： Alice's note\n失败事务回滚后： 0\n普通空格标题被约束拒绝： true\n成功事务提交后： 1\n"
+  },
+  {
+    "id": "go-design",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"sort\"\n\t\"strconv\"\n)\n\ntype Problem struct { ID int; Created int; Title string }\n\nfunc page(items []Problem, limit, offset int) ([]Problem, error) {\n\tif limit < 1 || limit > 100 || offset < 0 { return nil, fmt.Errorf(\"分页参数非法\") }\n\tcopyItems := append([]Problem(nil), items...)\n\tsort.Slice(copyItems, func(i, j int) bool {\n\t\tif copyItems[i].Created != copyItems[j].Created { return copyItems[i].Created > copyItems[j].Created }\n\t\treturn copyItems[i].ID > copyItems[j].ID\n\t})\n\tif offset >= len(copyItems) { return []Problem{}, nil }\n\tend := offset + limit\n\tif end < offset || end > len(copyItems) { end = len(copyItems) }\n\treturn copyItems[offset:end], nil\n}\n\nfunc main() {\n\tlimit := 2\n\tif raw := os.Getenv(\"PAGE_LIMIT\"); raw != \"\" {\n\t\tn, err := strconv.Atoi(raw)\n\t\tif err != nil || n < 1 || n > 100 { fmt.Println(\"配置错误：PAGE_LIMIT 需为 1–100\"); return }\n\t\tlimit = n\n\t}\n\titems := []Problem{{1, 10, \"旧记录\"}, {2, 20, \"新记录A\"}, {3, 20, \"新记录B\"}}\n\tfirst, err := page(items, limit, 0)\n\tif err != nil { fmt.Println(err); return }\n\tfmt.Println(\"第一页：\", first)\n\tempty, _ := page(items, limit, 99)\n\tfmt.Println(\"超出末页：\", len(empty))\n\t_, err = page(items, 0, 0)\n\tfmt.Println(\"拒绝非法 limit：\", err != nil)\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "第一页： [{3 20 新记录B} {2 20 新记录A}]\n超出末页： 0\n拒绝非法 limit： true\n"
+  },
+  {
+    "id": "go-auth",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n\t\"time\"\n)\n\nvar ErrDenied = errors.New(\"无权访问\")\n\ntype Problem struct { ID, OwnerID int; Title string }\ntype Session struct { UserID int; Expires time.Time; Revoked bool }\n\nfunc UserFromVerifiedSession(s Session, now time.Time) (int, error) {\n\tif s.UserID <= 0 || s.Revoked || !now.Before(s.Expires) {\n\t\treturn 0, errors.New(\"会话无效\")\n\t}\n\treturn s.UserID, nil\n}\n\nfunc Rename(p *Problem, verifiedUserID int, title string) error {\n\tif verifiedUserID <= 0 || p.OwnerID != verifiedUserID { return ErrDenied }\n\tp.Title = title\n\treturn nil\n}\n\nfunc main() {\n\tp := Problem{1, 10, \"A 的题目\"}\n\terr := Rename(&p, 20, \"B 篡改\")\n\tfmt.Println(\"B 被拒绝：\", errors.Is(err, ErrDenied))\n\tfmt.Println(\"原内容：\", p.Title)\n\terr = Rename(&p, 10, \"A 更新\")\n\tfmt.Println(\"A 更新成功：\", err == nil)\n\tfmt.Println(\"新内容：\", p.Title)\n\tnow := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)\n\ts := Session{10, now.Add(time.Hour), false}\n\tuserID, err := UserFromVerifiedSession(s, now)\n\tfmt.Printf(\"有效会话：user=%d，成功=%t\\n\", userID, err == nil)\n\ts.Revoked = true\n\t_, err = UserFromVerifiedSession(s, now)\n\tfmt.Println(\"注销后拒绝：\", err != nil)\n\ts.Revoked = false\n\t_, err = UserFromVerifiedSession(s, now.Add(time.Hour))\n\tfmt.Println(\"到期时拒绝：\", err != nil)\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "B 被拒绝： true\n原内容： A 的题目\nA 更新成功： true\n新内容： A 更新\n有效会话：user=10，成功=true\n注销后拒绝： true\n到期时拒绝： true\n"
+  },
+  {
+    "id": "go-concurrency",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"sync\"\n\t\"time\"\n)\n\nfunc Wait(ctx context.Context, delay time.Duration) error {\n\tif err := ctx.Err(); err != nil { return err }\n\ttimer := time.NewTimer(delay)\n\tdefer timer.Stop()\n\tselect {\n\tcase <-ctx.Done(): return ctx.Err()\n\tcase <-timer.C: return nil\n\t}\n}\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\ttotal := 0\n\tfor worker := 0; worker < 3; worker++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfor i := 0; i < 200; i++ {\n\t\t\t\tmu.Lock()\n\t\t\t\ttotal++\n\t\t\t\tmu.Unlock()\n\t\t\t}\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"安全计数：\", total)\n\tctx, cancel := context.WithCancel(context.Background())\n\tcancel()\n\tfmt.Println(\"提前取消：\", Wait(ctx, time.Hour))\n\tfmt.Println(\"正常完成：\", Wait(context.Background(), 0) == nil)\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "安全计数： 600\n提前取消： context canceled\n正常完成： true\n"
+  },
+  {
+    "id": "go-delivery",
+    "kind": "go",
+    "files": {
+      "main.go": "package main\n\nimport (\n\t\"context\"\n\t\"errors\"\n\t\"fmt\"\n\t\"net/http\"\n\t\"os\"\n\t\"os/signal\"\n\t\"strconv\"\n\t\"syscall\"\n\t\"time\"\n)\n\nfunc main() {\n\tport := \"8080\"\n\tif raw := os.Getenv(\"PORT\"); raw != \"\" { port = raw }\n\tn, err := strconv.Atoi(port)\n\tif err != nil || n < 1 || n > 65535 { fmt.Fprintln(os.Stderr, \"PORT 需为 1–65535\"); os.Exit(1) }\n\tif len(os.Args) < 2 || os.Args[1] != \"serve\" {\n\t\tfmt.Println(\"配置有效：端口\", port)\n\t\tfmt.Println(\"启动：go run . serve；验收：GET /health\")\n\t\treturn\n\t}\n\tmux := http.NewServeMux()\n\tmux.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n\t\tif r.URL.Path != \"/health\" { http.NotFound(w, r); return }\n\t\tif r.Method != http.MethodGet { w.WriteHeader(http.StatusMethodNotAllowed); return }\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tfmt.Fprintln(w, `{\"status\":\"ok\"}`)\n\t})\n\tserver := &http.Server{\n\t\tAddr: \":\" + port, Handler: mux,\n\t\tReadHeaderTimeout: 5*time.Second,\n\t\tWriteTimeout: 10*time.Second,\n\t\tIdleTimeout: 30*time.Second,\n\t}\n\tctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)\n\tdefer stop()\n\tfinished := make(chan error, 1)\n\tgo func() { finished <- server.ListenAndServe() }()\n\tfmt.Println(\"服务已请求启动，监听端口\", port)\n\tselect {\n\tcase err := <-finished:\n\t\tif err != nil && !errors.Is(err, http.ErrServerClosed) { fmt.Fprintln(os.Stderr, err); os.Exit(1) }\n\tcase <-ctx.Done():\n\t\tshutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)\n\t\tdefer cancel()\n\t\tif err := server.Shutdown(shutdownCtx); err != nil {\n\t\t\tfmt.Fprintln(os.Stderr, \"优雅退出超时：\", err)\n\t\t\t_ = server.Close()\n\t\t}\n\t\tif err := <-finished; err != nil && !errors.Is(err, http.ErrServerClosed) { fmt.Fprintln(os.Stderr, err) }\n\t\tfmt.Println(\"服务已停止\")\n\t}\n}\n"
+    },
+    "command": [
+      "run",
+      "."
+    ],
+    "expected": "配置有效：端口 8080\n启动：go run . serve；验收：GET /health\n"
+  }
+]

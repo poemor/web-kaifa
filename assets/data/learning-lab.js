@@ -21,7 +21,7 @@
       summary: '网页是文件；浏览器按地址读取文件，再解析出页面。',
       why: '图片不显示、样式没加载、换目录后链接失效，都从这里排查。',
       points: [['入口文件', 'index.html 是常见入口名，保存修改后需要让浏览器重新读取。'], ['相对路径', './ 指当前目录，../ 指上一层；路径要相对于引用它的文件理解。'], ['查证据', '用 Network 查请求地址和状态，用 Elements 查最终出现的元素。']],
-      language: 'html', example: '<link rel="stylesheet" href="./assets/style.css">\n<a href="./about.html">关于我们</a>\n<img src="./images/club.png" alt="社团成员一起练习">', expected: '页面会请求三个相对地址；文件必须真实存在。',
+      language: 'html', example: '<link rel="stylesheet" href="./assets/style.css">\n<a href="./about.html">关于我们</a>\n<img src="./images/club.png" alt="社团成员一起练习">', expected: '页面加载时读取 CSS 和图片；about.html 通常在点击链接导航时才读取。文件路径都必须真实存在。',
       pitfall: '本机盘符路径只在自己的电脑有效；部署后也要检查大小写与目录。',
       recall: ['图片放在 images/logo.png，页面在根目录，src 应该怎样写？', './images/logo.png。若页面移到 pages/，通常要改成 ../images/logo.png。'],
       prerequisites: [], lessonIds: ['web-01', 'web-02', 'web-13'], sourceIds: ['mdn-curriculum', 'odin']
@@ -151,7 +151,7 @@
       summary: '变量有类型与零值；函数明确输入、输出和可能的错误。',
       why: '从分数统计这样的小题开始，练习正常输入、空输入和非法输入。',
       points: [['零值', 'int 是 0、bool 是 false、string 是空字符串；零值不等于业务上一定有效。'], ['循环', 'Go 使用 for 表达不同循环；range 可取得索引和元素。'], ['多返回值', '计算结果与 error 分开返回，调用方先处理错误再使用结果。']],
-      language: 'go', example: 'func SumTo(n int) int {\n    total := 0\n    for i := 1; i <= n; i++ { total += i }\n    return total\n}\n// SumTo(3) == 6；SumTo(0) == 0', expected: '这是函数片段；放入包并由 main 或测试调用。负数应根据任务约定处理。',
+      language: 'go', example: 'func SumTo(n int) (int, error) {\n    if n < 0 { return 0, fmt.Errorf("n不能为负数") }\n    total := 0\n    for i := 1; i <= n; i++ { total += i }\n    return total, nil\n}\n// 3得到6和nil；0得到0和nil；负数返回error', expected: '函数片段，需要 import "fmt" 和 main 或测试调用。先判断 err，再使用 total；有限 int 范围下的大数还需另行防溢出。',
       pitfall: '短变量声明 := 可能在内层作用域创建同名变量；检查更新的是哪一个变量。',
       recall: ['一个分数为 0，怎样区分合法零分和“没有输入”？', '需要单独的存在标记、长度判断或可选类型，不能只靠数值是否为 0。'],
       prerequisites: ['go-tools'], lessonIds: ['go-02'], sourceIds: ['go-tour', 'go-examples']
@@ -181,7 +181,7 @@
       summary: '解析成功只表示格式读懂了，还需要检查业务范围与输入契约。',
       why: '接口面对空标题、超大请求、未知字段或两个 JSON 值时，要明确接受什么。',
       points: [['错误处理', '先检查 err；用 %w 包装错误后，调用方可用 errors.Is 或 errors.As 判断。'], ['解码边界', '限制 Body 大小，检查未知字段；需要严格单值时，再解码一次确认 EOF。'], ['释放资源', 'defer 在函数返回时执行，不是每次循环结束时执行。']],
-      language: 'go', example: 'var input struct { Title string `json:"title"` }\ndec := json.NewDecoder(r.Body)\ndec.DisallowUnknownFields()\nif err := dec.Decode(&input); err != nil { /* 返回 400 */ }\nif strings.TrimSpace(input.Title) == "" { /* 返回 400 */ }', expected: 'HTTP Handler 片段，需要 encoding/json、strings 和 r；完整实现还需大小限制与单值检查。',
+      language: 'go', example: 'var input struct { Title string `json:"title"` }\ndec := json.NewDecoder(strings.NewReader(`{"title":"练习"}`))\ndec.DisallowUnknownFields()\nif err := dec.Decode(&input); err != nil { return err }\nif strings.TrimSpace(input.Title) == "" { return fmt.Errorf("标题不能为空") }\nvar extra any\nif err := dec.Decode(&extra); err != io.EOF { return fmt.Errorf("只接受一个JSON值") }', expected: '返回 error 的解析函数内部片段，需要 encoding/json、strings、fmt、io；第5课从字符串解析开始。HTTP Body、大小限制和400响应在学过Handler后再练。完整程序见上方详细讲义。',
       pitfall: '“JSON 合法”不保证 title 非空，也不证明 owner_id 是可信用户身份。',
       recall: ['JSON 为 {"title":"   "}，解析没有报错，能创建记录吗？', '应根据契约拒绝空白标题；trim 后验证。返回错误之前也不要使用未验证的数据。'],
       prerequisites: ['go-models'], lessonIds: ['go-05', 'go-10', 'go-25'], sourceIds: ['go-examples', 'go-http']
@@ -214,7 +214,7 @@
       language: 'go', example: 'err := db.QueryRowContext(ctx,\n    "SELECT title FROM problems WHERE id = $1", id,\n).Scan(&title)\nif errors.Is(err, sql.ErrNoRows) { /* 按契约处理不存在 */ }', expected: 'PostgreSQL 存储层片段，需要已连接的 db、ctx、id、title 及相关导入。',
       pitfall: 'sql.Open 创建数据库句柄，不等于连接已经验证；使用 PingContext 和合适的超时。',
       recall: ['为什么把用户输入拼接到 SQL 字符串里不合适？', '输入可能改变 SQL 结构。参数绑定把值与 SQL 结构分开；动态列名仍需固定白名单。'],
-      prerequisites: ['go-http'], lessonIds: ['go-12', 'go-13', 'go-14', 'go-17'], sourceIds: ['go-sql']
+      prerequisites: ['go-http'], lessonIds: ['go-12', 'go-13', 'go-14', 'go-17', 'go-25'], sourceIds: ['go-sql']
     },
     {
       id: 'go-design', track: 'go', group: '测试与工程', level: 'applied', title: '职责、配置与稳定分页',
@@ -392,7 +392,7 @@
       run: '在独立模块目录保存 main.go，执行 go fmt ./... 和 go run .。', limitations: '起点只有编码；MarkSolved 与对照验证需要自己添加。'
     },
     {
-      id: 'go-json', track: 'go', level: 'applied', title: 'JSON 解析后还要验证什么', minutes: 30, topicIds: ['go-errors', 'go-http'], lessonIds: ['go-05', 'go-10'],
+      id: 'go-json', track: 'go', level: 'applied', title: 'JSON 解析后还要验证什么', minutes: 30, topicIds: ['go-errors', 'go-http'], lessonIds: ['go-10'],
       goal: '为创建接口定义严格的输入边界，拒绝格式错误与业务错误。',
       task: '在已有 Handler 中限制 Body，拒绝未知字段、空白标题与第二个 JSON 值。正常输入才继续调用业务层。',
       steps: ['列出接受的字段和标题长度约定。', '分别测试坏语法、坏字段与坏业务值。', '检查失败路径没有创建任何记录。'],
@@ -466,5 +466,5 @@
     'go-quality': { outcome: '别人按 README 也能运行的后端', evidence: '留下单元、HTTP、数据库测试结果，明确配置与分页边界。', exerciseIds: ['go-health', 'go-database'] },
     'go-delivery': { outcome: '有用户隔离与交付说明的项目', evidence: 'A / B 两用户测试、取消与退出检查、干净环境复现。', exerciseIds: ['go-ownership', 'go-cancel'] }
   };
-  window.LEARNING_LAB = { version: 1, reviewedAt: '2026-10-12', sources, topics, exercises, milestones };
+  window.LEARNING_LAB = { version: 1, reviewedAt: '2026-10-13', sources, topics, exercises, milestones };
 })();

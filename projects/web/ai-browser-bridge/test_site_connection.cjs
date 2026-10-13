@@ -37,6 +37,7 @@ delete manifest.content_scripts;fs.writeFileSync(path.join(extension,'manifest.j
     catch(e){return 'late injection rejected: '+e.message;}
    }));return;
   }
+  if(await page.locator('#assistant-toggle').getAttribute('aria-expanded')==='false')await page.locator('#assistant-toggle').click();
   await page.locator('#assistant-install').click();
   await page.locator('#connection-state[data-phase=unavailable]').waitFor({timeout:7000});
   assert.equal(await page.getByRole('button',{name:'连接已安装扩展',exact:true}).count(),1,'help must offer a real connection action');

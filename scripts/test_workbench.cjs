@@ -22,7 +22,10 @@ fs.mkdirSync(qa, { recursive: true });
       if (hash.startsWith('#/lesson/')) await page.waitForFunction(id => document.querySelector('#course-outline [aria-current="page"]')?.getAttribute('href') === id, hash);
       else await page.waitForFunction(() => document.querySelector('#course-outline').hidden);
     };
-    assert.equal(await page.locator('#assistant-toggle').getAttribute('aria-expanded'), 'true');
+    assert.equal(await page.locator('#assistant-toggle').getAttribute('aria-expanded'), 'false', 'assistant starts collapsed');
+    assert.equal(await page.locator('#site-navigation').evaluate(el => el.open), false);
+    assert(await page.locator('#course-outline').evaluate(el => el.getBoundingClientRect().top < 200), 'course outline has priority');
+    await page.locator('#assistant-toggle').click();
     assert.equal(await page.locator('#course-outline a').count(), 14);
     await page.screenshot({ path: path.join(qa, 'workbench-lesson-desktop.png'), fullPage: true });
     await page.locator('[data-lesson-tab="task"]').focus();
@@ -40,6 +43,7 @@ fs.mkdirSync(qa, { recursive: true });
     let prompt = await page.locator('#assistant-output').textContent();
     assert(prompt.includes(code) && prompt.includes('Web 专属问题'));
     await page.locator('#assistant-code').uncheck();
+    assert.equal(await page.locator('#assistant-result').isVisible(), false, 'changed context invalidates prompt');
     await page.locator('#assistant-form button').click();
     assert(!(await page.locator('#assistant-output').textContent()).includes(code));
     await go('#/lesson/go-01');
@@ -86,9 +90,16 @@ fs.mkdirSync(qa, { recursive: true });
       assert.equal(await page.locator('.page-shell').evaluate(el => el.inert), false);
       assert(await page.evaluate(() => {
         const a=document.querySelector('#assistant-panel').getBoundingClientRect();
-        const b=document.querySelector('.page-shell').getBoundingClientRect();
-        return innerWidth>900 ? b.right<=a.left+1 : a.top>=b.bottom-1;
+        const b=document.querySelector('main').getBoundingClientRect();
+        const footer=document.querySelector('.site-footer').getBoundingClientRect();
+        return innerWidth>=1200 ? b.right<=a.left+1 : a.top>=b.bottom-1 && a.bottom<=footer.top+1;
       }), 'assistant must reserve space: '+width);
+      if (width < 1200) {
+        assert(await page.locator('#assistant-title').evaluate(el => { const r=el.getBoundingClientRect(); return r.top>=0 && r.bottom<=innerHeight; }), 'help heading is visible after opening: '+width);
+        await page.locator('#assistant-return').click();
+        assert.equal(await page.locator('#assistant-toggle').evaluate(el => el===document.activeElement), true);
+        await page.locator('#assistant-toggle').click();
+      }
       await page.locator('[data-lesson-tab="code"]').click();
       assert.equal(await page.locator('[data-lesson-tab="code"]').getAttribute('aria-selected'),'true');
       await page.locator('#assistant-provider').click();

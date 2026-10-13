@@ -1,8 +1,5 @@
-/* Hallmark · macrostructure: Component Playground · tone: friendly reference · anchor hue: green
- * genre: editorial · theme: Almanac · enrichment: real editable previews · nav: N3 · footer: Ft3
- * audience: new and experienced programmers · use: AI-assisted practice
- * pre-emit critique: P5 H5 E4 S5 R4 V5 · contrast and mobile verified in browser
- */
+/* Base workbook styles. Final shared theme and workbench rules follow in
+ * tokens.css and assets/workbench.css; design-system: DESIGN.md. */
 * { box-sizing: border-box; }
 html, body { margin: 0; overflow-x: clip; }
 html { scroll-behavior: smooth; scroll-padding-top: 32px; }

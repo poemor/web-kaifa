@@ -10,11 +10,11 @@
 
 - 选择“第一次写代码”或“写过代码”，按自己的起点进入路线。
 - 学习 Web 前 14 天与 Go 28 天，每节有任务、完整讲义、提示、验收与小测。Web 后续前端 / 全栈阶段也有入口。
-- 用知识地图回看 24 个 Web / Go 主题，每个都有解释、短例子、误区与复习问题；JavaScript、DOM 和请求专题衔接后续阶段。
+- 用知识地图阅读 24 个 Web / Go 详细主题：原理、前置概念、完整示例、VS Code 操作、预期结果、排错与变式练习；课内直接展示对应完整讲解，JavaScript、DOM 和请求专题衔接后续阶段。
 - 在练习工坊挑选 18 个分层任务，按起步提示、独立实现和加练要求练习，用输入输出表验收；四套配套 Web / Go 例子可在本机运行。
 - 修改 Web 示例，在隔离预览中看到真实效果；Go 和 SQL 按讲义在自己的电脑上运行。
 - 带着当前课程、自己的代码和报错整理 AI 提问；也可以复制 10 个具体场景模板。
-- 在同一工作台切换本课任务、代码、验收与笔记；右侧 AI 助教可按需带入课程和代码，打开后正文缩窄，手机上上下排列。
+- 在同一工作台切换本课任务、代码、验收与笔记；AI 助教默认收起，可按需带入课程和代码；大屏打开后与正文并列，窄屏在正文后、页脚前排列，收起后返回原位置。
 - 阅读“怎样用 AI 开发”，练习描述需求、拆小任务、带证据排错与自己验证。
 - 保存课内笔记和代码草稿，导出 / 导入 JSON，或导出 Markdown 留在仓库。
 
@@ -27,6 +27,8 @@
 内容参考了 MDN、The Odin Project、Go 官方教程、Go by Example 与 Exercism 的课程与练习组织方式。具体依据与改动范围见 [知识与练习优化记录](docs/learning-content-upgrade.md)。补充讲解由本仓库编写，原教材保持原样。
 
 ## 从这里开始
+
+第一次准备环境可先打开网站的“安装与起步教程”：包含 VS Code 下载、Web / Go 环境检查、常见报错和六项 AI 提问练习。离线文字版：[安装 VS Code](docs/tutorials/vscode.md)、[Web 环境](docs/tutorials/web-environment.md)、[Go 环境](docs/tutorials/go-environment.md)、[学会问 AI](docs/tutorials/asking-ai.md)。
 
 | 路线 | 互动手册 | Markdown 教材 | 学习进度 |
 | --- | --- | --- | --- |
@@ -98,9 +100,16 @@ node scripts/check_site.cjs
 node scripts/test_site.cjs
 node scripts/test_workbench.cjs
 node scripts/test_learning.cjs
+node scripts/test_getting_started.cjs
+node scripts/test_site_assets.cjs
+node scripts/test_knowledge_guides.cjs
 ```
 
 浏览器集成检查位于 `scripts/test_site.cjs`，需要 Playwright 和本机 Edge，测试前先启动上述服务器。它覆盖课程入口、代码预览、完成规则、AI 上下文、记录备份和移动端布局；不要求学习者运行这些开发检查。
+
+起步教程以 `docs/tutorials/` 为源文件，修改后运行 `node scripts/build_getting_started.cjs` 同步离线网页数据。任何入口 JS/CSS 修改后运行 `node scripts/version_site_assets.cjs`，将内容哈希写入入口资源地址，避免旧路由脚本与新页面混用；`check_site.cjs` 会检查数据与版本是否同步。已有标签页需要刷新一次才能加载新代码，不会清除学习记录。`test_getting_started.cjs` 实际运行 HTML 交互、Go 编译/重建/输入示例，因此需要本机 Go 工具链；`test_site_assets.cjs` 覆盖旧脚本地址被缓存的故障。
+
+知识讲义源文件位于 `docs/knowledge/web/` 与 `docs/knowledge/go/`，修改后先运行 `node scripts/build_knowledge_guides.cjs`，再更新入口资源版本。每个目录的 `examples.json` 记录完整示例与可核对结果；示例内容必须与讲义同步。`test_knowledge_guides.cjs` 检查全部主题、课时映射、显示/复制/离线/学习状态，并实际运行独立 Web 和 Go 例子；数据库、容器、认证服务等额外环境的边界见讲义及 [知识内容审核](docs/knowledge-content-audit-2026-10-13.md)。
 
 工作台扩展检查位于 `scripts/test_workbench.cjs`，使用相同环境。设计与审核记录见 [工作台改版说明](docs/workbench-redesign.md)。AI 服务选择仅表示工具偏好，当前没有真实登录、API 调用或流式回答。
 
