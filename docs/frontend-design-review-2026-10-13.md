@@ -1,6 +1,8 @@
 <!-- Hallmark · pre-emit critique: P4 H4 E4 S5 R5 V4 · self-review, not independent certification -->
 # 前端设计检查、实施与复审记录
 
+发布更新（2026-10-13）：实现提交 [545c285](https://github.com/zhouwu97/web-kaifa/commit/545c285eb05fa67ea363d74e37802201a01718c9) 已推送到 main，[GitHub Pages 构建与部署成功](https://github.com/zhouwu97/web-kaifa/actions/runs/38341057990)。[在线入口](https://zhouwu97.github.io/web-kaifa/) 已核对入口与 17 个资源内容哈希，首页、四篇起步教程、24 个详细知识主题、Go02、提问复制、进度页和手机布局检查通过。下文“本地未发布”的表述保留为此前实施阶段记录。
+
 2026-10-13。当前阶段：用户已确认方案，正式改版与起步教程已实施，回归及实施后自审已完成。
 
 用户要求顺序为“先检查 → 审核 → 看设计 → 再实施”。第一阶段新增独立预览、验证脚本与说明；用户批准后修改正式入口、布局和交互，并按追加要求新增 VS Code、Web/Go 环境与 AI 提问教程。原教材保持不变，不更新用户的学习完成状态。开始时存在的未跟踪文件 `.hallmark/preflight.json` 保持不动。
