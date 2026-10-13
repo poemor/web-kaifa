@@ -1,0 +1,92 @@
+# 加载、成功、空结果与失败
+
+让一次请求的结果对应清晰界面状态。
+
+## 加载、成功、空结果与失败是什么意思
+
+界面状态要由真实操作决定。加载表示尚未取得结果；成功表示已经得到合法数据；空结果是成功但没有项目；失败表示无法提供正常数据。不要靠一条“请求已发送”提前显示成功。
+
+## 状态要跟着真实结果走
+
+**请求已发出只表示加载中；取得合法结果后才叫成功。** 本例重新读取时先写加载中并清掉旧列表，避免失败之后还显示一份像刚刷新过的数据。成功但数组为空是空结果，不是断网或服务器错误。
+
+`Array.isArray(events)` 判断解析值是不是数组；`events.some(x=>typeof x!=="string")` 判断是否至少有一项不是字符串。两者用 || 连接，任一坏条件成立就抛出错误；短路逻辑保证非数组不会继续调用它的 some。
+
+`条件 ? 真时的值 : 假时的值` 是三元条件表达式。events.length 不为 0 时选择成功计数，为 0 时选择没有活动；这里利用 0 被判断为假、正数为真。它只产生一个值，真正把文字写进页面的是 textContent 赋值。
+
+在独立目录保存 index.html 与 events.json，终端在该目录运行 `python -m http.server 8765`，访问 http://127.0.0.1:8765/，Ctrl+C 停止。Network 里临时选择慢速连接，再点重新读取，才能清楚看见加载过程。恢复正常速度后分别测试两项、[]、{}、[1] 和丢失文件，记录状态和 li 数量。重叠点击属于下一节的新问题。
+
+## 先看一个完整例子
+
+在自己的独立练习文件夹新建 index.html，保存下面完整内容，用浏览器打开。修改后先保存，再刷新。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>本节小练习</title>
+</head>
+<body>
+<button id="reload" type="button">重新读取</button>
+<p id="status"></p><ul id="list"></ul>
+<script>
+const status = document.querySelector("#status");
+const list = document.querySelector("#list");
+async function load() {
+  // 每次开始先显示尚未取得结果，不提前声称成功。
+status.textContent = "加载中";
+  // 移除旧列表，失败时不会把旧内容误当最新结果。
+list.replaceChildren();
+  try {
+    const response = await fetch("./events.json");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const events = await response.json();
+    // 先确认数组，再确认每项是字符串；JSON 合法不代表形状正确。
+if (!Array.isArray(events) || events.some(x => typeof x !== "string")) throw new Error("数据形状错误");
+    // 合法空数组也是成功结果，但显示独立的空状态。
+status.textContent = events.length ? `成功：${events.length} 项` : "没有活动";
+    for (const title of events) { const li = document.createElement("li"); li.textContent = title; list.append(li); }
+  } catch (error) { status.textContent = `失败：${error.message}`; }
+}
+document.querySelector("#reload").addEventListener("click", load);
+load();
+</script>
+</body>
+</html>
+```
+
+events.json完整内容：
+
+```json
+["编程交流","读书会"]
+```
+
+通过 python -m http.server 8765 在本地HTTP地址打开。
+
+## 逐步读懂这个例子
+
+每次先清旧列表，显示加载。合法数组才进入成功或空结果，失败不会保留一份看似最新的旧列表。some检查是否有不符合类型的项。本例先完成单次流程，重叠请求问题在下一节处理。
+
+## 自己改一处再观察
+
+将events.json分别设为两项、空数组、错误对象，观察状态与列表。
+
+### 参考答案
+
+两项成功并有列表；空数组显示没有活动；对象被判为形状错误。
+
+## 本节容易混淆的地方
+
+显示空数组不等于加载失败，重试按钮也不能替代具体错误原因。
+
+参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
+
+## 独立变式：书籍清单的四种状态
+
+**先合上原例，再从空白文件完成下面的目标。** 可以查本节概念和已经学过的章节，先写自己的预期；不要复制参考程序再换几个字。使用对象数组验证、单次请求、状态文字和DOM列表；重叠控制留给下一章，不夸大此题覆盖它。
+
+独立写一本地清单读取页，每本书有 name 文字和 pages 数字。先定义未操作/加载、正常、空数组、坏字段及HTTP失败的界面目标；数量与列表来源必须相同。每次等请求结束再进行下一次。
+
+自查：正常两书显示2行且数量2；空数组明确无书而非失败；坏字段/404显示失败且不留假最新列表；限速时能看到加载。此题不证明连续点击也正确，完成后去[重叠请求](#/learn/web/web-cancel-request)验证新的时间边界。

@@ -5,7 +5,7 @@ const root = path.resolve(__dirname, '..');
 const specs = [
   ['editor', '安装 VS Code', 'vscode.md', '下载编辑器、打开文件夹、保存文件与使用终端。'],
   ['web', 'Web 环境', 'web-environment.md', '运行第一个网页，检查保存、刷新与本地服务。'],
-  ['go', 'Go 环境', 'go-environment.md', '安装工具链，在独立模块中运行 Go 程序。'],
+  ['go', 'Go 环境', 'go-environment.md', '看图选安装包，按系统安装与检查 PATH，再创建模块、运行和编译。'],
   ['ask', '学会问 AI', 'asking-ai.md', '用目标、环境、预期、实际、代码与尝试组织问题。']
 ];
 const guides = specs.map(([id,title,file,summary]) => ({id,title,summary,source:'docs/tutorials/'+file,markdown:fs.readFileSync(path.join(root,'docs/tutorials',file),'utf8').replace(/\r\n/g,'\n')}));

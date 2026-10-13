@@ -9,8 +9,10 @@
 ## 网页里可以做什么
 
 - 选择“第一次写代码”或“写过代码”，按自己的起点进入路线。
-- 学习 Web 前 14 天与 Go 28 天，每节有任务、完整讲义、提示、验收与小测。Web 后续 12 个阶段提供直接展开的详细讲义和独立源码 ZIP：从布局、JavaScript、Git 到 TypeScript、React/Vue、测试、Go API、SQL、认证和备份恢复。
-- 用知识地图阅读 24 个 Web / Go 详细主题：原理、前置概念、完整示例、VS Code 操作、预期结果、排错与变式练习；课内直接展示对应完整讲解，JavaScript、DOM 和请求专题衔接后续阶段。
+- 按“入门 → 初阶 → 中级 → 高级”阅读125个系统教程章节：Go 65节、Web 60节。选择方向后在左栏分阶段、分页选章，中间只读当前一节；每节先解释概念，再给注释代码、结果与修改实验，阶段项目综合已学知识。完整顺序见 [教学大纲](docs/teaching-outline.md)。
+- 起步教程、课内目录和知识讲义统一使用左侧阅读目录，手机通过“目录”展开并跳到段落。标题区紧凑，长代码保留原行，长表格与代码在各自框内滚动，支持键盘操作。
+- 原Web 14课、Go 28课和12个后续阶段保留为项目练习，全部链接到新教程的对应基础。旧笔记、草稿与验收仍按原课时保存；阅读和参考代码运行不会自动标记学习完成。
+- 知识地图的24个专题用于查原理、工具与工程细节；课内扩展默认收起。新教程正文直接教当前知识，不要求先读完整模块、工具链或部署资料。
 - 在练习工坊挑选 18 个分层任务，按起步提示、独立实现和加练要求练习，用输入输出表验收；四套配套 Web / Go 例子可在本机运行。
 - 修改 Web 示例，在隔离预览中看到真实效果；Go 和 SQL 按讲义在自己的电脑上运行。
 - 带着当前课程、自己的代码和报错整理 AI 提问；也可以复制 10 个具体场景模板。
@@ -28,7 +30,13 @@
 
 ## 从这里开始
 
+准备好工具后，在网站“Go 后端”或“Web 开发”进入四层课程目录。Go先读程序结构、变量、类型、条件、循环与函数；Web先读文档结构、标签、文字、链接、CSS与盒模型。新手不用先配置F5或完整工程；函数、数据结构之后再做输入与文件，JavaScript之后再做DOM与请求。
+
+入门/初阶源码包：[学习时长计算器](assets/downloads/go-study-minutes.zip)、[学习名片页](assets/downloads/web-profile-card.zip)、[响应式活动页](assets/downloads/web-responsive-events.zip)。中级新增 [Go HTML 模板页面](assets/downloads/go-template-pages.zip)，可以启动服务观察服务器生成的 HTML。后续配套有词频工具、活动搜索、内存CRUD、持久化API、安全会话与部署恢复项目，各自README写明运行条件和限制。
+
 第一次准备环境可先打开网站的“安装与起步教程”：包含 VS Code 下载、Web / Go 环境检查、常见报错和六项 AI 提问练习。离线文字版：[安装 VS Code](docs/tutorials/vscode.md)、[Web 环境](docs/tutorials/web-environment.md)、[Go 环境](docs/tutorials/go-environment.md)、[学会问 AI](docs/tutorials/asking-ai.md)。
+
+Go 环境教程有官方下载页实拍、系统与处理器架构辨认、三种系统的安装步骤、Windows PATH 修复与环境变量解释。可按自己卡住的位置直达下载、安装、模块或运行章节；大屏章节目录随正文保留，手机按顺序阅读。文件名按系统、架构、后缀辨认，具体版本与支持要求以官方页面为准。
 
 Go 的 VS Code 第8–13节有真实界面截图、Go 插件与 gopls/dlv 安装步骤、四个完整工作区配置、任务运行和 F5 断点调试。可直接 [下载带配置的 Go 起步包](assets/downloads/vscode-go-starter.zip)，解压后打开独立项目，按 README 验证。cmd、PowerShell 与 macOS/Linux 的命令分开说明；复制代码与配置后仍需保存并主动运行。
 
@@ -90,6 +98,12 @@ git push
 
 ## 本地预览与检查
 
+系统教程源文件在 `docs/courses/go`、`docs/courses/web`，`catalog.json`记录顺序、前置、目标、旧课映射与可运行示例。编写和独立审核按 [教学标准](docs/teaching-standard.md) 逐章进行，正文与示例应保持一致。修改后运行 `node scripts/build_course_book.cjs` 和 `node scripts/version_site_assets.cjs`；四个新增小项目的ZIP用 `python scripts/build_course_projects.py` 同步。`node scripts/test_course_book.cjs`逐个运行独立例子，`node scripts/test_course_navigation.cjs`检查分阶段分页、阅读位置、手机目录与地址恢复；需要数据库、Docker或完整工程的项目单独按README验收，不把未执行计为通过。
+
+本轮三名新 agent 的全部 125 章判定、首轮问题、返修证据和实际运行范围见 [系统教程逐章审核](docs/course-audit.md)。教材审核通过与学习者完成课程分别记录。
+
+前端阅读展示由 `assets/reader-layout.js`、`assets/reader-layout.css` 统一适配。[阅读展示验证](docs/frontend-reading-review.md)记录改动与实测范围。`node scripts/test_reader_layout.cjs` 检查8种屏幕宽度、原正文DOM、手机段落定位、代码/表格横滚与旧学习记录；发布后用 `SITE_TEST_URL` 指定线上地址运行 `scripts/verify_deployment.cjs`，核对全部125章、19页目录、版本资源及下载包。
+
 直接打开 `index.html` 可阅读。开发时也可以在根目录启动静态服务器：
 
 ```powershell
@@ -110,6 +124,8 @@ node scripts/test_knowledge_guides.cjs
 node scripts/test_followup.cjs
 node scripts/test_vscode_starter.cjs
 node scripts/test_go_start_path.cjs
+node scripts/test_course_book.cjs
+node scripts/test_course_navigation.cjs
 ```
 
 浏览器集成检查位于 `scripts/test_site.cjs`，需要 Playwright 和本机 Edge，测试前先启动上述服务器。它覆盖课程入口、代码预览、完成规则、AI 上下文、记录备份和移动端布局；不要求学习者运行这些开发检查。

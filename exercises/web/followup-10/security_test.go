@@ -138,3 +138,17 @@ func TestArgon2SaltAndVerify(t *testing.T) {
 		t.Fatal("存储了明文")
 	}
 }
+
+func TestVerifyPasswordRejectsMalformedStorage(t *testing.T) {
+	prefix := "$argon2id$v=19$m=65536,t=3,p=4$"
+	tooLong := prefix + strings.Repeat("A", 10000) + "$" + strings.Repeat("A", 43)
+	for _, encoded := range []string{"", "not-a-hash", prefix + "!$!", prefix + strings.Repeat("!", 22) + "$" + strings.Repeat("A", 43), prefix + strings.Repeat("A", 22) + "$" + strings.Repeat("!", 43), tooLong} {
+		if verifyPassword(encoded, "Test-only-password-123") {
+			t.Fatal("非法存储格式不应通过")
+		}
+	}
+	// 超长输入在 Split/解码前拒绝，不为输入大小再分配一份解析空间。
+	if allocations := testing.AllocsPerRun(1, func() { verifyPassword(tooLong, "unused") }); allocations != 0 {
+		t.Fatalf("超长格式应提前拒绝，实际分配 %v 次", allocations)
+	}
+}

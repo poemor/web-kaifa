@@ -1,0 +1,15 @@
+/* 声明宽度包含 padding 和 border，便于检查窄屏尺寸。 */
+* { box-sizing: border-box; }
+body { margin: 0 auto; padding: 20px; max-width: 1000px; font: 16px/1.7 sans-serif; color: #1e293b; }
+/* Flex 组织页眉；空间不足时 wrap 允许主标题和导航换行。 */
+header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+nav { display: flex; flex-wrap: wrap; gap: 16px; }
+/* 默认一列；只有达到下面的断点才使用三列。 */
+.cards { display: grid; gap: 16px; }
+article { min-width: 0; padding: 20px; border: 1px solid #cbd5e1; background: #f4f7fa; }
+/* 长文本在需要时换行，不把网格撑出视口。 */
+article p { overflow-wrap: anywhere; }
+a { color: #164e80; }
+a:focus-visible { outline: 3px solid #164e80; outline-offset: 4px; }
+/* 宽度达到 700px 后，三列分配扣除间距后的可用空间。 */
+@media (min-width: 700px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

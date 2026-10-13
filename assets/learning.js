@@ -73,12 +73,12 @@
     const guide = window.LEARNING_FOLLOWUP_GUIDES?.[id];
     const lesson = window.LEARNING_CURRICULUM.web.followups[index];
     if (!guide || !lesson) return '';
-    return `<section class="followup-start" aria-label="阶段学习与示例"><h2>从讲解到自己做出来</h2><p>按章节准备文件、运行并核对结果。下载后先解压 ZIP，在 VS Code 选择“文件 → 打开文件夹”，打开包里的 <code>followup-${String(index).padStart(2, '0')}</code> 文件夹，再按 README 的环境要求和启动步骤运行。也可以照正文在自己的新练习目录逐个创建文件。</p><div class="button-row"><a class="button primary" data-followup-download="${id}" href="${escape(guide.download)}" download>下载完整示例源码（ZIP）</a><a class="button quiet" href="https://github.com/zhouwu97/web-kaifa/tree/main/${escape(guide.examplePath)}" target="_blank" rel="noopener noreferrer">查看示例目录 ↗</a></div></section>` + detailedGuide({id, title: lesson.title}, guide, 'followup');
+    return window.CourseBook.followupMarkup(index) + `<section class="followup-start" aria-label="阶段学习与示例"><h2>从讲解到自己做出来</h2><p>按章节准备文件、运行并核对结果。下载后先解压 ZIP，在 VS Code 选择“文件 → 打开文件夹”，打开包里的 <code>followup-${String(index).padStart(2, '0')}</code> 文件夹，再按 README 的环境要求和启动步骤运行。也可以照正文在自己的新练习目录逐个创建文件。</p><div class="button-row"><a class="button primary" data-followup-download="${id}" href="${escape(guide.download)}" download>下载完整示例源码（ZIP）</a><a class="button quiet" href="https://github.com/zhouwu97/web-kaifa/tree/main/${escape(guide.examplePath)}" target="_blank" rel="noopener noreferrer">查看示例目录 ↗</a></div></section>` + detailedGuide({id, title: lesson.title}, guide, 'followup');
   }
   function lessonMarkup(lesson) {
     const relevant = data.topics.filter(item => item.lessonIds.includes(lesson.id));
     const practice = data.exercises.filter(item => item.lessonIds.includes(lesson.id)).slice(0, 2);
-    return `<section class="lab-lesson"><h2>把本课的关键概念讲清楚</h2><p class="small hint">每个主题包含原理、完整例子、运行步骤、预期结果、排错和练习。先读当前需要的主题，亲手修改一处，再核对结果。</p>${relevant.map((item, i) => conceptMarkup(item, i === 0)).join('')}${practice.length ? `<div class="lab-lesson-practice"><strong>想再练一个小任务？</strong>${practice.map(item => `<a href="#/exercise/${item.id}">${escape(item.title)} <span>约 ${item.minutes} 分钟 →</span></a>`).join('')}</div>` : ''}</section>`;
+    return window.CourseBook.lessonMarkup(lesson.id) + `<section class="lab-lesson"><details><summary>项目参考与扩展讲义</summary><p class="small hint">需要查具体工具或工程细节时展开；基础知识按上方系统教程学习。</p>${relevant.map(item => conceptMarkup(item, false)).join('')}</details>${practice.length ? `<div class="lab-lesson-practice"><strong>想再练一个小任务？</strong>${practice.map(item => `<a href="#/exercise/${item.id}">${escape(item.title)} <span>约 ${item.minutes} 分钟 →</span></a>`).join('')}</div>` : ''}</section>`;
   }
   function followupMarkup(track, index) {
     if (track !== 'web') return '';

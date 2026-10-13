@@ -1,0 +1,71 @@
+# 对象、属性与引用
+
+用对象表示活动，观察两个变量引用同一个对象。
+
+## 对象、属性与引用是什么意思
+
+对象用属性名组织有关联的值。点号读取属性，赋值修改属性。把对象赋给另一个变量不会自动建立独立副本；两个变量可能引用同一个对象。
+
+## 一个对象表示一条有关联的数据
+
+`{ title:"编程交流", seats:10 }` 是对象字面量：花括号包住对象，属性名和值用冒号分开，各属性用逗号分开。`event.title` 按名字读取属性，`event.seats=8` 更新 seats 属性。
+
+**把对象赋给另一个变量，复制的是指向同一对象的引用，不是独立对象。** 本例 same=event 后，两者指向同一份属性集合；修改 same.seats，event.seats 也读到 8。const 约束的是变量绑定，不是对象内部属性。
+
+要建立新的浅副本，写 `const copy={...event};`。这里三个点是展开语法，把 event 当前可枚举的自身属性放进一个新对象。只复制这一层：id/title/seats 等基本值可独立修改；如果某属性又是对象，里面的引用仍可能共享。
+
+点号后是固定属性名；如果名字来自变量，可以用 `event[key]`。读取不存在的属性得到 undefined；拼错 title 为 tilte 不会自动纠正。后面读网络数据时，既要检查 JSON 能否解析，也要检查实际属性名与类型。
+
+## 先看一个完整例子
+
+在自己的独立练习文件夹新建 index.html，保存下面完整内容，用浏览器打开。修改后先保存，再刷新。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>本节小练习</title>
+</head>
+<body>
+<h1>JavaScript 小实验</h1>
+<p>按 F12 打开开发者工具，在 Console（控制台）看输出。</p>
+<script>
+// 一条活动的相关值放在同一对象中，属性名和值用冒号连接。
+const event = { title: "编程交流", seats: 10 };
+// 复制的是引用，两个名字现在指向同一对象。
+const same = event;
+// 通过 same 修改共享对象，后面 event.seats 也会读到 8。
+same.seats = 8;
+console.log(event.title);
+console.log(event.seats);
+</script>
+</body>
+</html>
+```
+
+控制台预期：
+
+```output
+编程交流
+8
+```
+
+## 逐步读懂这个例子
+
+event保存对象引用，same取得相同引用。修改same.seats后，event看到同一个对象的新值8。const不等于深度不可变。
+
+## 自己改一处再观察
+
+用{ ...event }创建一个浅副本，再修改副本seats，比较原值。
+
+### 参考答案
+
+原seats仍8，副本可单独改变；嵌套对象仍需另行处理，浅副本不隔离全部深层值。
+
+## 本节容易混淆的地方
+
+给不存在的属性名拼错可能得到undefined，不会自动指出你的业务字段错误。
+
+参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

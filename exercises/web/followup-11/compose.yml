@@ -28,6 +28,8 @@ services:
     restart: 'no'
   app:
     build: .
+    # 外部停止预算10秒，大于程序内部5秒的优雅退出预算。
+    stop_grace_period: 10s
     depends_on:
       migrate: {condition: service_completed_successfully}
     environment:

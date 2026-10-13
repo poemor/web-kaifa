@@ -1,0 +1,70 @@
+# 键盘、资源与性能验证
+
+分别检查能否操作、资源是否正确、优化是否有实测收益。
+
+## 三个问题分开验证
+
+键盘检查回答“能否完成操作”，资源检查回答“取到了什么文件”，性能检查回答“相同条件下耗时或响应有没有变化”。**页面外观、构建成功或一个分数，不能代替真实操作验收。** 本节在 followup-05 原版工程中检查，不要沿用上一节替换成小组件的副本冒充完整列表测试。
+
+## 启动完整项目与键盘路径
+
+下载并解压 followup-05 原版，按 README 的 Node 要求执行 npm.cmd ci、npm.cmd run dev，访问 http://127.0.0.1:8805/，Ctrl+C 停止；macOS/Linux 使用 npm。用 Tab 找到导航与搜索框，Shift+Tab 反向走，Enter 激活链接和按钮，Space 也可激活原生按钮。
+
+进入活动列表 → 搜索“图论” → 聚焦详情链接 → Enter → 返回列表。每一步焦点应可见，读得到当前页面标题；没有匹配时应有空状态，错误时应能找到重试。把数据场景换成 HTTP 错误，确认失败不是仅靠颜色表达。路由改变后的焦点要有合理落点，不能藏在已不存在的旧控件上。
+
+## 工具里看真实资源
+
+F12 → Network → 开启 Disable cache（开发者工具打开时禁用缓存）→ 刷新 → 进入学习资料页。点击原版/优化版按钮，在列表按 svg 过滤，核对 Request URL、Status、响应类型、传输大小和耗时。缓存命中可能使显示体积或耗时不同，比较时要使用相同条件；正常资源应可看到实际图形，不是一个 404 页面。
+
+工程 scripts/make-performance-assets.mjs 在 predev/prebuild/prepreview 中生成两份同图素材；原版人为保留大量无用注释。这个设计只证明减少响应体积，不能声称整个页面速度按相同比例提升。
+
+## 完整组件与新增属性含义
+
+以下完整组件对应 src/components/PerformancePanel.tsx，已有 App 在学习资料页引用它。用于读代码或在独立副本替换这个组件，不是独立网页。父项目、依赖、生成素材与入口仍由完整工程提供。
+
+```tsx
+import { useState } from "react";
+
+export function PerformancePanel() {
+  const [optimized, setOptimized] = useState(false);
+  // 两个文件显示同一个图形，差异用于观察传输体积。
+  const file = optimized ? "banner-optimized.svg" : "banner-original.svg";
+  return (
+    <section>
+      <h2>资源体积测量实验</h2>
+      <p>原版故意增加无用注释，只用于体积对照，不代表整体网站速度。</p>
+      <button type="button" onClick={() => setOptimized(value => !value)}>
+        {optimized ? "查看原版资源" : "切换优化资源"}
+      </button>
+      <p role="status">当前：{optimized ? "优化版" : "原版"}</p>
+      {/* BASE_URL 由 Vite 提供部署基路径；public 资源按原名提供。 */}
+      <img
+        className="banner"
+        src={import.meta.env.BASE_URL + file}
+        width="640"
+        height="180"
+        alt="蓝色圆形活动标识"
+        loading="lazy"
+      />
+    </section>
+  );
+}
+```
+
+optimized 是布尔状态，!value 翻转它；三元表达式选择资源名字。import.meta.env.BASE_URL 是 Vite 提供的部署基路径，拼到文件名前，避免发布到子目录时误请求网站根目录。width/height 预留图形比例，alt 给图形文字说明，loading=lazy 让浏览器对非立即需要的图像选择延迟加载；它不是压缩文件。
+
+## 测量表应该留下什么
+
+| 记录项 | 为什么需要 |
+| --- | --- |
+| 版本、设备、窗口尺寸 | 避免比较两套不相同代码和布局 |
+| 浏览器、缓存、网络限速 | 这些都可能改变加载表现 |
+| 原版/修改版资源字节数和耗时 | 将“感觉快”换成可核对数据 |
+| 多次测量及范围 | 一次网络波动不能代表稳定收益 |
+| 图片外观、键盘路径、错误/空状态 | 优化不能破坏任务和信息 |
+
+性能面板或 Lighthouse 可以提供线索，先解释你测的指标，再读工具结果。分数高不证明所有真实用户条件下都快；只改一项，重复相同流程，才能判断影响。
+
+## 独立任务与验收
+
+选择自己的一个慢页面，记录基线，只优化一张图片或一个重复计算，复测相同条件并重走键盘与失败流程。记录实际数值与限制；如果没有测到稳定改善，就写尚不能证明收益，不用“已优化性能”代替证据。

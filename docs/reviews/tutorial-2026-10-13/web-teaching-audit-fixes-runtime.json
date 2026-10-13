@@ -1,0 +1,31 @@
+{
+  "fullstack": [
+    "Old code reproduced: 2 rows while status says 1",
+    "New code: old success/old failure cannot replace latest success/failure",
+    "Initial slow read + POST + fresh GET: latest two rows and creation confirmation remain",
+    "Failed POST retains input; old GET cannot overwrite failure",
+    "Successful create + failed refresh stays confirmed, without invented list",
+    "Input failure also invalidates pending earlier read"
+  ],
+  "component": {
+    "typecheck": true,
+    "build": true,
+    "browserUnmountAndRemount": true,
+    "noFetchWhileUnmounted": true,
+    "liveRequestCancelled": true,
+    "failedFirstRequests": [
+      "net::ERR_ABORTED",
+      "net::ERR_ABORTED"
+    ],
+    "firstCalls": 2,
+    "secondCalls": 2,
+    "qa": "E:\\AI\\学习\\.qa\\web-audit-component-MsWnyc"
+  },
+  "consistency": [
+    "web-links",
+    "web-storage",
+    "web-component-requests",
+    "web-fullstack",
+    "web-quality"
+  ]
+}

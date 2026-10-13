@@ -14,7 +14,7 @@
   const draft = Object.fromEntries(fields.map(([id])=>[id,'']));
   let api, output='';
   const sections = {
-    go: { module: /^3\./, run: /^4\./, build: /^6\./, 'missing-module': /F5 报 go\.mod file not found/ },
+    go: { download: /^1\./, windows: /^Windows：/, mac: /^macOS：/, linux: /^Linux：/, path: /^命令路径与 PATH/, module: /^3\./, run: /^4\./, build: /^6\./, 'missing-module': /F5 报 go\.mod file not found/ },
     editor: { tools: /^8\./, module: /^9\./, terminal: /^10\./, tasks: /^11\./, debug: /^12\./ }
   };
   const template = '我正在做：\n环境（系统、工具版本、终端、目录）：\n预期结果：\n实际结果与完整报错：\n相关代码与文件名：\n已经试过的方法与结果：\n\n请先检查缺少的证据，再给一个能验证的原因。一次只指导一步，说明在哪里操作、预期看到什么；先给线索，不重写整个项目。';
@@ -43,7 +43,7 @@
       if(language!=='output')wrapper.append(button);
       wrapper.append(pre);
     });
-    return `<nav class="setup-toc" aria-label="本页步骤"><p>跳到你正在做的步骤</p>${toc}${selected.id==='ask'?'<button type="button" data-setup-jump="question-workshop">直接填写我的问题 →</button>':''}</nav><article class="markdown setup-article">${fragment.innerHTML}</article>`;
+    return `<div class="setup-layout"><nav class="setup-toc" aria-label="本页步骤"><p>跳到你正在做的步骤</p>${toc}${selected.id==='ask'?'<button type="button" data-setup-jump="question-workshop">直接填写我的问题 →</button>':''}</nav><article class="markdown setup-article">${fragment.innerHTML}</article></div>`;
   }
   function focusStep(id) {
     const target=document.getElementById(id);if(!target)return;
@@ -64,7 +64,7 @@
   function searchMarkup(query) {
     const items=search(query);
     const missingModule = /go\.mod.*file not found|cannot find main module/i.test(query);
-    const directStep = guide => missingModule && guide.id==='go' ? 'missing-module' : /go\.mod/i.test(query) && ['go','editor'].includes(guide.id) ? 'module' : /dlv/i.test(query) && guide.id==='editor' ? 'tools' : /f5/i.test(query) && guide.id==='editor' ? 'debug' : '';
+    const directStep = guide => missingModule && guide.id==='go' ? 'missing-module' : /go\.mod/i.test(query) && ['go','editor'].includes(guide.id) ? 'module' : /dlv/i.test(query) && guide.id==='editor' ? 'tools' : /f5/i.test(query) && guide.id==='editor' ? 'debug' : /PATH|GOROOT|GOPATH|找不到.*go|go.*不是.*命令/i.test(query) && guide.id==='go' ? 'path' : /amd64|arm64|安装包|下载/i.test(query) && guide.id==='go' ? 'download' : '';
     return items.length?`<section class="lab-search-section"><h2>起步教程 · ${items.length}</h2>${items.map(x=>`<article class="setup-search-result"><h3><a href="#/setup?topic=${x.id}${directStep(x)?'&amp;step='+directStep(x):''}">${escape(x.title)}${directStep(x)?' · 直达对应步骤':''} →</a></h3><p>${escape(x.summary)}</p></article>`).join('')}</section>`:'';
   }
   document.addEventListener('input',e=>{

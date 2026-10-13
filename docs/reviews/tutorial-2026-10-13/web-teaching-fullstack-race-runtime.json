@@ -1,0 +1,19 @@
+{
+  "passed": [
+    {
+      "id": "web-fullstack",
+      "typecheck": false,
+      "build": true,
+      "browser": true,
+      "goTests": true,
+      "actualGoPostAndGet": true,
+      "actualDelayedReadNoDuplicates": true,
+      "actualReadCreateInterleaving": true
+    }
+  ],
+  "limitations": [
+    "GitHub Actions/online deployment was not executed",
+    "Vue build/browser checked; no vue-tsc configured"
+  ],
+  "qa": "E:\\AI\\学习\\.qa\\web-project-replacements-yCgyCz"
+}

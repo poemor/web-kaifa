@@ -17,7 +17,7 @@ async function focusedHeading(page,fragment){
  await page.waitForFunction(part=>document.activeElement.tagName==='H2'&&document.activeElement.textContent.includes(part),fragment);
  await page.waitForLoadState('networkidle');
  const box=await page.evaluate(()=>{const r=document.activeElement.getBoundingClientRect();return{top:r.top,bottom:r.bottom};});
- check('直接定位 '+fragment,box.top>=68&&box.top<900);
+ check('直接定位 '+fragment+'（标题位置 '+Math.round(box.top)+'）',box.top>=68&&box.top<900);
 }
 (async()=>{
  const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'msedge',headless:true});
@@ -31,12 +31,45 @@ async function focusedHeading(page,fragment){
    localStorage.setItem(key,JSON.stringify(state));
   });
   await page.reload();const baseline=await learningProgress(page);
+  // Installation routes must work offline, on reload, and without touching study records.
+  const installSteps={download:'下载与验证',windows:'Windows：',mac:'macOS：',linux:'Linux：',path:'命令路径与 PATH'};
+  for(const width of [320,768,1440,1920]){
+   await page.setViewportSize({width,height:1000});
+   await page.goto(BASE+'#/setup?topic=go');
+   await page.waitForFunction(()=>document.activeElement.id==='main');
+   for(const [step,heading] of Object.entries(installSteps)){
+    await page.goto(BASE+'#/setup?topic=go&step='+step);
+    await focusedHeading(page,heading);
+    await page.reload();await focusedHeading(page,heading);
+    check('安装直达无溢出 '+step+' '+width,await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+   }
+   await page.goto(BASE+'#/setup?topic=go&step=download');
+   const photo=page.locator('.setup-article img[src="assets/images/tutorials/go-downloads.png"]');
+   await photo.scrollIntoViewIfNeeded();
+   await photo.evaluate(img=>img.decode());
+   check('官方下载实拍加载 '+width,await photo.evaluate(img=>img.naturalWidth>0&&img.getBoundingClientRect().width<=innerWidth));
+   check('实拍可查看原图 '+width,await photo.locator('..').getAttribute('href')==='assets/images/tutorials/go-downloads.png');
+   await page.screenshot({path:path.join(output,'go-download-guide-'+width+'.png')});
+   if(width>=1440){
+    await page.getByRole('button',{name:'6. 在 VS Code 编译，并启动生成的程序',exact:true}).click();
+    check('长文保留左栏目录 '+width,await page.locator('#reader-outline').evaluate(nav=>{const r=nav.getBoundingClientRect(),main=document.querySelector('#main').getBoundingClientRect();return r.top>=68&&r.top<200&&r.right<=main.left;}));
+   }
+  }
+  for(const [query,step] of [['PATH','path'],['arm64','download']]){
+   await page.goto(BASE+'#/search?q='+query);
+   const result=page.locator('.setup-search-result a[href*="topic=go"]');await result.waitFor();
+   check('安装搜索直达 '+query,(await result.getAttribute('href')).includes('step='+step));
+   await result.click();await focusedHeading(page,installSteps[step]);
+  }
+  check('安装阅读不改学习记录',JSON.stringify(await learningProgress(page))===JSON.stringify(baseline));
   // Keep prerequisite actions visible before the lesson tabs and code editor.
   for(const width of [320,360,390,768,1024,1440,1920]){
    await page.setViewportSize({width,height:1000});
    await page.goto(BASE+'#/lesson/go-01');
    const card=page.locator('.go-first-run');
    await card.waitFor();
+   check('Go01安装说明默认收起宽度'+width,await card.evaluate(el=>!el.open));
+   await card.locator('summary').click();
    const box=await card.boundingBox();
    check('Go01首屏入口宽度'+width,box.y<1000&&box.width<=width);
    check('Go01顺序含模块→运行→F5宽度'+width,await card.evaluate(el=>/go\.mod/.test(el.textContent)&&/go run/.test(el.textContent)&&/F5/.test(el.textContent)));
@@ -55,17 +88,19 @@ async function focusedHeading(page,fragment){
    await page.goBack();await page.locator('.go-first-run').waitFor();
    check('浏览器返回恢复Go01入口宽度'+width,page.url().includes('/lesson/go-01'));
    await page.goto(BASE+'#/lesson/go-01');
+   await page.locator('.go-first-run > summary').click();
    await page.locator('.go-first-run').getByRole('link',{name:'遇到 go.mod file not found？直接修复 →',exact:true}).click();
    await focusedHeading(page,'go.mod file not found');
    check('修复正文含所属模块/工作区/终端证据宽度'+width,await page.locator('.setup-article').evaluate(el=>/所属模块|上级目录/.test(el.textContent)&&/go env GOMOD/.test(el.textContent)&&/cmd/.test(el.textContent)));
    check('修复页宽度'+width+'无页面横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
    await page.goto(BASE+'#/lesson/go-01');
+   await page.locator('.go-first-run > summary').click();
    await page.locator('.go-first-run').getByRole('link',{name:'运行成功后，配置 VS Code →',exact:true}).click();
    await focusedHeading(page,'打开正确项目');
    check('先配置项目再F5宽度'+width,page.url().includes('step=module'));
    await page.goto(BASE+'#/setup?topic=editor&step=debug');
    await focusedHeading(page,'F5');
-   check('F5明确两份代码断点与变量不同宽度'+width,await page.locator('.setup-article').evaluate(el=>el.textContent.includes('A. 保留 Go 第1课的源码')&&el.textContent.includes('B. 使用第9节的变量示例')&&el.textContent.includes('不代表变量和断点位置相同')&&el.textContent.includes('main 还没有 name/message')));
+   check('F5明确最小源码与变量示例不同宽度'+width,await page.locator('.setup-article').evaluate(el=>el.textContent.includes('A. 保留 Go 第1课的最小源码')&&el.textContent.includes('B. 使用第9节的变量示例')&&el.textContent.includes('不代表变量和断点位置相同')&&el.textContent.includes('不定义greeting')));
    await page.goto(BASE+'#/search?q='+encodeURIComponent('go.mod file not found'));
    const found=page.locator('.setup-search-result a[href*="topic=go"]');await found.waitFor();
    check('错误搜索给直达步骤宽度'+width,(await found.getAttribute('href')).includes('step=missing-module'));
@@ -85,7 +120,7 @@ async function focusedHeading(page,fragment){
   const cleanPage=await cleanContext.newPage();
   await cleanPage.goto(BASE+'#/lesson/go-01');
   const source=await cleanPage.locator('#lesson-code').inputValue();
-  check('无草稿Go01实际编辑器源码匹配调试A',source.includes('fmt.Println(greeting("Go"))')&&!/message\s*:=/.test(source));
+  check('无草稿Go01只使用最小打印源码',source.includes('fmt.Println("你好，Go")')&&!source.includes('greeting')&&!/message\s*:=/.test(source));
   const cleanProgress=await learningProgress(cleanPage);
   check('打开默认源码没有自动完成课时',cleanProgress.completed.length===0);
   await cleanContext.close();

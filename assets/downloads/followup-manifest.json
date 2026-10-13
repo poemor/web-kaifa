@@ -994,7 +994,7 @@
       "id": "web-08",
       "examplePath": "exercises/web/followup-08",
       "download": "assets/downloads/web-followup-08.zip",
-      "sha256": "97f147299101b50a86da683f3b0e799d4c043627651b6d33dd2719d87513e599",
+      "sha256": "1b72811ca7d8c63b608c0b5748e3c1b41311b0d8d573128e2568eb9d6a24db31",
       "files": [
         {
           "name": "alternatives/express/package-lock.json",
@@ -1023,8 +1023,8 @@
         },
         {
           "name": "api.go",
-          "bytes": 6340,
-          "sha256": "a6471de47207e4c0e525c6ccab57db1a1e40935c53da23723255c5acfe28d5a6"
+          "bytes": 6585,
+          "sha256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391"
         },
         {
           "name": "api_test.go",
@@ -1037,9 +1037,14 @@
           "sha256": "1482e22e02912e3c40bd2284b147380909b12ecf26cd106c75656abea65253f4"
         },
         {
+          "name": "json_limits_test.go",
+          "bytes": 1925,
+          "sha256": "95216f89229cff901588cb8a1813016fb4b05df977bc18f7f874b12a7febc697"
+        },
+        {
           "name": "main.go",
-          "bytes": 877,
-          "sha256": "6becf16d66a3b8aa1790d54dc0892aef6d586146c7e8359f43690ab8527446e9"
+          "bytes": 1493,
+          "sha256": "dcb32d529071b12dee8f5ebc11970b951577e93563804a8e69aba1f231c2cc27"
         },
         {
           "name": "README.md",
@@ -1072,7 +1077,7 @@
       "id": "web-09",
       "examplePath": "exercises/web/followup-09",
       "download": "assets/downloads/web-followup-09.zip",
-      "sha256": "c9b2107e59a12c71d45669fa6ef83a020b6e10ea853282887948cbd123e8e482",
+      "sha256": "263bdc4ab8ef67f49d052b213c3ac9bab381a9174d53ead0cd04750312fafdda",
       "files": [
         {
           "name": ".gitignore",
@@ -1081,8 +1086,8 @@
         },
         {
           "name": "api.go",
-          "bytes": 6340,
-          "sha256": "a6471de47207e4c0e525c6ccab57db1a1e40935c53da23723255c5acfe28d5a6"
+          "bytes": 6585,
+          "sha256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391"
         },
         {
           "name": "api_test.go",
@@ -1105,9 +1110,14 @@
           "sha256": "faac02efcbba1cee48a6329a786a30519daad1034699951e181378f18efc1266"
         },
         {
+          "name": "json_limits_test.go",
+          "bytes": 1925,
+          "sha256": "95216f89229cff901588cb8a1813016fb4b05df977bc18f7f874b12a7febc697"
+        },
+        {
           "name": "main.go",
-          "bytes": 1455,
-          "sha256": "322d78e8bf4d5d7eba924d165b302a4eebdaf157cbb4e221430445b7d80d87ad"
+          "bytes": 2071,
+          "sha256": "ce66ce780ae10e8b551252fea625b0f0c0278541b76b6107ef5bc5ecccc08626"
         },
         {
           "name": "migrations/001_initial.sql",
@@ -1160,7 +1170,7 @@
       "id": "web-10",
       "examplePath": "exercises/web/followup-10",
       "download": "assets/downloads/web-followup-10.zip",
-      "sha256": "80bc664b5be66c224bad89267c50538e15c2daa426d8fdb583dc122e4a20a932",
+      "sha256": "2306346bb56ecc4a9a2da9a29f9aa65067dc97da9b65e8bf5b9a38ed9d8d52f4",
       "files": [
         {
           "name": ".env.example",
@@ -1169,8 +1179,8 @@
         },
         {
           "name": "api.go",
-          "bytes": 6340,
-          "sha256": "a6471de47207e4c0e525c6ccab57db1a1e40935c53da23723255c5acfe28d5a6"
+          "bytes": 6585,
+          "sha256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391"
         },
         {
           "name": "go.mod",
@@ -1188,9 +1198,14 @@
           "sha256": "7821563265710dc5be6db76faf7fb48c3008db318336d74eb16542b677bdba84"
         },
         {
+          "name": "json_limits_test.go",
+          "bytes": 1925,
+          "sha256": "95216f89229cff901588cb8a1813016fb4b05df977bc18f7f874b12a7febc697"
+        },
+        {
           "name": "main.go",
-          "bytes": 2095,
-          "sha256": "62a9d8cb4b3d150face4e4abb8e4b45f9b1752a74da79ea01b8d56a485f09ade"
+          "bytes": 2711,
+          "sha256": "4f1d343d241ff9f648425d00dfd4462e74db28cee9e6656b55982b54eda0c43f"
         },
         {
           "name": "migrations/001_initial.sql",
@@ -1219,13 +1234,13 @@
         },
         {
           "name": "security.go",
-          "bytes": 10390,
-          "sha256": "8e0ce2be1d88d228e7a07bd821c8c726e95aabd116e48511f49b8f591fdcd67e"
+          "bytes": 10736,
+          "sha256": "76f1b332cebfe7c849f1aaa62b9bc18b02386efe7de155e862ad80c729c800e5"
         },
         {
           "name": "security_test.go",
-          "bytes": 4385,
-          "sha256": "6f9681bcc99a96aadf692f6854570505661c24a62791dd6b8f2deb78180b609d"
+          "bytes": 5178,
+          "sha256": "5cd5f3fb4f8a34344f9468bf166757d6e20d446fc013753d36bb800ea872302f"
         },
         {
           "name": "store.go",
@@ -1253,7 +1268,7 @@
       "id": "web-11",
       "examplePath": "exercises/web/followup-11",
       "download": "assets/downloads/web-followup-11.zip",
-      "sha256": "c09bb9b811dbf3a80bf47e2a31fd45105d45974c3a2cc2e2a9e72b596291284a",
+      "sha256": "3bfdfc494091ba8a8ca70962e45c106a883ea2d7b6c2a1ae2b03b407bb1c90f8",
       "files": [
         {
           "name": ".dockerignore",
@@ -1267,13 +1282,13 @@
         },
         {
           "name": ".gitignore",
-          "bytes": 54,
-          "sha256": "dd8214186d7626ebbaa971a9dec7c1271692f9d84757d234b5d17944f9502534"
+          "bytes": 247,
+          "sha256": "f8e31ece8a4cc1173a689f4d9ee260f15ca5eee830b89e32689cbf068c6a9a0a"
         },
         {
           "name": "api.go",
-          "bytes": 6340,
-          "sha256": "a6471de47207e4c0e525c6ccab57db1a1e40935c53da23723255c5acfe28d5a6"
+          "bytes": 6585,
+          "sha256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391"
         },
         {
           "name": "ci/verify.yml",
@@ -1287,8 +1302,8 @@
         },
         {
           "name": "compose.yml",
-          "bytes": 1489,
-          "sha256": "bdf1b1e8987d5c51d96908c82b24c2814f15335187fe8b77396dbe3011ef91e8"
+          "bytes": 1595,
+          "sha256": "e87eeca29f17b5ee6055144a388fbfd938192bd6e09e065a43b285c9c9911e33"
         },
         {
           "name": "db_security_test.go",
@@ -1351,9 +1366,14 @@
           "sha256": "7821563265710dc5be6db76faf7fb48c3008db318336d74eb16542b677bdba84"
         },
         {
+          "name": "json_limits_test.go",
+          "bytes": 1925,
+          "sha256": "95216f89229cff901588cb8a1813016fb4b05df977bc18f7f874b12a7febc697"
+        },
+        {
           "name": "main.go",
-          "bytes": 2095,
-          "sha256": "62a9d8cb4b3d150face4e4abb8e4b45f9b1752a74da79ea01b8d56a485f09ade"
+          "bytes": 2711,
+          "sha256": "4f1d343d241ff9f648425d00dfd4462e74db28cee9e6656b55982b54eda0c43f"
         },
         {
           "name": "migrations/001_initial.sql",
@@ -1387,8 +1407,8 @@
         },
         {
           "name": "README.md",
-          "bytes": 2556,
-          "sha256": "8ca87a19c2395f6b0a7854eeb170bff8c156e23af79dddf72d7521d32f780f80"
+          "bytes": 3242,
+          "sha256": "4043117fe48b9250b51d653b57c22041aa8056fe392615bb953712b23273377d"
         },
         {
           "name": "repository.go",
@@ -1397,13 +1417,13 @@
         },
         {
           "name": "security.go",
-          "bytes": 10390,
-          "sha256": "8e0ce2be1d88d228e7a07bd821c8c726e95aabd116e48511f49b8f591fdcd67e"
+          "bytes": 10736,
+          "sha256": "76f1b332cebfe7c849f1aaa62b9bc18b02386efe7de155e862ad80c729c800e5"
         },
         {
           "name": "security_test.go",
-          "bytes": 4385,
-          "sha256": "6f9681bcc99a96aadf692f6854570505661c24a62791dd6b8f2deb78180b609d"
+          "bytes": 5178,
+          "sha256": "5cd5f3fb4f8a34344f9468bf166757d6e20d446fc013753d36bb800ea872302f"
         },
         {
           "name": "store.go",

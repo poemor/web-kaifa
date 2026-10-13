@@ -1,0 +1,217 @@
+{
+  "scope": [
+    "go-http-message",
+    "go-http-handler",
+    "go-http-query",
+    "go-http-json",
+    "go-json-boundary",
+    "go-http-testing",
+    "go-web-frameworks",
+    "go-templates",
+    "go-sql-tables",
+    "go-sql-crud",
+    "go-database-go",
+    "go-transactions",
+    "go-repository",
+    "go-config",
+    "go-pagination",
+    "go-goroutines",
+    "go-mutex",
+    "go-crud",
+    "go-channels",
+    "go-context",
+    "go-type-assertion",
+    "go-generics",
+    "go-passwords",
+    "go-sessions",
+    "go-authorization",
+    "go-shutdown",
+    "go-containers",
+    "go-ci",
+    "go-performance",
+    "go-recovery"
+  ],
+  "reviews": [
+    {
+      "id": "go-http-message",
+      "verdict": "pass",
+      "evidence": "完整阅读正文和catalog.main.go：先定义客户端/服务器/HTTP，再拆127.0.0.1、8080、路径、查询与片段，随后介绍方法、状态、头部/正文。明确NewRequest只构造对象，未发请求或监听；正常与坏URL都有观察结果，并要求独立改为加法参数。",
+      "issues": []
+    },
+    {
+      "id": "go-http-handler",
+      "verdict": "pass",
+      "evidence": "复读全文、catalog完整例子与原语法前置。新增段落明确定义if初始化语句：分号前先执行、后面判断，Fprint返回字节数/error，_丢弃字节数，err只在该if/else范围可见，并将ListenAndServe单error返回与同一写法对应。原有r/w接口、路由登记、模拟/真实serve、404/405、F12与停止/重启步骤保留；首轮语法跳步关闭。",
+      "issues": []
+    },
+    {
+      "id": "go-http-query",
+      "verdict": "pass",
+      "evidence": "完整读取正文及catalog：Query.Get得到文字、Atoi返回值/错误、业务范围与求和上限分开解释；错误后return的原因清楚。完整程序为内存模拟，给出正常/缺失/非数/负数/上界表与缩小范围变式，没有冒称端口已启动。",
+      "issues": []
+    },
+    {
+      "id": "go-http-json",
+      "verdict": "pass",
+      "evidence": "完整读取正文与catalog：媒体类型、请求/响应方向、状态语义、头部→状态→正文的发送顺序均清楚，编码器/Set等新方法有定义。204不编码、先Encode导致200、真正创建完成才能201都有说明；例子明确没有真实创建或数据库。",
+      "issues": []
+    },
+    {
+      "id": "go-json-boundary",
+      "verdict": "pass",
+      "evidence": "复读全文及四份实际decodeJSON/json_limits_test.go：未知字段、EOF/第二值、null与业务空白、HTTP片段位置与媒体/大小/业务规则分工仍清楚。四份第二次Decode现均识别MaxBytesError→413 body_too_large，其他额外值/坏尾部→400。已核对.qa/backend-boundary-regressions.json的真实解析函数提取、24个边界用例与恢复旧缺陷后的失败，六份报告源哈希仍匹配；这是隔离标准库解析证据，不是完整DB工程通过。",
+      "issues": []
+    },
+    {
+      "id": "go-http-testing",
+      "verdict": "pass",
+      "evidence": "完整阅读两份文件、catalog和go-testing前置：测试调用实际Handler路由，分别检查200、Result快照响应头、JSON字段、404与405。文件目录、test运行、正文不启动服务、wrong突变与加法独立四种测试明确；没有用假业务响应替代被测函数。",
+      "issues": []
+    },
+    {
+      "id": "go-web-frameworks",
+      "verdict": "pass",
+      "evidence": "完整阅读正文及catalog：标准库/第三方库/框架职责、中间件、匿名函数、闭包、HandlerFunc转换与next继续顺序逐项解释。绕过包装/404/漏next的实验有可观察预期，Go与React/Vue的运行位置分开说明，没有要求同时学其他后端语言。",
+      "issues": []
+    },
+    {
+      "id": "go-templates",
+      "verdict": "pass",
+      "evidence": "全文和三个实际源码、README、go.mod逐一完整比对，catalog内容一致。独立目录/Go1.22/模块/三个文件、HTML角色、动作/导出字段、ParseFiles、内存缓冲后写响应、转义与QueryEscape区别、真实监听/停止、模板修改要重启、缺文件/突变测试、独立Topic变式齐全；没有假装已保存或上线。",
+      "issues": []
+    },
+    {
+      "id": "go-sql-tables",
+      "verdict": "pass",
+      "evidence": "复读全文和必要数据库环境前置。SQL注释与正文已限定trim默认只去普通空格，明确不会拒绝全部Unicode空白/制表符/换行，与Go TrimSpace范围不同。服务/psql/SQL/库表行列、非超级用户与目标库确认、NULL/主键/默认/CHECK、正常插入与约束失败仍有具体步骤和结果；首轮存储边界错解关闭，未将源码审查说成已执行本机数据库。",
+      "issues": []
+    },
+    {
+      "id": "go-sql-crud",
+      "verdict": "pass",
+      "evidence": "完整阅读正文：INSERT列值顺序与RETURNING、SELECT/WHERE/ORDER BY/LIMIT、SET、DELETE与DROP区别都有解释，明确用自己实际临时id替换123。零匹配不等于故障，更新约束失败后复查旧值与独立三行变式都有步骤，未要求无条件删除整表。",
+      "issues": []
+    },
+    {
+      "id": "go-database-go",
+      "verdict": "pass",
+      "evidence": "完整阅读正文、catalog database-demo.go、09 README/main.go/go.mod/repository/db_test/迁移：驱动、空导入、连接池、Open/Ping、环境变量、5秒ctx、QueryRow/Scan、$1绑定和错误阶段分开讲。新增入口只按文件运行并要求移走避免两个main，practice表与events表不混用；go.mod要求1.26.9，当前本机1.26.2不被计作此DB工程执行证据。 追加运行记录使用显式Go1.26.9完成09实际模块vet/test/build，4个顶层测试PASS；TestRealDatabase因TEST_DATABASE_URL为空明确SKIP，仍不计作PostgreSQL或持久化验收。",
+      "issues": []
+    },
+    {
+      "id": "go-transactions",
+      "verdict": "pass",
+      "evidence": "全文与09真实db_test完整比对：BEGIN/COMMIT/ROLLBACK先用practice表成功/失败实验，完整Go函数标注不含main及所需db/ctx/import；所有写走tx、defer回滚、提交失败、不盲目重试与id可有空洞均明确。TestRealDatabase确实用重复username UNIQUE失败后回滚查0，但本次未重跑真实DB测试。 追加09完整模块记录中TestRealDatabase明确SKIP，事务原子性的真实数据库实验仍待具备独立测试库后执行，编译与内存测试不能替代这项证据。",
+      "issues": []
+    },
+    {
+      "id": "go-repository",
+      "verdict": "pass",
+      "evidence": "完整阅读正文/catalog及09Store/SQLStore/API结构：Repository、依赖与注入先定义，再用单行为接口、Memory、Service组合，按执行链解释输出。真实业务与假依赖的界线、无实现会panic、编译不证明值正确、换Fixed/错误返回变式齐全；未宣称内存演示验证PostgreSQL。",
+      "issues": []
+    },
+    {
+      "id": "go-config",
+      "verdict": "pass",
+      "evidence": "完整阅读正文/catalog：配置与Go变量/.env/已运行进程的区别、LookupEnv缺失与显式空值、范围、默认条件均明确。PowerShell/export/cmd及恢复原配置、PowerShell空值差异实验、真实工程APP_ADDR区别、敏感值不打印都说明；例子只是输出校验值。",
+      "issues": []
+    },
+    {
+      "id": "go-pagination",
+      "verdict": "pass",
+      "evidence": "全文/catalog及09List实现完整核对：page/limit/offset定义、公式及32位安全上界、空结果与非法值、SQL片段所需变量、QueryContext/Next/Scan/Close/Err步骤及源码入口均说明。稳定唯一排序与动态翻页漏重边界不混淆，明确工程接受limit/offset，切片分页独立变式含越界处理。",
+      "issues": []
+    },
+    {
+      "id": "go-goroutines",
+      "verdict": "pass",
+      "evidence": "正文/catalog完整阅读：顺序/并发/并行、goroutine调度与main结束、WaitGroup的Add/Done/Wait、传地址及不可复制先解释；运行结果、两任务变式、漏Wait/漏Done/负计数死锁或panic均有现象。等待完成不被说成共享数据保护或错误传播。",
+      "issues": []
+    },
+    {
+      "id": "go-mutex",
+      "verdict": "pass",
+      "evidence": "正文/catalog完整阅读：count++读改写竞态、Mutex临界区、WaitGroup与锁分工、闭包共享同一数据、统一读写保护与不可复制均解释。去锁/race实验说明平台/C工具链与覆盖边界；死锁及Add/Value指针方法变式有明确预期。",
+      "issues": []
+    },
+    {
+      "id": "go-crud",
+      "verdict": "pass",
+      "evidence": "复读全文、catalog以及08api/store/main/新测试。完整CRUD合同、POST数据流、PATCH未给与清空/null、状态与存储核对、内存重启边界均准确。正文413合同现与四份decodeJSON及边界回归一致。明确q筛选已实现，独立任务改为新增location精确筛选、q/location同时满足并先筛选再分页；列表仍返回数组，不要求未约定total。2/0/3预期明确只针对不含默认种子的三条隔离数据，原服务追加三条仍有种子，避免假预期。首轮两项和复审新增结果前提均关闭。 追加核对root的.qa/backend-module-validation.json：显式Go1.26.9运行08真实模块vet/test/build均成功，4个顶层测试PASS，包含实际内存CRUD和新JSON边界；未据此更新用户学习状态。",
+      "issues": []
+    },
+    {
+      "id": "go-channels",
+      "verdict": "pass",
+      "evidence": "正文/catalog完整阅读：通道的元素类型、无缓冲配对、箭头方向、goroutine调用、同协程死锁、容量1仍会等、close后的值/ok/发送panic与多发送者责任齐全。片段有已有results和放置条件，生产者三项累加变式说明结束条件，未把close说成任务取消。",
+      "issues": []
+    },
+    {
+      "id": "go-context",
+      "verdict": "pass",
+      "evidence": "复读全文、catalog checks及例子。取消信号、Done关闭、select/default、工作观察后return、期限继承及不支持取消的工作边界清楚。checks已同步为删显式cancel保留defer输出6、恢复提前取消输出已取消、删sum取消检查即使提前cancel仍输出6，与实际控制流及正文一致；首轮旧验收文字关闭。",
+      "issues": []
+    },
+    {
+      "id": "go-type-assertion",
+      "verdict": "pass",
+      "evidence": "完整阅读正文/catalog及接口前置：any/静态与动态类型、断言不转换、两结果零值/ok、短声明复用ok、单结果panic和片段替换条件说明清楚。整数7与文字7、nil、空白业务检验变式有预期，不把类型匹配当业务正确。",
+      "issues": []
+    },
+    {
+      "id": "go-generics",
+      "verdict": "pass",
+      "evidence": "完整阅读正文/catalog：类型参数与值参数、T/[]T/返回T、any约束、显式与推断类型、不同零值、空切片保护先定义；T any不保证加法有明确反例。空输入去保护panic与Last独立变式可验收，没有只列高级术语。",
+      "issues": []
+    },
+    {
+      "id": "go-passwords",
+      "verdict": "pass",
+      "evidence": "复读全文、10/11实际verifyPassword与新TestVerifyPasswordRejectsMalformedStorage、原密码单测和依赖条件。解析在Split/Base64前先拒绝encoded超过128字节，再核对固定参数与22/43字符编码长度，随后才解码并检查16/32字节；正文明确合法输入仍有Argon2成本，不能声称完全不分配。恒定时间比较已正确定义且区别于定时器。边界报告的非法格式、超长零分配与删除长度保护失败均匹配当前源码；panic算法stub只证明非法输入未进入哈希，未用于算法/登录/DB通过结论。首轮两项关闭。 另核对root新增完整模块运行记录：显式Go1.26.9下10/11真实模块各5个顶层测试PASS，包含未替换算法的TestArgon2SaltAndVerify及真实格式测试；这项实际Argon2证据与前述stub格式控制流证据分开，不能推导数据库或部署通过。",
+      "issues": []
+    },
+    {
+      "id": "go-sessions",
+      "verdict": "pass",
+      "evidence": "正文及10Security.current/credentials/Handler/测试完整核对：会话与Cookie/页面标记分离、自动携带与属性、服务器15分钟期限、csrfToken请求头、Origin、401/403、注销删除服务器map均与代码一致。独立HTTP启动/真实浏览器与内存测试不同证据、默认内存/单实例边界和未登录→登录→注销變式清楚。 追加10/11真实模块运行记录均通过TestSessionsOwnershipCSRFAndRoles、TestOriginAndRateLimit等内存处理器测试；实际Argon2参与密码验证，数据库身份与独立浏览器端到端仍另验收。",
+      "issues": []
+    },
+    {
+      "id": "go-authorization",
+      "verdict": "pass",
+      "evidence": "正文与SecureStore内存/SQL Register/CancelRegistration完整比对：认证/授权/成员与管理员职责、MemberID来源、SQL同时绑定id和member_id/RowsAffected、统一404与角色403均准确。明确没有GET/PATCH单报名入口，A/B独立浏览器上下文、伪memberId/重复409/状态后复查存储和去归属故障实验具备实际反馈。",
+      "issues": []
+    },
+    {
+      "id": "go-shutdown",
+      "verdict": "pass",
+      "evidence": "关联复审全文/catalog及08–11四份实际main.go：独立例与工程均登记os.Interrupt/SIGTERM，解释信号只取消通知；等待逻辑继续使用未取消根context与5秒期限。四份源码保留shutdownDone，监听返回后主函数等待，新增正常Shutdown开始/等待结束日志，超时明确Close。已完整核对.qa/validate-shutdown.py与更新后的.qa/shutdown-fixes.json：真实loopback在途请求手动门控，四份实际退出goroutine等待后才关闭资源，去等待均被拒绝。这是标准库控制流回归，未覆盖OS信号、四个完整依赖/DB工程或Docker运行。",
+      "issues": []
+    },
+    {
+      "id": "go-containers",
+      "verdict": "pass",
+      "evidence": "复读全文与11main/Compose/Dockerfile/角色初始化、迁移配置。SIGINT与SIGTERM区别、同时登记、正常日志、外部stop_grace_period 10秒大于内部5秒等待已落实，实际停止验收明确另做Linux/Docker实验，未将Windows控制流当容器通过。端口18770→8770、db:5432、镜像/容器/卷、owner/app职责及迁移/持久边界与源码一致；首轮信号缺口和复审发现的缺日志均关闭。",
+      "issues": []
+    },
+    {
+      "id": "go-ci",
+      "verdict": "pass",
+      "evidence": "复读全文、catalog、web-git前置、workflow及独立.gitignore。新增明确Git/GitHub/Actions职责、Git与账号/空仓库准备及回链；在仓库外独立目录初始化、复制workflow、分支、暂存核对、提交/remote/push、相同提交Actions日志均有命令与解释。独立.gitignore现排除node_modules、.env/本地环境、备份、Go默认二进制及bin/dist/coverage/profile等，保留.env.example，ZIP已含规则。真实vet/test/build/迁移/E2E入口与文件一致，SKIP与远程未执行限制保留；首轮前置及复审新增独立ignore缺口关闭。 另读.qa/standalone-ignore-proof.json：独立Git目录中.env/.env.local、node_modules、Go产物、备份与profile确实被忽略，源码/go.mod/go.sum/package-lock/.env.example/workflow仍可跟踪。root追加显式Go1.26.9的四个实际模块vet/test/build通过，这是本机检查；3个真实DB测试SKIP，远程Actions未执行。",
+      "issues": []
+    },
+    {
+      "id": "go-performance",
+      "verdict": "pass",
+      "evidence": "完整读正文及wordfreq真实Count/Entry/main_test/README：基准测实际已实现函数，完整benchmark_test文件有原包依赖与保存位置。b.N、run正则、五次、ns/op/B/op/allocs/op、CPU/内存profile与flat/cum解释具体，未杜撰固定性能数；优化先守正确性、同输入边界、产物不提交和Large变式可操作。",
+      "issues": []
+    },
+    {
+      "id": "go-recovery",
+      "verdict": "pass",
+      "evidence": "复读全文、11README、Compose、角色权限与备份/恢复脚本。恢复到新前缀库、拒绝覆盖与失败现场、计数/孤儿/版本/关键关系/RPO/RTO仍具体。新增完整恢复API路线：在实际恢复库授予club_app连接/schema/table/sequence权限，compose run --no-deps复用容器网络，覆盖恢复库DSN与APP_ORIGIN，继承PGPASSWORD/管理员并只发布本机18771；解释run不重复发布18770、容器db地址不能在本机直接用、Cookie不同端口不隔离、必须独立浏览器重新登录核对。仅docker stop/rm指定演练容器，保留原API/库/备份；README同步回链。官方Compose run语义已核对，首轮不可复现步骤关闭，未声称Docker恢复端到端已执行。",
+      "issues": []
+    }
+  ],
+  "summary": "最终独立教学审核：Go中级18章、高级12章，共30章均为pass，当前无待修问题。首轮完整独立阅读为21 pass/9 needs_fix、11项问题，原始记录保留在.qa/audit-go-backend-round1.json。本轮完整复读9篇返修章和关联go-shutdown，逐项核对正文、catalog、必要前置/真实工程文件，并关闭复审时发现的total/种子数据前提、独立.gitignore与正常退出日志细节。22项正文/catalog代码文件一致；27项08–11源码包文件按换行规范化与canonical一致，含新测试、README、Compose、.gitignore；模板ZIP四文件与源码一致。已审阅源哈希仍匹配的24个JSON边界/突变、2组密码格式保护/突变及4组实际loopback在途请求退出/去等待失败记录，未重复bulk测试。格式测试的Argon2 panic stub只证明非法输入不进入哈希；退出回归以可控context代替OS信号。另独立读取root追加的.qa/backend-module-validation.json：显式Go1.26.9运行08/09/10/11真实模块vet/test/build均通过，顶层PASS测试4/4/5/5，包含实际Argon2盐/正确错误密码及完整内存合同；依赖/lock只读未改。09 TestRealDatabase和11 TestRealDatabase/TestRealSQLIdentityOwnership共3项明确SKIP，不计作DB通过。独立ignore实际Git验证也已确认。完整PostgreSQL工程、Linux/Docker信号与容器运行、远程CI、恢复库HTTP端到端仍未在本轮执行；教学内容通过、本机测试、环境验收与用户学习完成是不同结论。仅写QA记录，未改课程正文/catalog/materials/网站。"
+}

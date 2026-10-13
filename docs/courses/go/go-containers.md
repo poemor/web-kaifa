@@ -1,0 +1,86 @@
+# Docker 镜像、容器与数据卷
+
+先分清打包、运行与持久数据，再用Compose启动既有API和数据库。
+
+## 为什么本机能跑，另一台电脑还需要准备环境
+
+Go程序可能需要指定依赖、静态文件和数据库。如果另一台机器缺版本或路径不同，不能只复制一份源码就运行。Docker把应用运行所需文件和启动约定打包为镜像，再以容器形式运行。安装Docker并不自动把本机项目上线。
+
+**镜像是可用来启动的打包结果，容器是运行实例，数据卷是独立于容器生命周期保存数据的地方。** 镜像可启动多个容器，停止容器不等于删镜像；容器内存也不会因有镜像就持久保存。
+
+Dockerfile描述怎样构建镜像，Compose配置多个服务怎样一起运行：本项目db运行PostgreSQL，migrate执行结构迁移，app运行Go API。Docker客户端发命令，后台Docker服务负责实际运行，`docker --version`只看到客户端版本不代表后台可用。
+
+## 先准备工具和独立配置
+
+下载 [完整交付工程](assets/downloads/web-followup-11.zip)，解压用VS Code打开followup-11。有Dockerfile、compose.yml、migrations、deploy和独立go.mod。按 [Docker安装文档](https://docs.docker.com/get-started/get-docker/) 安装并启动适合系统的Docker；Windows使用Linux容器模式，本工程镜像为Linux。
+
+在followup-11终端：
+
+```sh
+docker version
+```
+
+应同时看到Client与Server信息；只有Client或连接错误时先修Docker后台，不继续宣称启动成功。首次拉镜像/下载依赖需要联网，具体版本由工程文件声明。
+
+将.env.example复制为这个工程的.env，填写自己的独立练习密码与管理员。POSTGRES_PASSWORD是管理账户密码，APP_DB_PASSWORD是应用账户密码，职责不同。不要提交.env，也不把含密码的配置完整打印出去。
+
+**Compose读取.env作变量替换，与Go标准库自动读.env不是一回事。** 只读改密码也不会改已有数据库卷中已创建账户的密码，首次初始化和已运行库的修改是不同操作。
+
+## 看懂最关键的配置
+
+这是已有compose.yml中的app端口片段，不是完整新文件：
+
+```yaml
+# 只暴露到本机：左边主机18770，右边容器8770。
+ports:
+  - '127.0.0.1:18770:8770'
+```
+
+浏览器连接主机18770，Compose转发到容器内8770。app在容器内连接 `db:5432`，db是Compose网络中的服务名，不是本机127.0.0.1；容器里的127.0.0.1指容器自己。
+
+已有db把命名卷club_data挂到PostgreSQL数据位置。迁移服务用管理账户改表，app用权限较小的club_app读写；db健康后migrate运行成功，app才启动。**数据库能连接不等于业务表已迁移，容器Running不等于API正确。**
+
+Dockerfile的第一阶段用Go构建可执行文件，后一阶段只带运行所需程序和web文件，这叫多阶段构建，减少运行环境所需内容。工作目录和复制路径应与工程一致，不能复制无关main.go。
+
+## 构建、启动、看状态
+
+在含compose.yml的工程目录运行：
+
+```sh
+docker compose config --quiet
+docker compose up --build -d
+docker compose ps
+docker compose logs app
+```
+
+config --quiet校验配置但不启动；up的--build要求构建、-d在后台运行；ps看服务状态；logs查看真实日志。**本工程服务名是app，不是api**，命令写错服务名不会得到API日志。浏览器打开 `http://127.0.0.1:18770/`，按身份流程登录与操作。
+
+需要停止但保留数据，可在同一工程目录执行：
+
+```sh
+docker compose stop
+```
+
+这是停止服务，不是清除卷。不用删除卷的命令修端口、迁移或密码问题。已有数据有问题先保留日志与配置，核对原因。
+
+## 正常与失败验收
+
+创建一条虚构活动并报名，记下实际id，重启app，再GET应仍在；然后重启db和app，再核对活动与报名关系。只重启app不能证明数据库卷持久化。
+
+先预测，故意在自己的练习配置缺少一个必填变量，config应拒绝；恢复后再通过。若数据库健康但迁移失败，app不应按本配置继续就绪，读取migrate日志定位，不能静默改成内存模式充数。
+
+### 参考答案
+
+配置决定连接目标与启动方式，卷保留数据，迁移定义结构，应用逻辑决定业务结果。这些各要有证据。Compose文件解析通过不等于容器实际运行通过，更不等于云端HTTPS部署完成。
+
+## 停止信号也要与程序一致
+
+**Ctrl+C 通常发 SIGINT，容器的默认停止通常发 SIGTERM；程序需要登记自己会收到的信号。** 交付入口现在同时登记 `os.Interrupt` 与 `syscall.SIGTERM`，两者都进入前面学过的 Shutdown 等待流程。Compose 的 app 设 `stop_grace_period: 10s`，留给程序的外部时间大于内部5秒等待；超时后程序主动关闭连接，不能承诺请求永远等待。
+
+需要验证容器路径时，在实际容器环境发起在途请求后执行 `docker compose stop app`，检查请求结束、Shutdown日志和进程退出顺序。Windows 上的独立控制流测试只验证等待逻辑，不能当作 Linux 信号和 Docker 停止也已跑过。
+
+## 独立变式与生产边界
+
+给自己练习工程另选本机暴露端口，保持容器内8770，按新地址验收并解释为什么Go代码无需变。公网部署还需实际域名、DNS、HTTPS、密钥管理、备份和监控；本节默认只在本机，不把端口开放当可靠交付。
+
+参考：[Docker容器基础](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/)、[Docker卷](https://docs.docker.com/engine/storage/volumes/)、[Compose启动](https://docs.docker.com/reference/cli/docker/compose/up/)。

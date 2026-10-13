@@ -1,0 +1,109 @@
+# 备份恢复与项目交付
+
+在新的独立数据库实际还原，再验证记录、关联和程序版本，而不是只拿到备份文件。
+
+## 备份和恢复分别是什么
+
+备份是在某个时间点导出可用于还原的数据；恢复是把这份内容还原到数据库并重新使用。pg_dump是PostgreSQL导出工具，pg_restore读取特定归档格式，不能随意用文本重定向处理二进制文件。
+
+**有备份文件不代表能够恢复，只有实际还原并核对业务关系才有恢复证据。** 还需要记录备份时间、库名、结构版本、程序版本和预期数据，避免恢复出另一份看似正常的数据。
+
+RPO是最多可接受丢失多久的数据，RTO是最多可接受恢复花多久。它们是目标，不是程序自动保证；恢复实验用实际时间和数据核对目标是否可达。
+
+## 先在自己的完整工程准备记录
+
+使用 [交付工程](assets/downloads/web-followup-11.zip) followup-11。沿 [容器章节](#/learn/go/go-containers) 在独立配置下启动Compose，浏览器访问本机18770。备份脚本依赖正在运行的db容器，不是任意原生数据库都可原样使用。
+
+管理员创建虚构活动，成员报名，记实际活动/用户/报名id与时间。先查询确认三者有关联；只有零行库的备份不能验证关系恢复。不要使用真实个人数据、生产密码或业务库。
+
+## 先读脚本，再执行入口
+
+deploy/backup.ps1在容器中pg_dump，生成custom归档，再docker cp到本机backups并打印SHA256。哈希可核对文件有没有变化，不证明数据语义正确。
+
+在含compose.yml的followup-11目录，PowerShell运行：
+
+```powershell
+./deploy/backup.ps1
+```
+
+输出给出实际 `.dump`文件路径和文件哈希；记下它。不靠“控制台没有报错”跳过后续恢复。
+
+restore-practice.ps1只接受club_restore_开头的新演练库，拒绝覆盖现有同名库；先用createdb建新库，再pg_restore导入，最后查计数、孤儿关联和schema版本。执行前把文件名换成刚生成的实际文件：
+
+```powershell
+./deploy/restore-practice.ps1 -BackupFile 'backups/实际文件.dump' -TargetDatabase 'club_restore_test01'
+```
+
+**恢复目标是新独立库，不能把业务库名当练习目标。** 这个脚本不会为了重跑自动删除已存在库；重复运行应选新的演练名字，保留失败现场排查。不需提高整个系统脚本权限来绕过文件策略，按自己环境受控运行。
+
+## 恢复后要看哪些结果
+
+| 检查 | 预期与原因 |
+| --- | --- |
+| events/members/registrations计数 | 与备份时间点预期一致，不能只要求大于0 |
+| 孤儿报名数orphans | 0，报名引用的活动和用户确实存在 |
+| schema_version | 与备份对应迁移版本一致 |
+| 关键id及字段 | 虚构活动标题/报名归属与记录相符 |
+| 程序读取恢复库 | 用独立API配置连接新库，身份与查询可按合同工作 |
+
+脚本的查询检查与整套HTTP流程是两层不同证据。下面让另一份 API 实例读取刚恢复的库，核对真实登录与报名查询。
+
+## 让独立 API 读取恢复库
+
+继续在同一个 `followup-11` 目录的 PowerShell 中操作，原 Compose 的 `db` 和 `app` 已启动，镜像已构建。下面沿用刚才的库名 `club_restore_test01`；如果恢复时使用了别的演练名字，后续 SQL 与连接串都要一起替换。
+
+**容器里的 `db:5432` 是容器网络地址，本机 Go 程序不能直接用它连接这个未公开端口的数据库。** 因此仍使用 Compose 的 `app` 配置启动另一只容器，让它留在同一个网络中。它读取恢复库，在本机另用 `18771` 端口；原实例仍读 `club_practice`，使用 `18770`。
+
+先为已有应用角色 `club_app` 核对恢复库的权限。下面命令进入 `db` 容器，用 `club_owner` 在指定恢复库执行 SQL；`-T` 不分配交互终端，`ON_ERROR_STOP=1` 让 SQL 出错时返回失败：
+
+```powershell
+docker compose exec -T db psql -U club_owner -d club_restore_test01 -v ON_ERROR_STOP=1 -c "GRANT CONNECT ON DATABASE club_restore_test01 TO club_app; GRANT USAGE ON SCHEMA public TO club_app; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO club_app; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO club_app;"
+```
+
+`CONNECT` 允许连接库，`USAGE ON SCHEMA` 允许查找 `public` 中的对象，表权限允许应用查询和写记录，序列权限支持自动生成 id。这是已还原对象的权限，不等于让应用角色成为超级用户，也不负责将来新增对象的权限。输出应包含对应的 `GRANT`；出错先排查，不继续启动。
+
+然后新开名为 `club-restore-api` 的演练容器：
+
+```powershell
+docker compose run -d --no-deps --name club-restore-api -p "127.0.0.1:18771:8770" -e "DATABASE_URL=postgres://club_app@db:5432/club_restore_test01?sslmode=disable" -e "APP_ORIGIN=http://127.0.0.1:18771" app
+docker logs club-restore-api
+```
+
+`run` 创建一个新的容器；`-d` 在后台运行；`--no-deps` 复用已运行的数据库，不另外启动依赖；`--name` 便于单独查看和停止。`-p` 只把新容器的 `8770` 映射到本机 `18771`；`run` 默认不发布服务原来配置的 `18770`。两个 `-e` 分别覆盖目标数据库与浏览器来源。其余配置来自 `app`，包括 `APP_ADDR=0.0.0.0:8770`、`.env` 中的 `APP_DB_PASSWORD` 所提供的 `PGPASSWORD` 和虚构管理员配置，密码不写进连接串。
+
+日志应显示服务启动；若显示数据库权限或连接错误，保留日志，先检查恢复库名、角色与自己的 `.env`，不能用关闭所有权限检查来修复。浏览器打开 `http://127.0.0.1:18771/health` 应得到健康响应，才继续打开 `http://127.0.0.1:18771/`。健康检查只说明连接可用，还没核对备份记录。
+
+使用独立浏览器配置或隐私窗口，用备份前记录的虚构成员账号重新登录，再看“我的报名”：报名 id 与活动 id 应对应备份时间点。管理员登录后查活动标题和地点，也应与备份记录一致。恢复的是账户哈希与业务数据，内存会话没有随库备份，不能沿用原登录状态；同一主机不同端口的 Cookie 也不能当作互相隔离的登录环境。若修改过 `.env` 中的管理员密码，已有管理员不会因此自动改密码，应使用备份时的已知虚构凭据。
+
+核对后只停止这个演练实例：
+
+```powershell
+docker stop --time 10 club-restore-api
+docker rm club-restore-api
+```
+
+第一条给程序最多 10 秒停止，第二条删除已停止的演练容器；恢复库和备份文件仍保留，以便记录或继续排查。如果名字已存在，先查 `docker ps -a --filter name=club-restore-api` 确认上次演练状态，不为了重跑随意删除其他容器。**记下实际命令、状态、登录和记录结果，才算完成恢复库的 HTTP 验收；只阅读这段步骤不能记作已验证。**
+
+## 恢复还要考虑版本与存放位置
+
+回退应用代码不会自动回退数据库结构；新增迁移、配置和旧版本能否读取都需要兼容方案。卷保留不等于异机备份，电脑或磁盘损坏仍可能同时丢失原数据与同机文件。
+
+## 预测并做失败实验
+
+给脚本一个不存在的BackupFile，应明确失败而不建可用恢复结果；给已经存在的演练库名，创建应被拒绝而不覆盖旧库。合法还原后查询指定报名的event_id/member_id，验证关联。
+
+### 参考答案
+
+只看到文件、只查总行数、只回退代码，都不够证明恢复。失败时保留日志、备份和演练库，先诊断，不静默删掉再宣称成功。耗时以实际实验记录，不能凭估算写达成RTO。
+
+## 将工程交给另一份干净目录
+
+项目README至少写工具与版本、独立配置名、迁移顺序、启动停止、测试、虚构账号流程、备份恢复和已知限制。新目录按README重现：登录→两用户隔离→CRUD→分页→重启持久→恢复读取。未运行的云端DNS/TLS、共享会话、监控和容量仍列未验收。
+
+**源码可交付、工程本机验收、线上部署成功是不同阶段，不能互相冒充。** ZIP只含源码与配置模板，不含.env、真实Cookie、密码、数据库目录、依赖目录和编译产物。
+
+## 独立变式
+
+为自己的恢复报告写“时间点、文件哈希、目标库、迁移版本、关键记录、关联核对、开始结束时间、失败现场”。请另一份干净目录据此重现一次，说明剩余不确定之处。
+
+参考：[PostgreSQL备份恢复](https://www.postgresql.org/docs/current/backup.html)、[pg_dump](https://www.postgresql.org/docs/current/app-pgdump.html)、[pg_restore](https://www.postgresql.org/docs/current/app-pgrestore.html)、[GRANT权限](https://www.postgresql.org/docs/current/sql-grant.html)、[Compose run](https://docs.docker.com/reference/cli/docker/compose/run/)。

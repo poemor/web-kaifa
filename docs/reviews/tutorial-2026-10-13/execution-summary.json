@@ -1,0 +1,713 @@
+{
+  "date": "2026-10-13",
+  "chapters": 125,
+  "independentAudit": {
+    "pass": 125,
+    "needsFix": 0
+  },
+  "smallExamples": {
+    "go": 51,
+    "browser": 49,
+    "node": 1,
+    "environmentOrProject": 24
+  },
+  "readerRoutes": 375,
+  "directory": {
+    "widths": [
+      320,
+      375,
+      414,
+      768,
+      1440
+    ],
+    "directoryPages": 95,
+    "chapters": 125,
+    "preserves": [
+      "body",
+      "scroll",
+      "answers",
+      "question",
+      "notes",
+      "code",
+      "completion"
+    ],
+    "history": true
+  },
+  "backendModules": [
+    {
+      "module": "followup-08",
+      "result": "PASS",
+      "testsPassed": 4,
+      "skipped": []
+    },
+    {
+      "module": "followup-09",
+      "result": "PASS",
+      "testsPassed": 4,
+      "skipped": [
+        "TestRealDatabase"
+      ]
+    },
+    {
+      "module": "followup-10",
+      "result": "PASS",
+      "testsPassed": 5,
+      "skipped": []
+    },
+    {
+      "module": "followup-11",
+      "result": "PASS",
+      "testsPassed": 5,
+      "skipped": [
+        "TestRealSQLIdentityOwnership",
+        "TestRealDatabase"
+      ]
+    }
+  ],
+  "additionalPassedChecks": [
+    "check_site",
+    "test_site",
+    "test_workbench",
+    "test_learning",
+    "test_getting_started",
+    "test_go_start_path (230)",
+    "test_knowledge_guides (24 topics × 7 widths)",
+    "test_site_assets",
+    "test_followup_downloads",
+    "check_materials (5 files)",
+    "git diff --check"
+  ],
+  "finalSources": [
+    {
+      "id": "go-vscode",
+      "source": "docs/courses/go/go-vscode.md",
+      "sha256": "9c933e4c4b5265884aa8ccbf0b1c3f2b4c97ee75d666d0e09b0abc6e6dd8403e"
+    },
+    {
+      "id": "go-program",
+      "source": "docs/courses/go/go-program.md",
+      "sha256": "6feca9636451624479bf3b33bf5a6a3515ad0221cf7fe209384f41af93de6a63"
+    },
+    {
+      "id": "go-syntax",
+      "source": "docs/courses/go/go-syntax.md",
+      "sha256": "4b007c240406131406f4a8c7320161c0964424c924a4edf6d811a656f07f046a"
+    },
+    {
+      "id": "go-variables",
+      "source": "docs/courses/go/go-variables.md",
+      "sha256": "d68b57bb1f89170ede7916d56f25e10e409127d20f23fcb09cc706e62361ace7"
+    },
+    {
+      "id": "go-types",
+      "source": "docs/courses/go/go-types.md",
+      "sha256": "e177fe8a9cec5ac4ac2dce63d5fc36b1c3452d7c56ce17074efc21d8f9ada64d"
+    },
+    {
+      "id": "go-constants",
+      "source": "docs/courses/go/go-constants.md",
+      "sha256": "84ca11f92fc6b9cbfe2901de45b0b85a7e149eb1a9b6f4e127c631a8ebef3e43"
+    },
+    {
+      "id": "go-operators",
+      "source": "docs/courses/go/go-operators.md",
+      "sha256": "bdd383bea7d0cd15b5c998f54f7a616d57dc28fd40cd97c1038911ede5a347d5"
+    },
+    {
+      "id": "go-strings",
+      "source": "docs/courses/go/go-strings.md",
+      "sha256": "c72f57c1879558fbea8675e0f595247e7bbe26e88773014381ef99d1d4b56051"
+    },
+    {
+      "id": "go-if",
+      "source": "docs/courses/go/go-if.md",
+      "sha256": "e5cc2c282f04a1f3ec35113472cacf070269dd1a4a6e5db5d22be5a575a2cac8"
+    },
+    {
+      "id": "go-switch",
+      "source": "docs/courses/go/go-switch.md",
+      "sha256": "d0a1b5c770acea0dc3706dd235cc5fd272280d146903b4351c24f6f1d4d22ed2"
+    },
+    {
+      "id": "go-for",
+      "source": "docs/courses/go/go-for.md",
+      "sha256": "5b9dbce27bc02285c0d223b41db0447874b14d06c569e76a49a2bcc9577e1b36"
+    },
+    {
+      "id": "go-functions",
+      "source": "docs/courses/go/go-functions.md",
+      "sha256": "ff04d687f7d29eabd0adca68fd3a1c354f2399211b99e4115acbf173d15cc990"
+    },
+    {
+      "id": "go-scope",
+      "source": "docs/courses/go/go-scope.md",
+      "sha256": "5d043c89460d08c5b48ceb6017ed10add6f67a3b6d03ed1911e10119fc54da5f"
+    },
+    {
+      "id": "go-recursion",
+      "source": "docs/courses/go/go-recursion.md",
+      "sha256": "ddeec83356f659f9283f1c32862d7dbafcbc01bf6643aa411cf950c8ff303376"
+    },
+    {
+      "id": "go-project-minutes",
+      "source": "docs/courses/go/go-project-minutes.md",
+      "sha256": "ea7618477a055c9f9396aa9dac064f9ba6aad3d142c93ed0da451feff7e5a60b"
+    },
+    {
+      "id": "go-arrays",
+      "source": "docs/courses/go/go-arrays.md",
+      "sha256": "2cbb9eff94ca83b954fb5da63523aa6e2f981c5cdacc240e017441755c8da3bb"
+    },
+    {
+      "id": "go-slices",
+      "source": "docs/courses/go/go-slices.md",
+      "sha256": "6c58dc6a5742773994eaba1bf2458f7a1b752cbc125d7f1eba7516359486aac3"
+    },
+    {
+      "id": "go-slice-sharing",
+      "source": "docs/courses/go/go-slice-sharing.md",
+      "sha256": "6e8b35ed870d016878903dc26618f157540f4863f10c1b26a5d04368356ada93"
+    },
+    {
+      "id": "go-range",
+      "source": "docs/courses/go/go-range.md",
+      "sha256": "f25e1b2293ee143bad33f5c4d230bff63c96ae58b777894c98a481c3f958ff73"
+    },
+    {
+      "id": "go-returns",
+      "source": "docs/courses/go/go-returns.md",
+      "sha256": "400586bcec5edb675315452aaef2e07da7a79a52850b03e650d6c21b460afced"
+    },
+    {
+      "id": "go-maps",
+      "source": "docs/courses/go/go-maps.md",
+      "sha256": "2e9326ad85a7498f021edf4bf3d771eff51463feb232a45019fb986022da8024"
+    },
+    {
+      "id": "go-unicode",
+      "source": "docs/courses/go/go-unicode.md",
+      "sha256": "89bf7f32ccefab549b8774809a88fb91ed85f7668d435c7c962d8f362f2e8968"
+    },
+    {
+      "id": "go-pointers",
+      "source": "docs/courses/go/go-pointers.md",
+      "sha256": "581d9e9ed943c19c7bfece5aa7915a15140d6fc982c7f5bc88aab84a4a2f2180"
+    },
+    {
+      "id": "go-structs",
+      "source": "docs/courses/go/go-structs.md",
+      "sha256": "3da6b3cd787430990bd6f7b5d76c0f30b87ac311b15c63d3d27fb4950f4ee700"
+    },
+    {
+      "id": "go-methods",
+      "source": "docs/courses/go/go-methods.md",
+      "sha256": "4a4d1ca2c74d9bf874ae2ee08e8b789031b36801aac18ceb3112be735a261a5d"
+    },
+    {
+      "id": "go-interfaces",
+      "source": "docs/courses/go/go-interfaces.md",
+      "sha256": "84e98e728a2a22b660bf91efd20e627d3a50a2685f61e6fd13786c8847d0019b"
+    },
+    {
+      "id": "go-errors",
+      "source": "docs/courses/go/go-errors.md",
+      "sha256": "326297b84c24c5fbe797546b3ad7a0ea95e227d7f3273d93b7bafb7539f0e933"
+    },
+    {
+      "id": "go-defer",
+      "source": "docs/courses/go/go-defer.md",
+      "sha256": "5a750e939b4c89b65d4cfb9c139aa010e7afc051837f8a4b74af5b0766a9c7b1"
+    },
+    {
+      "id": "go-packages",
+      "source": "docs/courses/go/go-packages.md",
+      "sha256": "f5b462272afe1e572bf63ffcdd799dea8072802bfa251f1a3a02326e24611d5b"
+    },
+    {
+      "id": "go-testing",
+      "source": "docs/courses/go/go-testing.md",
+      "sha256": "f9d5033bca22bd1862e0ac7a7315f68dfd21ff9ae11e3cabdb774b8aac6b62ed"
+    },
+    {
+      "id": "go-json",
+      "source": "docs/courses/go/go-json.md",
+      "sha256": "ebcb625f9d398138979e1d71c36e4b4cfece786d643edbd6fad3490a127995d5"
+    },
+    {
+      "id": "go-input",
+      "source": "docs/courses/go/go-input.md",
+      "sha256": "6626441d88118558420da084d00ec5df5b6fa19ef01fa54fb8ad6a0135d93dee"
+    },
+    {
+      "id": "go-files",
+      "source": "docs/courses/go/go-files.md",
+      "sha256": "66073adf77a1ae1648973a9df0ede873a608b372c8dcc866a6e133517b469ca3"
+    },
+    {
+      "id": "go-sort",
+      "source": "docs/courses/go/go-sort.md",
+      "sha256": "a931775977b65f179f66868eb983c5ac42038b49b9f745da83167d8524aec33f"
+    },
+    {
+      "id": "go-project-wordfreq",
+      "source": "docs/courses/go/go-project-wordfreq.md",
+      "sha256": "5091575e835914ccff4aae5b4fdf007c94c34744618125f96106b082f0f1360b"
+    },
+    {
+      "id": "go-http-message",
+      "source": "docs/courses/go/go-http-message.md",
+      "sha256": "c1b7b841983138736f3a1b1384b66ca1e0f2aa14ddef9da5e55fa248db1b6082"
+    },
+    {
+      "id": "go-http-handler",
+      "source": "docs/courses/go/go-http-handler.md",
+      "sha256": "18ddf9dcab1df8db3e4c88fe2ed8945af931ee466e9797c7ef09e5790006f7d3"
+    },
+    {
+      "id": "go-http-query",
+      "source": "docs/courses/go/go-http-query.md",
+      "sha256": "4677bbcf5fb51749f160d23d222a3a9854ec04d721ccb82d614c7c65eb1f68d5"
+    },
+    {
+      "id": "go-http-json",
+      "source": "docs/courses/go/go-http-json.md",
+      "sha256": "1bcd7575800ae228554bfeac891f8c3b6f3318116672bf81ceffcacb7c96c126"
+    },
+    {
+      "id": "go-json-boundary",
+      "source": "docs/courses/go/go-json-boundary.md",
+      "sha256": "e84821699b4517b9502e08c2dd15349e9756c8ac3e184c6a288cde15af1df2c9"
+    },
+    {
+      "id": "go-http-testing",
+      "source": "docs/courses/go/go-http-testing.md",
+      "sha256": "51f74f420929369b534159b3496887b5f2c065e060970a52a2ce881581e079d6"
+    },
+    {
+      "id": "go-web-frameworks",
+      "source": "docs/courses/go/go-web-frameworks.md",
+      "sha256": "034fc763e1744de3b5e03419ad4d9b221b1908bdf4f4e2bf7498872c48b97c84"
+    },
+    {
+      "id": "go-templates",
+      "source": "docs/courses/go/go-templates.md",
+      "sha256": "c91093c67363671e97ac6c640b8629129cf575726be8cdf50368205c3a268d6d"
+    },
+    {
+      "id": "go-sql-tables",
+      "source": "docs/courses/go/go-sql-tables.md",
+      "sha256": "0a4b01b58b2fc1dbb7beae047e6bc6042a0d503e3ee98ffef7fe1bc7852c8740"
+    },
+    {
+      "id": "go-sql-crud",
+      "source": "docs/courses/go/go-sql-crud.md",
+      "sha256": "07c299349c63e99377bfc2c171ab8a04fa7af2ccb84227715bd42654bcc2d9a4"
+    },
+    {
+      "id": "go-database-go",
+      "source": "docs/courses/go/go-database-go.md",
+      "sha256": "6c7d6cc972f20c34afc38dde83917049516ed704addcc385c22a8ef5deb05d1a"
+    },
+    {
+      "id": "go-transactions",
+      "source": "docs/courses/go/go-transactions.md",
+      "sha256": "2e06e69c055e2d2ef60761c2bdfa22bd76e7ad8ea56908f2495ffae70c70c33c"
+    },
+    {
+      "id": "go-repository",
+      "source": "docs/courses/go/go-repository.md",
+      "sha256": "e33edb0f1f3c676c78038b91917ac4e89ab7117803a5b07988c1b385116eef82"
+    },
+    {
+      "id": "go-config",
+      "source": "docs/courses/go/go-config.md",
+      "sha256": "cbe9d9b7223898e7b85cbfc169bbaedb0cc8b2337e905f79954a09107888ffa0"
+    },
+    {
+      "id": "go-pagination",
+      "source": "docs/courses/go/go-pagination.md",
+      "sha256": "956f454658c66d7ea6b688cb0520ea664cd7fc342ae4f27536cd6b419abb0071"
+    },
+    {
+      "id": "go-goroutines",
+      "source": "docs/courses/go/go-goroutines.md",
+      "sha256": "3b56c56ad833223faec7bfad6c633fcb3454dc0a3fa32ecb2b2edcecc7c5d991"
+    },
+    {
+      "id": "go-mutex",
+      "source": "docs/courses/go/go-mutex.md",
+      "sha256": "a02ea334385da9d4e22488a3888c626f022448cf3b2ecfb1651da007ef466870"
+    },
+    {
+      "id": "go-crud",
+      "source": "docs/courses/go/go-crud.md",
+      "sha256": "3e7484e6cefd21c67d4a4c9d548e05b889f99db1b9491c3aaf845b9f5c048fc5"
+    },
+    {
+      "id": "go-channels",
+      "source": "docs/courses/go/go-channels.md",
+      "sha256": "2825b799f8c761cd7c1476547c0d434f787a101f28607752f5be18d7da8ea144"
+    },
+    {
+      "id": "go-context",
+      "source": "docs/courses/go/go-context.md",
+      "sha256": "af97a2cadd862caca5fcd274b9167e369b639f79b9f3a8685b5e80debd1a79ae"
+    },
+    {
+      "id": "go-type-assertion",
+      "source": "docs/courses/go/go-type-assertion.md",
+      "sha256": "39937d2001067d0bc323607265b2572cae0ee74529a36a22bc04fdb581372561"
+    },
+    {
+      "id": "go-generics",
+      "source": "docs/courses/go/go-generics.md",
+      "sha256": "c54896472ae82581d16db6f807c4284469faac08f602c8263eeafa770233d959"
+    },
+    {
+      "id": "go-passwords",
+      "source": "docs/courses/go/go-passwords.md",
+      "sha256": "ff05127f860517463175b169e1d8bd985495373445cffc5b844bdc8fa2c4a7c7"
+    },
+    {
+      "id": "go-sessions",
+      "source": "docs/courses/go/go-sessions.md",
+      "sha256": "d23230af06de39f88f0848be0426f38bdabe5a8f19d5692630f40539bf811b90"
+    },
+    {
+      "id": "go-authorization",
+      "source": "docs/courses/go/go-authorization.md",
+      "sha256": "231b4584b5e17b7622b874978c07a901430154098439fe1bbf2ad74869566c47"
+    },
+    {
+      "id": "go-shutdown",
+      "source": "docs/courses/go/go-shutdown.md",
+      "sha256": "6042a0ce5c319293f238238addc4f1aec98528b0bddb506789363c52c14b8088"
+    },
+    {
+      "id": "go-containers",
+      "source": "docs/courses/go/go-containers.md",
+      "sha256": "7f198a8e88eaf9b7d007528ef9659a097363456485de00f6fb0a26ed1f461d64"
+    },
+    {
+      "id": "go-ci",
+      "source": "docs/courses/go/go-ci.md",
+      "sha256": "4694715fd3b6e902be51f44452889380120318c29412d959ab9ec1883bce7df2"
+    },
+    {
+      "id": "go-performance",
+      "source": "docs/courses/go/go-performance.md",
+      "sha256": "8c636225adfb1d2f5246932a596c0ef88e88ae6ca1799bc0c1eb929e30c4094b"
+    },
+    {
+      "id": "go-recovery",
+      "source": "docs/courses/go/go-recovery.md",
+      "sha256": "64392737375e0ac01d04f5ee81656e40c1a778b1d68956092d555ec166d608a2"
+    },
+    {
+      "id": "web-roles",
+      "source": "docs/courses/web/web-roles.md",
+      "sha256": "1caa4876292cd761e5d2a3dc69b5d6445fa9baa56ebe3473f08e3d194e104b81"
+    },
+    {
+      "id": "web-document",
+      "source": "docs/courses/web/web-document.md",
+      "sha256": "9c7e34b9cc2949f580b2c74e33f71df81648f6fbe8b1383e9950495640193caa"
+    },
+    {
+      "id": "web-elements",
+      "source": "docs/courses/web/web-elements.md",
+      "sha256": "60e8f8824a5233787c9f7bf9e4da51e1a2f744d9ce17c8c3138bd25a6c1a3f60"
+    },
+    {
+      "id": "web-text",
+      "source": "docs/courses/web/web-text.md",
+      "sha256": "590c4ec82a645daee46d41c802ff3a18d73a5d081a04a1f04d37aa64fbb7bc1c"
+    },
+    {
+      "id": "web-links",
+      "source": "docs/courses/web/web-links.md",
+      "sha256": "6417c4758be72eec8415c8d305ddfa980949e1700b7aa83bfa660dc16cc9e8da"
+    },
+    {
+      "id": "web-images",
+      "source": "docs/courses/web/web-images.md",
+      "sha256": "9baf4af55fd65491a9c9399a7df04f4570d9bb5ee1610f6564f844339477141c"
+    },
+    {
+      "id": "web-sections",
+      "source": "docs/courses/web/web-sections.md",
+      "sha256": "27ff74c0d43c688294ed6fd5d4ac3d4e3e677b1f901c359e95071ec4c9c80769"
+    },
+    {
+      "id": "web-forms",
+      "source": "docs/courses/web/web-forms.md",
+      "sha256": "2faded9b804edcb9d6e33c71e18779128450ed2cb0b9b8755cd557d9d7d95ae1"
+    },
+    {
+      "id": "web-css",
+      "source": "docs/courses/web/web-css.md",
+      "sha256": "a86a104389d43313f014d438c82e5e95cb70df04102796b7bf047a8be65a9b64"
+    },
+    {
+      "id": "web-selectors",
+      "source": "docs/courses/web/web-selectors.md",
+      "sha256": "339a3c9ac4d0fc616f4839b1ad3c7a2f6086453454cfc7f4b52526f12a37f05d"
+    },
+    {
+      "id": "web-cascade",
+      "source": "docs/courses/web/web-cascade.md",
+      "sha256": "ab3ce363cb20155d4242f30655ff0da969181ae3ee13064ab7ca4e5ccaafcde2"
+    },
+    {
+      "id": "web-units",
+      "source": "docs/courses/web/web-units.md",
+      "sha256": "13f9d3c5c452d4cfdfdea0a85946c7ef5cfec369b979539cc12a620cb8da8df2"
+    },
+    {
+      "id": "web-box",
+      "source": "docs/courses/web/web-box.md",
+      "sha256": "8deb6dffe499736a09eb07e7bec31053bcc56780f6a79b252c566a1b58a0915d"
+    },
+    {
+      "id": "web-project-profile",
+      "source": "docs/courses/web/web-project-profile.md",
+      "sha256": "f2bd9c483976ba3a72b5b2232cf3a1f1c72944ea813dd0aca5027fc4cb2998ad"
+    },
+    {
+      "id": "web-flow",
+      "source": "docs/courses/web/web-flow.md",
+      "sha256": "bc16ca765889ecd705b754aca21f1d1569a97f56eccb8c7836a67ac2ff9a1496"
+    },
+    {
+      "id": "web-flex",
+      "source": "docs/courses/web/web-flex.md",
+      "sha256": "4e9be8f3f5989cba6f3c2e62f8fe989fb3697cdbb43f4fa417e200f6a58a64e2"
+    },
+    {
+      "id": "web-grid",
+      "source": "docs/courses/web/web-grid.md",
+      "sha256": "0888b477e84a8de37c925960d1c712abab01a7f654a57ec941b627a8423af519"
+    },
+    {
+      "id": "web-responsive",
+      "source": "docs/courses/web/web-responsive.md",
+      "sha256": "17c0f7aeb2039b3fd86a8fde0f6ce92fc2e3a3710f79b03088f5621bcba6b55d"
+    },
+    {
+      "id": "web-position",
+      "source": "docs/courses/web/web-position.md",
+      "sha256": "7d71450dd8a22cef6068e0839124bf61ffe715794f419bee9d36538d858075cb"
+    },
+    {
+      "id": "web-overflow",
+      "source": "docs/courses/web/web-overflow.md",
+      "sha256": "b765e42b5aa889f584de6e9426926442b0e17fa5ec111f5c13f5595873befcc6"
+    },
+    {
+      "id": "web-css-variables",
+      "source": "docs/courses/web/web-css-variables.md",
+      "sha256": "64aa0387fe68504832517f179aa833cc84f4f2f91bf58ce58e6c05c129e1ad79"
+    },
+    {
+      "id": "web-project-responsive",
+      "source": "docs/courses/web/web-project-responsive.md",
+      "sha256": "2d4df4ecdbb88d39d431f91bdfcbd252c1ed50f879661c382ef8b03482409471"
+    },
+    {
+      "id": "web-js-start",
+      "source": "docs/courses/web/web-js-start.md",
+      "sha256": "5ae56f1734add657c5c9175bade837f1cbd76630d1e0ab9d05e2dfc2b0b7c9a9"
+    },
+    {
+      "id": "web-js-variables",
+      "source": "docs/courses/web/web-js-variables.md",
+      "sha256": "7d2a41585e829904d0710ae7599fbed22a678e0f449f94371fc3af9636b03507"
+    },
+    {
+      "id": "web-js-operators",
+      "source": "docs/courses/web/web-js-operators.md",
+      "sha256": "f7558a325caaa58bd9e1c2bb5dfc4e24478ad61b739a80175bab15bbe8e4eac0"
+    },
+    {
+      "id": "web-js-strings",
+      "source": "docs/courses/web/web-js-strings.md",
+      "sha256": "c3588c25a82ad7796940bcea89039e3e6b931b774360a62d1af241c377807f4e"
+    },
+    {
+      "id": "web-js-if",
+      "source": "docs/courses/web/web-js-if.md",
+      "sha256": "38a7448b2ab6f23c1b4404c38828087a7f2c97e97134d516acf9de9c6f057170"
+    },
+    {
+      "id": "web-js-loops",
+      "source": "docs/courses/web/web-js-loops.md",
+      "sha256": "40b9c940697abac8214cca04f52134d09243a5975b77bff6de17bb9e8e3fdb9a"
+    },
+    {
+      "id": "web-js-functions",
+      "source": "docs/courses/web/web-js-functions.md",
+      "sha256": "820117bbe183c328c961d8dd29374f4b8c26fb6396997e8fd5228389640b877f"
+    },
+    {
+      "id": "web-js-scope",
+      "source": "docs/courses/web/web-js-scope.md",
+      "sha256": "0af1c82ae1dba2c7f5b0ff4b669a2c0ea70b2ac56457a2c829f0f1766f78d71b"
+    },
+    {
+      "id": "web-js-arrays",
+      "source": "docs/courses/web/web-js-arrays.md",
+      "sha256": "1ad9149b4d890a4515b6637dfa2b60995baab6fcb23f17802480a07e03f48c97"
+    },
+    {
+      "id": "web-js-objects",
+      "source": "docs/courses/web/web-js-objects.md",
+      "sha256": "45a47796aea3a420dbbe49b855605ad5513793089c66f763c582f505c4cbcf2b"
+    },
+    {
+      "id": "web-json",
+      "source": "docs/courses/web/web-json.md",
+      "sha256": "a9515d5bb0a73d3b66882c9b8719f60bda2ebceac169e7b71fec3e06970d7a37"
+    },
+    {
+      "id": "web-js-callbacks",
+      "source": "docs/courses/web/web-js-callbacks.md",
+      "sha256": "54a7db3a631655dc605e7f34fd40a9e2e9a05bf55d35790a7776b940074b75d9"
+    },
+    {
+      "id": "web-js-map",
+      "source": "docs/courses/web/web-js-map.md",
+      "sha256": "e7663924b5da898daaeeb564b52bf4b7ebdfa8647059be34155474a202eb9698"
+    },
+    {
+      "id": "web-dom",
+      "source": "docs/courses/web/web-dom.md",
+      "sha256": "866e7cc4c85e9b7da545ceb5c430447399e373c5b5c471996031da10777a568c"
+    },
+    {
+      "id": "web-events",
+      "source": "docs/courses/web/web-events.md",
+      "sha256": "33579fbb53f84c8122e7d945beadb4187d5692e3b98ef498fe95b7e4b33258c3"
+    },
+    {
+      "id": "web-dom-list",
+      "source": "docs/courses/web/web-dom-list.md",
+      "sha256": "2f413aa78c5907bb344b749c47fad57c80362bc5d0bedff42e290b6c7a6a9f12"
+    },
+    {
+      "id": "web-ui-state",
+      "source": "docs/courses/web/web-ui-state.md",
+      "sha256": "7d9edf63df727227c9f0f58fe6fd4e551a0666204d78519e9215d049e4d27894"
+    },
+    {
+      "id": "web-js-errors",
+      "source": "docs/courses/web/web-js-errors.md",
+      "sha256": "cc00dd562c77fa0c006a0a15d76e69b670676aa6bb4cfc6eebce539ccdf54d4e"
+    },
+    {
+      "id": "web-promise",
+      "source": "docs/courses/web/web-promise.md",
+      "sha256": "169704d6bc43539121f66a88f8d7f02fa11f937dd0e7eba90bfe64cda3c4175c"
+    },
+    {
+      "id": "web-async",
+      "source": "docs/courses/web/web-async.md",
+      "sha256": "01e0bb6b9c963cdf41b21cb1a27cfbeea3e5ed55cd2cc41b48ef8734845cee8c"
+    },
+    {
+      "id": "web-modules",
+      "source": "docs/courses/web/web-modules.md",
+      "sha256": "eaf11a6386454636077e1a18c6cb0f386343fc202af9d1d55026e55cad450a4f"
+    },
+    {
+      "id": "web-storage",
+      "source": "docs/courses/web/web-storage.md",
+      "sha256": "5e7d3941b5a47a7e51b7f23cccab1c0b96875678c8715b4bf1d4e7cdeae34672"
+    },
+    {
+      "id": "web-fetch",
+      "source": "docs/courses/web/web-fetch.md",
+      "sha256": "745f7338652c88da44f3afa65a86584a845c06899c4ff4491b8850ca77c48755"
+    },
+    {
+      "id": "web-request-states",
+      "source": "docs/courses/web/web-request-states.md",
+      "sha256": "52dbb94aec9b475436884cf926f437b81f48b9967e5cd242f33621bb8a08f2f2"
+    },
+    {
+      "id": "web-cancel-request",
+      "source": "docs/courses/web/web-cancel-request.md",
+      "sha256": "d923f5ae462f46b9a1abe0992ed2a30ce88fcfb50a15393b94f5ae0d86533fb1"
+    },
+    {
+      "id": "web-rendering",
+      "source": "docs/courses/web/web-rendering.md",
+      "sha256": "bbece034d152153facfd558633de6031ec292552656adcddedca34ab96f357e0"
+    },
+    {
+      "id": "web-git",
+      "source": "docs/courses/web/web-git.md",
+      "sha256": "7168403c3914e663237fe58f4b09dc2345882909e1891a076a696b619ac61f8b"
+    },
+    {
+      "id": "web-npm",
+      "source": "docs/courses/web/web-npm.md",
+      "sha256": "3c42a1f2ac563a13a7d14ef82fc03fd0800ba2d054f248267d3a56632dd6098c"
+    },
+    {
+      "id": "web-frameworks",
+      "source": "docs/courses/web/web-frameworks.md",
+      "sha256": "23c75b46db1e62ad7005f28af0f6b3efa51a8cad917a66fe1989a5dcde3fa5e9"
+    },
+    {
+      "id": "web-typescript",
+      "source": "docs/courses/web/web-typescript.md",
+      "sha256": "d4c95860093029b8254e39b41b604279953f51c69b389e0634162b5cb8961b3f"
+    },
+    {
+      "id": "web-narrowing",
+      "source": "docs/courses/web/web-narrowing.md",
+      "sha256": "be79194803064e16a9bfb70c21b56f4abe6730bf35bae504a4e6385ae3142231"
+    },
+    {
+      "id": "web-react",
+      "source": "docs/courses/web/web-react.md",
+      "sha256": "e70cb9434896f7d0f7f738f819f6faa273fd8175680c7676e28f3a1c6e761813"
+    },
+    {
+      "id": "web-vue",
+      "source": "docs/courses/web/web-vue.md",
+      "sha256": "c7bfbfa9f94ecbbfe9b9f4a033365e39a1ce23e38e3df1bca767b29f66467d48"
+    },
+    {
+      "id": "web-component-requests",
+      "source": "docs/courses/web/web-component-requests.md",
+      "sha256": "3e773583fec2cda59900d920c3d6b084907979a5b5915dd8ab3d772ba4086ade"
+    },
+    {
+      "id": "web-testing",
+      "source": "docs/courses/web/web-testing.md",
+      "sha256": "cad1f68e4d6bda90abfbc8de957b29396d5adbe77634b361679bec303575b3fc"
+    },
+    {
+      "id": "web-quality",
+      "source": "docs/courses/web/web-quality.md",
+      "sha256": "3e5149130693ddd897c1a583d92adb2c4dc9c2bfa7eec378d96ea9aa84d62d5b"
+    },
+    {
+      "id": "web-deploy",
+      "source": "docs/courses/web/web-deploy.md",
+      "sha256": "4cf3411d9952ead7669703f838532479a3735f76628c79994b22822a44236123"
+    },
+    {
+      "id": "web-fullstack",
+      "source": "docs/courses/web/web-fullstack.md",
+      "sha256": "87ec80d3550e79095d3e8cdbf85ff5a272da8de8d06ff234c889fab12c59b41f"
+    }
+  ],
+  "limits": [
+    "Real PostgreSQL tests explicitly SKIP without TEST_DATABASE_URL (3 test entries).",
+    "No actual Docker/Linux OS signal, remote CI, cloud publish, or restored-database HTTP end-to-end execution in this round.",
+    "Vue build/basic browser comparison is not claimed as full vue-tsc coverage.",
+    "Teaching review and example runs do not mark learner completion."
+  ]
+}

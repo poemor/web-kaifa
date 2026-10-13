@@ -49,7 +49,13 @@ func decodeJSON(w http.ResponseWriter, r *http.Request, dst any) bool {
 		return false
 	}
 	if err = d.Decode(new(any)); err != io.EOF {
-		fail(w, 400, "invalid_json", "只接受一个 JSON 对象")
+		// 第二次读取也可能触发正文上限，不能把超限误报成普通 JSON 错误。
+		var large *http.MaxBytesError
+		if errors.As(err, &large) {
+			fail(w, 413, "body_too_large", "请求体不能超过 8192 字节")
+		} else {
+			fail(w, 400, "invalid_json", "只接受一个 JSON 对象")
+		}
 		return false
 	}
 	return true

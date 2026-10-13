@@ -1,0 +1,1025 @@
+{
+  "scope": [
+    "go-vscode",
+    "go-program",
+    "go-syntax",
+    "go-variables",
+    "go-types",
+    "go-constants",
+    "go-operators",
+    "go-strings",
+    "go-if",
+    "go-switch",
+    "go-for",
+    "go-functions",
+    "go-scope",
+    "go-recursion",
+    "go-project-minutes",
+    "go-arrays",
+    "go-slices",
+    "go-slice-sharing",
+    "go-range",
+    "go-returns",
+    "go-maps",
+    "go-unicode",
+    "go-pointers",
+    "go-structs",
+    "go-methods",
+    "go-interfaces",
+    "go-errors",
+    "go-defer",
+    "go-packages",
+    "go-testing",
+    "go-json",
+    "go-input",
+    "go-files",
+    "go-sort",
+    "go-project-wordfreq"
+  ],
+  "reviews": [
+    {
+      "id": "go-vscode",
+      "verdict": "pass",
+      "evidence": "完整复读工具职责、原hello目录及新增“独立准备第二份练习”（93–103行）。新任务允许取用尚未讲语法的最小源码，但目录打开、独立模块、保存、运行、终端位置与两次未保存/保存输出必须自行完成；没有把换原文件文字当独立操作。catalog checks包含新目录与故障辨认，原缺口已解决。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-program",
+      "verdict": "pass",
+      "evidence": "完整复读正文和catalog程序，新“独立写两句输出”（81–89行）要求空白main.go组织包、导入、入口和两次Println，不可复制替字；两行文字、换序和入口解释均可验收。所用结构和调用全在本章先定义，没有提前要求变量、自定义函数或JSON。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-syntax",
+      "verdict": "pass",
+      "evidence": "完整复读正文及catalog，新“自行安排说明与语句”（80–88行）要求空白程序、自定行注释/两行块注释位置、仅两条输出、圈出显示数据并自修括号。正常两行与编译拒绝后恢复有具体反馈，只使用程序结构课及本章语法。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-variables",
+      "verdict": "pass",
+      "evidence": "完整复读声明/赋值/读取与catalog一致的程序；新增“独立表示一次数据变化”（88–96行）由读者命名并从空白声明、更新、两次打印，验收10→25及10→0。没有把赋值等同输出或重复:=，也未提前使用条件、循环或函数。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-types",
+      "verdict": "pass",
+      "evidence": "完整复读类型、零值、Printf格式与catalog。新“借书记录选择类型”（86–101行）要求自行命名/选型、零值后赋合法值、核对0 0.0 false空串与2 1.5 true阿青，并实际制造数量赋文字的类型错误；类型和占位符都已在本章定义。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-constants",
+      "verdict": "pass",
+      "evidence": "完整复读正文、比较的先行定义和catalog。新“区分自己的规则和数据”（73–83行）从空白选择固定30分钟目标/可变计划，只打印声明值；29/30/31、禁止目标再赋值与修改声明40后的结果明确。不使用尚未教的控制流程，独立选择const的原缺口已解决。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-operators",
+      "verdict": "pass",
+      "evidence": "完整复读正文和catalog。77、83行已将零除终止限定整数，85行分别说明浮点变量可能Inf/NaN与常量零除编译拒绝，未再泛化所有变量除法。87–103行独立分装任务从输入计算箱数、余数、布尔结果，17/16/0三组表格可手算，只用已定义运算与输出，不提前写if。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 2,
+        "resolvedOriginalIssueCount": 2,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-strings",
+      "verdict": "pass",
+      "evidence": "完整复读字面量、变量、拼接/格式化与catalog。79–87行新报告由空白文件组织称呼/分钟变量和两条消息，明确不能写死整句；阿青30与学习小组0的两组输出、占位符与两行换行可验收。%s/%d、连接和输出均已教。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-if",
+      "verdict": "pass",
+      "evidence": "if/else 先定义布尔条件、互斥分支与继续执行；score=60 的逐行解释及59/60/100表格与 catalog 输出一致。非法范围任务要求读者亲手加前置分支，验收-1/120及原边界；if score 的类型失败明确，已形成实际变式。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-switch",
+      "verdict": "pass",
+      "evidence": "case、逗号匹配、default 和普通 case 不继续执行都在代码前定义。原例故意将未知值归工作日，正文坦诚限制；新增工作日 case 与未知星期分支是可验收的业务变式，字符串误写的编译错误有反馈。正文与 catalog 相同。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-for",
+      "verdict": "pass",
+      "evidence": "完整复读循环四步、状态表、break/continue说明与catalog。85–93行从空白求偶数和须自行确定起点/条件/更新/循环外累积，6→12、5→6、0→0和前三轮0/2/2有反馈；只用此前if、余数和本章for，不要求range或自定义函数。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-functions",
+      "verdict": "pass",
+      "evidence": "定义/调用/参数/返回的角色及 func Add 签名分解具体，执行路线2、3→a、b→return→result→Println清楚；完整代码与 catalog 一致。把打印误作返回会编译失败，Multiply 要自行写输入输出类型并用正数、零、负数验收。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-scope",
+      "verdict": "pass",
+      "evidence": "同名内外块与整数参数副本有完整四行输出及逐位置表格；链接到函数课，源码/catalog一致。返回并由main赋回、在main错误读取n、改内层名字与独立Double(4)=8覆盖了名字范围和传值，未把参数更新误说成调用者自动变化。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-recursion",
+      "verdict": "pass",
+      "evidence": "先定义阶乘、递归、停止与输入逐步缩小，再给完整main.go及5→1调用/1→120返回表。0/1/3和非法负数的实际含义清楚；不要求危险耗尽调用空间。独立Sum有输入范围与0/3反馈，例子与 catalog 相同。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-project-minutes",
+      "verdict": "pass",
+      "evidence": "计划时长的输入规则、非负小整数范围、20×3/15×3/0天输出、60边界故意改错及90分钟独立重写均具体。正文与catalog及 exercises/go/study-minutes/main.go 一致，README/go.mod/测试的功能边界真实。初查下载ZIP是旧无注释源码，root重建后本审核已复读ZIP的main.go、go.mod、README.md、main_test.go并逐一确认规范换行后与目录源一致，该缺口已消除。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-arrays",
+      "verdict": "pass",
+      "evidence": "完整复读数组类型、下标、len、复制与catalog。78–88行独立四项测量任务要求声明、访问/更新第四项、打印长度和复制后单独改第一项；14→24、长度4、原[11 12 13 24]/副本[99 12 13 24]正确，未提前使用切片或range。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-slices",
+      "verdict": "pass",
+      "evidence": "完整复读切片/append/范围/容量与catalog。75–89行独立字符串清单需按实际长度展示至多两项，0/1/2项及追加SQL后长度3和展示前两项可核对。明确可写在main、不需要range或多返回值；安全终点只依赖已学len、变量和if。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-slice-sharing",
+      "verdict": "pass",
+      "evidence": "完整复读共享、copy方向/目标长度及catalog。77行已在三参数make实验前分解长度和容量，0长度/len(a)容量与复制项数0的原因清楚。83–99行独立备份直接在main用make/copy完成，空、[4]、[4 7]表格及两边修改结果正确，不要求未教的切片返回函数。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 2,
+        "resolvedOriginalIssueCount": 2,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-range",
+      "verdict": "pass",
+      "evidence": "完整复读切片range下标/值、下划线与写回实验及catalog。77–85行独立及格人数任务由空白选择结果变量并累计人数，59/60/100→2、空→0、59→0、60→1可手算；明确不能用下标当成绩，所用条件/累计均为已学语法。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-returns",
+      "verdict": "pass",
+      "evidence": "完整复读多返回值正文及catalog。79–91行失败实验给出可整体替换First的函数，先读values[0]后检查并最终return，所属文件/原main/import/恢复明确；实查该函数先输出8 true，再在空切片运行时index out of range，已不先报missing return。95–109行独立Last要求自行空检查/末项下标/双结果，空、[0]、[8 9]三组反馈正确。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 2,
+        "resolvedOriginalIssueCount": 2,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-maps",
+      "verdict": "pass",
+      "evidence": "完整复读map键值、缺键/零键、nil写入与catalog。81–91行空白课程预约任务用已教的字符串切片range计数，通过已知键读取，明确暂不要求map双结果遍历；go2/web1、键数2、sql缺失/显式0/删除及键数3→2的状态可独立核对。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-unicode",
+      "verdict": "pass",
+      "evidence": "完整复读字节/码点/UTF-8/rune和catalog。82–96行把安全首码点转成空白程序任务，中文6/2→中、A中4/2→A、空0/0→没有首项正确；非空判断、[]rune、%c均已定义，未误称所有视觉组合字符都只有一个码点。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-pointers",
+      "verdict": "pass",
+      "evidence": "完整复读地址和值、副本、&/*、nil以及catalog。82–96行独立Increment依赖目标当前值并写回调用者，3→4、0→1、-2→-1和调用前后打印明确；参数和地址均已有定义，不要求unsafe或nil处理的未实现功能。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-structs",
+      "verdict": "pass",
+      "evidence": "完整复读类型/实际值、字段、零值、复制和catalog。77–87行独立StudyRecord由读者命名字段和选型、声明三项新格式并创建两条记录；0/false零值、10/true更新与第二条不变可核对，未继续沿用Problem换标题或提前引入方法。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-methods",
+      "verdict": "pass",
+      "evidence": "完整复读正文与catalog。13行已区分空参数括号和括号后的返回类型；79行明确裸写p.MarkSolved作为独立语句是函数值未使用的编译失败，非运行后忽略。81–91行空白SetTitle使用指针接收者/字符串参数，仅改一条标题，保留Solved及另一条记录，空标题%q反馈明确，原三项缺口已解决。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 3,
+        "resolvedOriginalIssueCount": 3,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-interfaces",
+      "verdict": "pass",
+      "evidence": "先把接口定义为准确匹配的方法约定，并解释Name() string、User实际方法、接口保存具体值及不能直接读NameText。完整源码/catalog匹配；Team是自行增加的第二种类型/行为实现，方法签名不匹配有失败反馈，nil/后续断言边界未夸大。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-errors",
+      "verdict": "pass",
+      "evidence": "完整复读error/nil/errors.New、数据占位与返回停止及catalog。86–96行独立SquareNonNegative需自行拒绝负数和先查err，3→9、0→合法0、-2只输出错误不使用占位有明确反馈；限定小整数，未把大数溢出检测说成已有功能。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-defer",
+      "verdict": "pass",
+      "evidence": "完整复读登记/参数求值/后进先出/函数结束与catalog。70–87行独立带布尔参数的函数同时验证正常和提前return，普通输出读2、登记输出仍1且结束先于登记值的四行表格正确。明确defer属于该函数，不用尚未教的匿名函数或后台任务。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-packages",
+      "verdict": "pass",
+      "evidence": "新独立模块路径example.com/book/packages、go.mod/main.go/calc/add.go结构、完整两份源码、导入路径与调用名区分、运行目录均明确，catalog module与文件一致。小写导出与不存在路径分别给失败类别，独立新增Multiply从包外调用能验收组织行为。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-testing",
+      "verdict": "pass",
+      "evidence": "先定义独立期望比较，再给被测main.go与main_test.go完整文件；_test后缀、Test命名、*testing.T、Fatalf、./...与go run区别明确。减法变异的-1/FAIL及恢复流程可观察，catalog含同一变异；三项新测试要求自行建立测试函数、调用、比较和失败报告，非虚称课程完成。",
+      "issues": [],
+      "recheck": {
+        "reviewed": false,
+        "basis": "首轮全文审核已通过；本轮返修复核范围是另外26篇，维持首轮判定。"
+      }
+    },
+    {
+      "id": "go-json",
+      "verdict": "pass",
+      "evidence": "完整复读JSON格式、字节、标签、目标地址、err及catalog。102–118行独立StudyRecord两个导出字段/标签/两处错误处理、真实解码字段结果具体；复习20、minutes文字20和尾逗号分别成功、错类型、坏格式，字段顺序不作验收。所有语法在本章或此前已定义，不提前要求HTTP/数据库。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-input",
+      "verdict": "pass",
+      "evidence": "完整复读Scanner正文与catalog，并复读最后修正的第15、91、93、97、110行。82–93行Buffer初始16/最大32字节参数明确定义，实查40个a只显示token too long，移去限制后同样输入正常读出。95–110行空白问候区分非空/空行/EOF/异常及恢复；新增顺序矛盾现已改为必须先Scan、成功才能Text、Scan=false看Err，明确Err可先于Text，原两项及本轮新增发现均已解决。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 2,
+        "resolvedOriginalIssueCount": 2,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-files",
+      "verdict": "pass",
+      "evidence": "完整复读路径/工作目录、全部文件、ReadFile及catalog真实message.txt。88–98行独立新建UTF-8 notes.txt并从空白写读取逻辑，先error、再成功字节长度/内容，有内容/空文件/改名缺失三种输出、实际目录/路径和恢复要求具体，只用已学文件读取与条件。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-sort",
+      "verdict": "pass",
+      "evidence": "完整复读Fields/ToLower、map键、sort.Strings原地排序及catalog。94–108行独立小写名称切片计数/收集键/排序/查值，lin重复、并列、空输入反馈正确。明确本题只用sort.Strings，次数优先比较留作下节纸上规则，不提前要求比较函数。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    },
+    {
+      "id": "go-project-wordfreq",
+      "verdict": "pass",
+      "evidence": "完整复读项目正文、catalog example/checks及实际main.go/go.mod/README/main_test.go。26行已在代码前定义map双结果第一键/第二值、string/int及与切片下标/值的区别，56行注释说明转Entry的作用；正文与catalog及实际main.go规范换行后逐字一致。命令行、比较函数、零长度容量和Top2仍有真实边界，未虚称TopN/清洗/文件读取，原前置缺口已解决。",
+      "issues": [],
+      "recheck": {
+        "reviewed": true,
+        "originalIssueCount": 1,
+        "resolvedOriginalIssueCount": 1,
+        "basis": "完整复读本章正文、catalog example及checks；核对新任务所需语法与正常/边界反馈。"
+      }
+    }
+  ],
+  "summary": "首轮完整审核35篇：9篇pass、26篇needs_fix、32项P2。root返修后，本审核者完整复读全部26篇受影响正文、catalog example/checks及相关wordfreq源码，逐项确认原32项已解决；25项独立任务均从空白自行组织，有可核对正常/边界结果，常量任务未偷用控制流，copy任务在main完成。复读发现go-input旧第15行与新任务第97行的Scanner顺序矛盾，本审核报告给root后又直接复读修正段，已解决。当前35篇均pass、0篇needs_fix；其中9篇沿用首轮通过结论。为新必要疑点只实际运行First先访问后检查、Scanner32字节错误、删除限制后的40字节恢复三个隔离探针，没有重跑34个旧正常例子，临时文件已删除。wordfreq正文/catalog/main.go及运行说明真实一致、没有专用ZIP；study-minutes首轮已确认下载ZIP与四份源文件一致，本轮没有相关源修改。完整网站产物及其余方向ZIP的最终构建/机械检查由root完成，本结论仅覆盖本报告35篇教学源稿。首轮全部findings和第二轮新增发现保留在reviewHistory中。本审核未修改正文、catalog、materials、站点或学习状态；教材审核通过不代表用户完成学习。",
+  "reviewHistory": [
+    {
+      "round": 1,
+      "scope": [
+        "go-vscode",
+        "go-program",
+        "go-syntax",
+        "go-variables",
+        "go-types",
+        "go-constants",
+        "go-operators",
+        "go-strings",
+        "go-if",
+        "go-switch",
+        "go-for",
+        "go-functions",
+        "go-scope",
+        "go-recursion",
+        "go-project-minutes",
+        "go-arrays",
+        "go-slices",
+        "go-slice-sharing",
+        "go-range",
+        "go-returns",
+        "go-maps",
+        "go-unicode",
+        "go-pointers",
+        "go-structs",
+        "go-methods",
+        "go-interfaces",
+        "go-errors",
+        "go-defer",
+        "go-packages",
+        "go-testing",
+        "go-json",
+        "go-input",
+        "go-files",
+        "go-sort",
+        "go-project-wordfreq"
+      ],
+      "reviews": [
+        {
+          "id": "go-vscode",
+          "verdict": "needs_fix",
+          "evidence": "先定义源码、编辑器与工具链；hello/go.mod/main.go 的目录、保存、go run .、输出位置和程序结束均明确。安装入口实际有系统选择、PATH 与模块起步说明；catalog 将本节标为 reference，未假称网站运行 Go。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "主动运行，再看真实输出；参考答案（72、89–91行）",
+              "problem": "验收只有跟随步骤建立 hello，再把现成程序的文字改成另一句；没有脱离步骤重新完成工具操作的独立任务。",
+              "reason": "能跟着点击并改文字，不能证明读者会独立选择工作目录、保存源码、运行和辨认运行的是哪份文件。",
+              "fix": "增加合上步骤后的操作任务：在另一个独立练习目录，用给定最小源码自行完成打开目录、初始化、保存、运行和输出核对；给出一次目录或未保存故障的定位要求。无需提前要求理解下一课语法。"
+            }
+          ]
+        },
+        {
+          "id": "go-program",
+          "verdict": "needs_fix",
+          "evidence": "完整 main.go 与 catalog 相同；package、import、入口、点号、字符串、调用参数逐项定义，执行顺序和“保存/运行/输出”清楚。旧文字、名称错误、括号错误都有自检现象。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；保存、运行与报错自检（59–79行）",
+              "problem": "任务止于改问候文字及恢复拼写，未要求独立写一份新程序。",
+              "reason": "读者可以原样照抄仍通过，无法验收其是否能自己组织包声明、导入、main 和打印调用。",
+              "fix": "增加合上示例后从空 main.go 写两行自定问候的任务，只用本节结构与 Println；先写完整预期输出，再保存运行，并解释入口与两次调用。参考放折叠答案。"
+            }
+          ]
+        },
+        {
+          "id": "go-syntax",
+          "verdict": "needs_fix",
+          "evidence": "行注释、块注释、名字大小写、标点配对均用可见输出解释；完整程序和 catalog 一致。注释第二条语句、改 Println 拼写、删括号等实验区分了编译拒绝与正常执行。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；让错误帮助你认清语法（62–78行）",
+              "problem": "所有任务都是给原例加斜杠、恢复名称或括号，缺少读者自行安排语句与注释的独立变式。",
+              "reason": "只会修改指定位置不足以说明能区分自己写的说明文字、字符串数据和执行语句。",
+              "fix": "新增从空文件组织两条输出、一个行注释和一个块注释的任务，由读者决定注释位置；先预测哪些文字出现，再运行核对，并保留一次自己修复语法错误的记录。"
+            }
+          ]
+        },
+        {
+          "id": "go-variables",
+          "verdict": "needs_fix",
+          "evidence": "声明/赋值/读取的三种动作有表格与状态轨迹；:= 与 =、变量名与字符串区别明确。完整例子先打印80后打印90，与 catalog 匹配，重复声明实验给出 no new variables 类别。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；试一次声明错误，再恢复（70–86行）",
+              "problem": "只把80/90换成60/75，或给第二次赋值改符号，没有独立建模一个会变化的数据。",
+              "reason": "复制原变量后换数字不能验证读者会自行声明、更新、读取变量，也容易把赋值误当自动输出。",
+              "fix": "增加从空 main.go 表达另一项数据变化的任务，例如练习分钟先10后25；不给实现代码，要求自己选 var 或 := 声明、用 = 更新，并在更新前后打印和解释两行结果。"
+            }
+          ]
+        },
+        {
+          "id": "go-types",
+          "verdict": "needs_fix",
+          "evidence": "四种常见类型、各自零值、空字符串与空格及格式占位符对应均已定义。Printf 的格式与变量顺序可跟踪，count=\"3\" 的编译失败和合法赋值有明确反馈；正文与 catalog 相同。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；验证类型限制（68–84行）",
+              "problem": "练习只对给定四个变量填入指定新值，没有让读者独立选择类型与声明数据。",
+              "reason": "能把值抄进现成声明，不等于能根据数据含义选择 int、float64、bool、string 并检查零值。",
+              "fix": "增加从空文件建立一条新的生活场景数据的任务，要求读者为数量、小数、是否和称呼选择类型，先观察零值，再赋合法值输出；给预期结果和一个类型错误的验收条件，不给整段实现。"
+            }
+          ]
+        },
+        {
+          "id": "go-constants",
+          "verdict": "needs_fix",
+          "evidence": "常量禁止运行逻辑中重新赋值，与编辑声明后重跑的区别明确；首次出现的 >= 已在用前定义。边界59/60/61与常量赋值编译失败都有反馈，catalog 与正文一致。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；观察不能重新赋值的含义（55–71行）",
+              "problem": "任务均围绕原 passScore/score 改数值或加一行非法赋值，缺少独立区分规则和数据的变式。",
+              "reason": "这些操作不能验收读者会自己决定什么用 const、什么用变量，并组合出一个新的比较。",
+              "fix": "新增合上参考从空文件写另一条固定目标与当前数量，例如目标30分钟，用29/30/31三组数据验收；要求自行声明常量、变量和比较输出，解释修改声明与重新赋值的区别。"
+            }
+          ]
+        },
+        {
+          "id": "go-operators",
+          "verdict": "needs_fix",
+          "evidence": "算术、余数、比较与逻辑表达式均有用途；完整例子明确整数截断、括号顺序与小数结果，和 catalog 相同。正常算式有手算反馈，但失败规则和独立任务仍需修复。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "比较正常、边界与失败输入（83行）",
+              "problem": "“若除数来自运行中的变量，零除法会在运行时导致错误终止”未限定整数，紧邻本课 float64 运算及转换说明，读者会把它当成全部数字类型的规则。",
+              "reason": "本次独立反例 zero:=0.0; fmt.Println(7.0/zero) 实际输出 +Inf、退出0；Go官方规范也区分整数零除与浮点实现行为，见 https://go.dev/ref/spec#Arithmetic_operators。错误概括会使读者错误预测失败分支。",
+              "fix": "把该句明确限定为整数变量的 / 和 % 零除；说明本节不将浮点零除当作可靠的异常检测办法。若给浮点反例，写明工具链实际现象，不把所有变量零除统一称为终止。"
+            },
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；比较正常、边界与失败输入（67–83行）",
+              "problem": "实验只替换打印的算式和现成比较，没有从新问题独立组合运算。",
+              "reason": "逐个抄算式能验证运算结果，却不能说明读者会选择除法、余数和比较来表达一个实际规则。",
+              "fix": "新增从空 main.go 写分装任务，例如17本书每箱4本，独立输出整箱数、余书数和是否有剩余；再验收16本的边界。仅用已学变量、运算和输出，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-strings",
+          "verdict": "needs_fix",
+          "evidence": "引号数据与变量名、拼接与格式化、Print/Println/Printf区别、常见转义和反引号均解释。两行输出可跟随数据流，类型错误与不换行实验具体，正文/catalog一致。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；做两组可区分的实验（61–77行）",
+              "problem": "任务只有替换称呼和20分钟，或把 Println 换成 Print；没有独立生成另一条包含文字和数字的消息。",
+              "reason": "改字面值不能验收读者会主动选择拼接或格式化、安排占位符顺序和换行。",
+              "fix": "增加合上示例从空文件输出自己的学习报告任务，包含一个字符串变量和一个整数变量、两条不同输出；给可核对输入输出，要求解释 %s/%d 或拼接的选择，参考代码折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-if",
+          "verdict": "pass",
+          "evidence": "if/else 先定义布尔条件、互斥分支与继续执行；score=60 的逐行解释及59/60/100表格与 catalog 输出一致。非法范围任务要求读者亲手加前置分支，验收-1/120及原边界；if score 的类型失败明确，已形成实际变式。",
+          "issues": []
+        },
+        {
+          "id": "go-switch",
+          "verdict": "pass",
+          "evidence": "case、逗号匹配、default 和普通 case 不继续执行都在代码前定义。原例故意将未知值归工作日，正文坦诚限制；新增工作日 case 与未知星期分支是可验收的业务变式，字符串误写的编译错误有反馈。正文与 catalog 相同。",
+          "issues": []
+        },
+        {
+          "id": "go-for",
+          "verdict": "needs_fix",
+          "evidence": "初始化、每轮条件、主体、更新、累加位置与终端最终输出都有跟踪表。+=、++、break、continue明确解释，3/0边界和循环停止说明可核对，完整例子与 catalog 一致。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；提前结束与跳过一轮（67–83行）",
+              "problem": "练习只改上限，或把已给出的完整 break/continue 片段放进原循环，没有独立写新的循环目标。",
+              "reason": "按现成插入位置操作不能证明读者能自行设初始化、条件、更新和循环外累积变量。",
+              "fix": "新增合上示例从空 main.go 计算1到6偶数之和的任务，只用已学 for、if、% 和输出；给6时12、上限0时0的验收，要求先列至少三轮状态，不把实现放在任务旁。"
+            }
+          ]
+        },
+        {
+          "id": "go-functions",
+          "verdict": "pass",
+          "evidence": "定义/调用/参数/返回的角色及 func Add 签名分解具体，执行路线2、3→a、b→return→result→Println清楚；完整代码与 catalog 一致。把打印误作返回会编译失败，Multiply 要自行写输入输出类型并用正数、零、负数验收。",
+          "issues": []
+        },
+        {
+          "id": "go-scope",
+          "verdict": "pass",
+          "evidence": "同名内外块与整数参数副本有完整四行输出及逐位置表格；链接到函数课，源码/catalog一致。返回并由main赋回、在main错误读取n、改内层名字与独立Double(4)=8覆盖了名字范围和传值，未把参数更新误说成调用者自动变化。",
+          "issues": []
+        },
+        {
+          "id": "go-recursion",
+          "verdict": "pass",
+          "evidence": "先定义阶乘、递归、停止与输入逐步缩小，再给完整main.go及5→1调用/1→120返回表。0/1/3和非法负数的实际含义清楚；不要求危险耗尽调用空间。独立Sum有输入范围与0/3反馈，例子与 catalog 相同。",
+          "issues": []
+        },
+        {
+          "id": "go-project-minutes",
+          "verdict": "pass",
+          "evidence": "计划时长的输入规则、非负小整数范围、20×3/15×3/0天输出、60边界故意改错及90分钟独立重写均具体。正文与catalog及 exercises/go/study-minutes/main.go 一致，README/go.mod/测试的功能边界真实。初查下载ZIP是旧无注释源码，root重建后本审核已复读ZIP的main.go、go.mod、README.md、main_test.go并逐一确认规范换行后与目录源一致，该缺口已消除。",
+          "issues": []
+        },
+        {
+          "id": "go-arrays",
+          "verdict": "needs_fix",
+          "evidence": "固定长度、元素类型、0起下标、len与最后下标、数组复制及固定下标/变量下标失败均用具体值解释；两行输出与 catalog 相同。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；检查访问范围（60–76行）",
+              "problem": "只有把原数组第三项改95、访问同一数组和说明范围，没有独立建立另一种数组数据的任务。",
+              "reason": "按给定下标改值不足以验收读者会自己确定数组长度、元素类型、有效下标和修改位置。",
+              "fix": "增加合上参考从空文件建立另一组固定记录的任务，例如四项整数测量值；要求读取并修改第四项、输出长度，再复制到另一变量验证修改互不影响。给预期状态和越界判断，不提供完整实现。"
+            }
+          ]
+        },
+        {
+          "id": "go-slices",
+          "verdict": "needs_fix",
+          "evidence": "[]int 与数组、切片起止范围、空/nil、len/cap和append返回值均已说明；初始两项追加到三项再取[1:3]的数据路线清楚。空输入与忽略append返回值的编译失败具体，catalog一致。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；零项与范围实验（57–73行）",
+              "problem": "所有实验只给原scores追加90、改初值为空或删除指定取片语句，没有独立写另一份可增长数据。",
+              "reason": "读者可能只照指令接回 append，未证明能自行安排追加、长度检查和安全取片。",
+              "fix": "新增从空 main.go 管理一个[]string列表的变式，独立追加并只展示至多前两项；用初始零项、一项、两项验收，要求先检查长度再决定范围，只使用已学语法。"
+            }
+          ]
+        },
+        {
+          "id": "go-slice-sharing",
+          "verdict": "needs_fix",
+          "evidence": "切片描述与元素、make新空间、copy方向和较短长度、普通整数复制与嵌套共享的边界解释明确。a/b/c状态表、复制项数实验和catalog输出一致，但新参数及独立迁移不足。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "验证 copy 的目标长度（77行）",
+              "problem": "首次出现 make([]int,0,len(a)) 三参数写法，之前只定义 make([]int,len(a))，没有交代第二参数是长度、第三参数是容量。",
+              "reason": "目标长度决定copy能写几项，这正是本节失败实验的核心；只给新调用让零基础读者无法解释0和len(a)分别控制什么。",
+              "fix": "在实验前明确分解 make([]int,长度,容量) 及本例len=0/cap=len(a)，或将实验改为已教的make([]int,0)。说明需要删去所有c[0]读写才可观察复制项数0，再恢复原创建。"
+            },
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；验证 copy 的目标长度（63–79行）",
+              "problem": "只修改原a/b/c的元素和创建参数，没有要求独立写隔离复制的行为。",
+              "reason": "知道某次a/b/c输出不代表能在自己的函数或数据里主动建立副本并验证修改边界。",
+              "fix": "增加独立CloneInts或同等新场景任务，用已学make/copy建立完整副本；验收空、一项、两项，并分别修改原数据与副本确认互不影响。要求先写预测结果，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-range",
+          "verdict": "needs_fix",
+          "evidence": "切片range的第一下标/第二值、单结果与下划线、值副本与按下标写回明确。三轮累加表、空/单项完整输出、原切片修改实验具体，完整代码/catalog一致。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；检验次数和原数据（59–75行）",
+              "problem": "任务止于换空或单项输入及改原元素；缺少由读者独立确定循环结果的另一个目标。",
+              "reason": "只复现总分模板无法验收是否真正分清下标、值与循环外的状态，可能把索引当分数。",
+              "fix": "新增从空文件统计及格人数的任务，输入59/60/100预期2人，空切片0人、仅59为0人；要求自己用range与条件累计并说明是否需要下标，不给实现代码。"
+            }
+          ]
+        },
+        {
+          "id": "go-returns",
+          "verdict": "needs_fix",
+          "evidence": "多个结果按顺序接收、:=与=、占位零和合法零值均用First三种输入解释；完整例子/catalog相同。空集合先检查的核心准确，但其故意错误实验无法产生描述的现象，且缺独立函数变式。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "让空集合拒绝下标读取（79行）",
+              "problem": "要求把空集合if移动到无条件return values[0],true后，再预告空输入运行越界。该修改使函数末尾成为没有else的if，实际会先编译失败。",
+              "reason": "本次按该顺序制作的独立反例退出1，报missing return，未进入运行时下标访问。Go规范要求有结果的函数末尾是终止语句，见 https://go.dev/ref/spec#Terminating_statements。学习者照做却看不到承诺现象。",
+              "fix": "改用明确可编译的失败实验，例如临时删除空检查，保留return values[0],true；或先读取first:=values[0]、再检查并在最后return。给出完整替换函数或精确编辑位置、空输入panic和恢复后的0 false。"
+            },
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；让空集合拒绝下标读取（65–81行）",
+              "problem": "只给First换[]int{0}或破坏已有检查/接收，未独立实现新的双结果函数。",
+              "reason": "改输入无法验收读者会把数据与有效性分开返回，也不能验证会在访问前处理空集合。",
+              "fix": "增加独立Last(values []int)(int,bool)任务，自己返回末项与是否存在；验收空集合、[]int{0}、[]int{8,9}，分别核对0 false、0 true、9 true，参考代码折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-maps",
+          "verdict": "needs_fix",
+          "evidence": "键/值类型、可写字面量、读取不自动加入、值零与exists、delete/len以及nil写入失败均有具体解释。两次go++和web缺失的输出与catalog一致。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；创建可写 map 与 nil map（63–79行）",
+              "problem": "任务只给既有counts插入/删除web或改初始化方式，未自行把一组数据转为新的计数表。",
+              "reason": "不能据此判断读者会自己选择键值类型、累计数据和分清不存在与记录为零。",
+              "fix": "增加从空文件统计另一组字符串，例如课程预约名go/web/go的任务，用已学range与map计数；验收已有键、缺键、显式零键以及删除后的两个结果，要求说明len不是次数总和。"
+            }
+          ]
+        },
+        {
+          "id": "go-unicode",
+          "verdict": "needs_fix",
+          "evidence": "字节、Unicode码点、UTF-8、rune/int32、单/双引号以及用户可见字符边界均已定义。Go中5字节3码点与中文0/3字节下标可追踪，catalog一致；空文本和截断编码的差别已指出。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；用中文证明字节下标的差别（64–80行）",
+              "problem": "练习只有替换为中文或空串，安全取首个码点仅以“若想”描述，没有独立实现与验收要求。",
+              "reason": "读者能记住6与2，仍可能在自己的逻辑中用text[:1]截断UTF-8或对空rune切片索引。",
+              "fix": "将安全取得首个完整码点变成合上示例的独立任务：先非空判断，再转换/取值/按字符显示；验收中文、A中、空字符串，分别预测中字、A与无首项，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-pointers",
+          "verdict": "needs_fix",
+          "evidence": "值副本与地址、&、类型中的*和访问目标的*有逐项表格；指针自身按值复制与改目标整数的区别清楚。完整程序/catalog一致，误传整数的编译失败和nil目标解释具体。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；地址必须指向有效目标（64–80行）",
+              "problem": "任务只是给现成Change增加一次打印、误去掉&再恢复，没有独立用指针完成新修改。",
+              "reason": "不能证明读者会自己定义指针参数、选择目标地址和写入调用者变量，也容易只记住固定的9。",
+              "fix": "新增独立Increment(p *int)行为的任务，在函数中把目标整数增加1而非固定赋9；用初值3、0、-2分别验收4、1、-1，打印调用前后并说明参数复制的是地址，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-structs",
+          "verdict": "needs_fix",
+          "evidence": "类型格式与具体值、字段类型、按名初始化、零值、点号读写及简单字段值复制都有定义；完整程序/catalog匹配，bool误填字符串的失败具体。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；创建、复制并修改两条记录（59–75行）",
+              "problem": "任务仍只新建同一种Problem或按给定other:=p复制，未要求独立设计/声明另一种记录格式。",
+              "reason": "这些操作能显示简单复制，却不足以验收读者会把有关联、不同类型的数据自主组织成结构体与实际记录。",
+              "fix": "新增从空文件声明StudyRecord等新类型的任务，包含文字、分钟整数和完成布尔字段；独立创建两条值、观察未填字段零值并修改一条，给可核对结果并说明另一条不变，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-methods",
+          "verdict": "needs_fix",
+          "evidence": "方法与接收对象、接收者范围、指针写原字段、自动取地址和p.Solved访问均有具体解释；值/指针接收者对比与完整程序/catalog一致。不过空括号含义和裸方法名实验有错误/缺失反馈，且无独立方法变式。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "方法告诉你“对哪条记录做什么”（13行）",
+              "problem": "把“MarkSolved后面的空括号”同时解释为“没有额外参数，也没有返回值”。空参数括号不能说明没有返回值。",
+              "reason": "上节函数已教括号后的返回类型，本句却建立了相反的语法关联；Name() string等无参数但有返回值方法会与这条认识冲突。",
+              "fix": "拆成两句：()表示没有额外参数；括号后未写返回类型，才说明此方法不返回结果。可以用已学func签名作简短对照，不引入新高级概念。"
+            },
+            {
+              "severity": "P2",
+              "location": "对比值接收者与指针接收者（79行）",
+              "problem": "要求只写p.MarkSolved而不加括号，却只说操作不会执行，没有给出本例作为独立语句会被编译拒绝的现象。",
+              "reason": "本次独立反例退出1，报p.MarkSolved (value of type func()) is not used；学习者容易以为程序仍能运行并输出false，而实际不会得到正常输出。",
+              "fix": "明确本例裸写方法名作为独立语句会报未使用的函数值类编译错误，不能把它当作一次调用；恢复()后才会运行并改变状态。无需提前详细讲方法值。"
+            },
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；对比值接收者与指针接收者（63–79行）",
+              "problem": "只有切换接收者星号和恢复调用括号，没有由读者独立定义、调用另一项方法行为。",
+              "reason": "能照位置删除星号不代表能把接收者、参数与字段更新组合成自己的方法。",
+              "fix": "增加独立SetTitle(title string)或同等新行为，使用指针接收者修改原标题并保留Solved；给两条记录与调用后结果，要求自己写方法并解释接收者及参数，参考代码折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-interfaces",
+          "verdict": "pass",
+          "evidence": "先把接口定义为准确匹配的方法约定，并解释Name() string、User实际方法、接口保存具体值及不能直接读NameText。完整源码/catalog匹配；Team是自行增加的第二种类型/行为实现，方法签名不匹配有失败反馈，nil/后续断言边界未夸大。",
+          "issues": []
+        },
+        {
+          "id": "go-errors",
+          "verdict": "needs_fix",
+          "evidence": "error、nil、errors.New及成组import均已解释；Divide的结果/错误与合法零值分离，失败后return阻止使用占位值具体。删return会多印0的实验符合代码，正文/catalog相同。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；验证失败分支也结束得正确（68–84行）",
+              "problem": "任务只有给Divide换参数、删除已有return后恢复，缺独立建立新(值,error)约定的函数。",
+              "reason": "复制err检查只能显示这个除法例子，不能验收读者会自行选择无效输入、返回错误并由调用者停止使用数据。",
+              "fix": "增加独立计算非负整数平方或等价小函数的任务，负数返回说明错误，0返回合法0与nil，正数返回结果；要求自己写调用者先检查err的流程并保存三组输出，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-defer",
+          "verdict": "needs_fix",
+          "evidence": "登记与执行时间、参数登记时求值、后进先出、提前return仍执行、依附函数而非后台均定义；两行输出及新增defer的顺序与catalog可核对，资源未成功打开不可Close的边界真实。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；用输出验证登记时机（52–68行）",
+              "problem": "任务只有把现成第二个defer/return插入原例，没有独立组合一个新函数的正常与提前结束顺序。",
+              "reason": "照抄指定插入位置不能验收读者会自己把defer绑定到当前函数，并区分登记参数与后续变量值。",
+              "fix": "新增从空文件写一个小函数的变式，独立安排普通输出、两个defer和一个可选提前return；同时用整数变量先1后2验证参数登记值。给两条路径完整预期输出，要求先预测再运行，参考代码折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-packages",
+          "verdict": "pass",
+          "evidence": "新独立模块路径example.com/book/packages、go.mod/main.go/calc/add.go结构、完整两份源码、导入路径与调用名区分、运行目录均明确，catalog module与文件一致。小写导出与不存在路径分别给失败类别，独立新增Multiply从包外调用能验收组织行为。",
+          "issues": []
+        },
+        {
+          "id": "go-testing",
+          "verdict": "pass",
+          "evidence": "先定义独立期望比较，再给被测main.go与main_test.go完整文件；_test后缀、Test命名、*testing.T、Fatalf、./...与go run区别明确。减法变异的-1/FAIL及恢复流程可观察，catalog含同一变异；三项新测试要求自行建立测试函数、调用、比较和失败报告，非虚称课程完成。",
+          "issues": []
+        },
+        {
+          "id": "go-json",
+          "verdict": "needs_fix",
+          "evidence": "JSON文字格式、Go值、[]byte/byte/uint8、编码解码、反引号标签、目标地址与err复用均解释；两段独立输入的数据流及数字title/尾逗号失败具体，catalog与正文一致，未把最小示例当严格HTTP校验。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；合法格式也可能类型不匹配（80–100行）",
+              "problem": "任务只把既有Problem的字段值或incoming文字换掉，没有独立设计并验证另一份Go值/JSON对应关系。",
+              "reason": "改既定JSON不能验收读者会自己声明导出字段与标签、准备解码目标地址、处理类型不匹配后停止用数据。",
+              "fix": "新增从空文件为StudyRecord等已知简单记录编解码的变式，自己声明至少字符串和整数/布尔字段及标签；给正常输入、错类型、坏格式的验收，要求打印关键字段而非只看无报错，参考代码折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-input",
+          "verdict": "needs_fix",
+          "evidence": "标准输入、Scanner、Scan/Text/Err、Enter、单行结束、空行与EOF均有具体定义。hello world输入、保存运行、停止与不同系统结束输入方式明确，catalog提供同一输入与输出，但独立迁移和真实异常反馈不足。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；空行与结束输入分别验证（64–80行）",
+              "problem": "只换交给现成程序的称呼、提交空行或EOF，没有独立写处理读取结果的新行为。",
+              "reason": "改变终端输入不等于能自己建立Scanner、决定是否读到数据并安全处理Err，无法验收空行与无数据的区别能否迁移。",
+              "fix": "增加合上参考从空main.go写一行称呼问候的任务，读到正常行输出问候、空行输出单独提示、EOF无行输出单独提示；先检查读取结果/异常，再使用文字，给各条路径的实际输出验收。"
+            },
+            {
+              "severity": "P2",
+              "location": "空行与结束输入分别验证（76–80行）",
+              "problem": "实际要求验证的只有空行、正常结束和Ctrl+C；读取异常只以约64KiB限制带过，没有可复现的异常输入步骤或预期错误类别。",
+              "reason": "空行和EOF都是正常情况，不能证明Err分支工作；本课目标是检查读取错误，零基础读者还不能区分Scan=false的正常结束与异常失败。",
+              "fix": "补一项可在本课环境复现的Scanner异常实验，例如提供明确可复制的过长单行输入夹具/操作，说明运行位置、Scan=false且Err非nil、token too long类现象与恢复短输入后的正常结果。新用到的夹具命令或方法也要定义。"
+            }
+          ]
+        },
+        {
+          "id": "go-files",
+          "verdict": "needs_fix",
+          "evidence": "目录/路径/UTF-8、工作目录与编辑标签区别、main.go/go.mod/message.txt全部文件、ReadFile关闭与字节转string均说明；正常、空文件、缺文件有表格反馈，catalog含真实message.txt且匹配输出。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；用三个文件状态验收（66–86行）",
+              "problem": "练习仅重命名既有路径、清空原message.txt并恢复，没有独立建立读取另一项文件数据的程序。",
+              "reason": "这些状态操作能证明参考处理缺文件，却不能验收读者会自行选路径、创建所需文件并在错误后停止使用字节。",
+              "fix": "增加合上示例从空文件读取notes.txt等新文件的变式，独立输出内容并加一个清楚的成功/空文件判断；验收有内容、空、缺失三种状态，记录工作目录和实际路径，参考代码折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-sort",
+          "verdict": "needs_fix",
+          "evidence": "ToLower/Fields的求值顺序、[]string、空白规则、map键收集、sort.Strings原地修改与字符串顺序边界均解释。多个range结果含义、z/a两组对照和空文本输出清楚，catalog一致；次数优先只作为下节规则讨论。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "自己改一处再运行；明确你到底在按什么排序（76–92行）",
+              "problem": "实践仍只替换原输入字符串，另一项要求是设计下节的次数比较规则，本节没有自己独立写可运行的排序变式。",
+              "reason": "修改原词频例子的文字无法验收读者会自行收集map键、在排序后按键读值；次数排序实现还依赖下节首次定义的比较函数。",
+              "fix": "增加只用本节已教知识的独立任务，例如从空文件对另一组名称去重计数并按字符串顺序输出；给含重复、并列及空输入的预期。将次数降序比较清楚标为纸上规则或留到词频项目，参考实现折叠。"
+            }
+          ]
+        },
+        {
+          "id": "go-project-wordfreq",
+          "verdict": "needs_fix",
+          "evidence": "项目先固定分词/大小写/并列/标点规则，完整Count与命令行main、os.Args/Join、三参数make和匿名比较函数逐项定义；正常/并列/空白/错误排序及独立Top2均有反馈。已完整读实际main.go/go.mod/README/main_test.go，和正文/catalog匹配；TopN、清洗、文件读取等真实未实现。",
+          "issues": [
+            {
+              "severity": "P2",
+              "location": "完整源码与启动位置：for word, count := range counts（54行）；沿数据流读懂 Count（100–106行）",
+              "problem": "这里首次使用map的两个range结果，但此前go-sort只定义map单结果为键；本节“新用到的三个写法”和数据流解释也没有说明word/count分别是键和值。",
+              "reason": "前面切片的双结果range是下标与元素；零基础读者容易把这一组word/count继续当成位置与值，不清楚怎样从map构造Entry，也无法解释计数转排名这一步。",
+              "fix": "在用前定义map双结果range的第一项是键、第二项是该键的值，本例类型为string/int、遍历顺序无保证；给一个go→2如何生成Entry{Word:\"go\",Count:2}的跟踪，并在该循环增加解释此作用的注释。同步catalog及实际main.go。"
+            }
+          ]
+        }
+      ],
+      "summary": "独立逐篇完整阅读Go入门15篇、初阶20篇，以及35篇catalog前置和全部example，共35篇；当前9篇pass、26篇needs_fix，共32项P2。25篇缺少真正独立的小变式：换字面值、照给定步骤插入语句或故意拼写错不能替代独立编写。另需修复整数/浮点零除概括、First故障实验先编译missing return、make三参数未定义、方法空参数与返回值混淆/裸方法语句编译现象、Scanner实际异常实验、map双结果range跳步。只为新发现运行了3个隔离反例，并删除临时文件，没有重复运行已测的全部34个Go正常样例；Go规范作为零除与终止语句的核对依据。study-minutes与wordfreq正文/catalog/仓库源码一致；旧study-minutes ZIP失同步在审核期间由root重建，本审核已逐一确认其main.go、go.mod、README.md、main_test.go与源一致，故第15篇现判pass。这35篇未引用Go HTML模板项目；中级模板不在本审核scope。未改正文、catalog、materials或站点；以上判定是教材质量与相应证据审核，不代表用户完成学习。需要root修复后逐项复读，不能仅靠机械测试将needs_fix改为pass。"
+    },
+    {
+      "round": 2,
+      "scope": [
+        "go-vscode",
+        "go-program",
+        "go-syntax",
+        "go-variables",
+        "go-types",
+        "go-constants",
+        "go-operators",
+        "go-strings",
+        "go-for",
+        "go-arrays",
+        "go-slices",
+        "go-slice-sharing",
+        "go-range",
+        "go-returns",
+        "go-maps",
+        "go-unicode",
+        "go-pointers",
+        "go-structs",
+        "go-methods",
+        "go-errors",
+        "go-defer",
+        "go-json",
+        "go-input",
+        "go-files",
+        "go-sort",
+        "go-project-wordfreq"
+      ],
+      "reviewedChapterCount": 26,
+      "initialIssueCount": 32,
+      "resolvedInitialIssueCount": 32,
+      "additionalFindings": [
+        {
+          "id": "go-input",
+          "verdictAtDiscovery": "needs_fix",
+          "issue": {
+            "severity": "P2",
+            "location": "go-input 第15行与新独立任务第97行（第二轮首次复读时）",
+            "problem": "旧第15行将流程说成Scan→Text→Err且三个动作不能交换，新任务要求Scan→Err→Text/正常结束判断。",
+            "reason": "两种有效流程被写成一条不可交换的硬顺序，读者无法确定应何时检查Err。",
+            "fix": "改成依赖约束：必须先Scan，成功才能Text；Scan=false须用Err区分EOF与读取异常，Err可以在Text之前检查。"
+          },
+          "resolved": true,
+          "resolutionEvidence": "已直接复读最终第15行：必须先执行Scan，成功后Text才代表本次行；调用Scan后可以检查Err，Scan=false用Err区分正常结束/异常；明说Err不是只能放在Text之后。与第97及110行的先排错路径一致。"
+        }
+      ],
+      "probes": [
+        {
+          "probe": "First先读取再检查",
+          "basis": "从go-returns正文的整段替换First函数取源码，放入原catalog main",
+          "goRunExitCode": 1,
+          "observed": "先输出8 true，再panic: runtime error: index out of range [0] with length 0；没有missing return编译错误。"
+        },
+        {
+          "probe": "Scanner32字节限制",
+          "basis": "在catalog go-input scanner创建后按正文添加Buffer(make([]byte,16),32)，输入40个英文a及换行",
+          "goRunExitCode": 0,
+          "observed": "只输出bufio.Scanner: token too long，没有读到前缀。"
+        },
+        {
+          "probe": "Scanner删去临时限制",
+          "basis": "删去上述临时Buffer，仍使用同样40个英文a及换行，验证恢复",
+          "goRunExitCode": 0,
+          "observed": "正常输出读到：后接完整40个a。"
+        }
+      ],
+      "sourceChecks": [
+        "已完整复读wordfreq/main.go、go.mod、README.md、main_test.go；catalog main.go与实际源规范换行后逐字相同。",
+        "本轮未改study-minutes源；首轮已完成其下载ZIP四文件同步复核。",
+        "这35篇没有Go模板项目引用；中级模板不在scope。"
+      ],
+      "finalPass": 35,
+      "finalNeedsFix": 0
+    }
+  ]
+}

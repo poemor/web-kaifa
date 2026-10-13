@@ -15,6 +15,8 @@ new vm.Script(fs.readFileSync(path.join(root, 'assets/learning.js'), 'utf8'));
 new vm.Script(fs.readFileSync(path.join(root, 'assets/getting-started.js'), 'utf8'));
 require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_getting_started.cjs'), '--check'], { stdio: 'inherit' });
 require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_knowledge_guides.cjs'), '--check'], { stdio: 'inherit' });
+require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'build_course_book.cjs'), '--check'], { stdio: 'inherit' });
+require('node:child_process').execFileSync('python', [path.join(__dirname, 'build_course_projects.py'), '--check'], { stdio: 'inherit' });
 require('node:child_process').execFileSync('python', [path.join(__dirname, 'build_followup_examples.py'), '--check'], { stdio: 'inherit' });
 require('node:child_process').execFileSync('python', [path.join(__dirname, 'build_vscode_starter.py'), '--check'], { stdio: 'inherit' });
 require('node:child_process').execFileSync(process.execPath, [path.join(__dirname, 'version_site_assets.cjs'), '--check'], { stdio: 'inherit' });

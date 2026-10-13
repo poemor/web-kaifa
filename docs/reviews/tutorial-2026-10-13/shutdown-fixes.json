@@ -1,0 +1,75 @@
+{
+  "files": [
+    {
+      "file": "E:\\AI\\学习\\exercises\\web\\followup-08\\main.go",
+      "waitLine": 44,
+      "changes": [
+        "等待Shutdown完成后main才结束，defer关闭资源在等待之后",
+        "Shutdown超时明确记录并Close剩余连接"
+      ],
+      "validation": [
+        "实际loopback HTTP请求经手动通道保持在途，来源为该文件的退出goroutine",
+        "取消后监听停止但资源不提前关闭，请求放行后正常finished",
+        "移除等待语句时四份控制流均被测试拒绝"
+      ],
+      "limitations": [
+        "回归提取这四份相同退出控制流，使用标准库与可控context代替OS信号",
+        "这四个完整工程当前需要Go1.26.9及数据库/依赖；没有宣称工程端到端已执行"
+      ]
+    },
+    {
+      "file": "E:\\AI\\学习\\exercises\\web\\followup-09\\main.go",
+      "waitLine": 64,
+      "changes": [
+        "等待Shutdown完成后main才结束，defer关闭资源在等待之后",
+        "Shutdown超时明确记录并Close剩余连接"
+      ],
+      "validation": [
+        "实际loopback HTTP请求经手动通道保持在途，来源为该文件的退出goroutine",
+        "取消后监听停止但资源不提前关闭，请求放行后正常finished",
+        "移除等待语句时四份控制流均被测试拒绝"
+      ],
+      "limitations": [
+        "回归提取这四份相同退出控制流，使用标准库与可控context代替OS信号",
+        "这四个完整工程当前需要Go1.26.9及数据库/依赖；没有宣称工程端到端已执行"
+      ]
+    },
+    {
+      "file": "E:\\AI\\学习\\exercises\\web\\followup-10\\main.go",
+      "waitLine": 80,
+      "changes": [
+        "等待Shutdown完成后main才结束，defer关闭资源在等待之后",
+        "Shutdown超时明确记录并Close剩余连接"
+      ],
+      "validation": [
+        "实际loopback HTTP请求经手动通道保持在途，来源为该文件的退出goroutine",
+        "取消后监听停止但资源不提前关闭，请求放行后正常finished",
+        "移除等待语句时四份控制流均被测试拒绝"
+      ],
+      "limitations": [
+        "回归提取这四份相同退出控制流，使用标准库与可控context代替OS信号",
+        "这四个完整工程当前需要Go1.26.9及数据库/依赖；没有宣称工程端到端已执行"
+      ]
+    },
+    {
+      "file": "E:\\AI\\学习\\exercises\\web\\followup-11\\main.go",
+      "waitLine": 80,
+      "changes": [
+        "等待Shutdown完成后main才结束，defer关闭资源在等待之后",
+        "Shutdown超时明确记录并Close剩余连接"
+      ],
+      "validation": [
+        "实际loopback HTTP请求经手动通道保持在途，来源为该文件的退出goroutine",
+        "取消后监听停止但资源不提前关闭，请求放行后正常finished",
+        "移除等待语句时四份控制流均被测试拒绝"
+      ],
+      "limitations": [
+        "回归提取这四份相同退出控制流，使用标准库与可控context代替OS信号",
+        "这四个完整工程当前需要Go1.26.9及数据库/依赖；没有宣称工程端到端已执行"
+      ]
+    }
+  ],
+  "result": "PASS",
+  "mutationResult": "all 4 rejected missing wait",
+  "testOutput": "=== RUN   TestInFlightRequestsFinishBeforeResourcesClose\n=== RUN   TestInFlightRequestsFinishBeforeResourcesClose/followup-08\n2026/10/13 19:33:11 Shutdown开始：停止监听，等待在途请求，最多5秒\n2026/10/13 19:33:12 Shutdown等待结束，准备释放资源\n=== RUN   TestInFlightRequestsFinishBeforeResourcesClose/followup-09\n2026/10/13 19:33:12 Shutdown开始：停止监听，等待在途请求，最多5秒\n2026/10/13 19:33:12 Shutdown等待结束，准备释放资源\n=== RUN   TestInFlightRequestsFinishBeforeResourcesClose/followup-10\n2026/10/13 19:33:12 Shutdown开始：停止监听，等待在途请求，最多5秒\n2026/10/13 19:33:12 Shutdown等待结束，准备释放资源\n=== RUN   TestInFlightRequestsFinishBeforeResourcesClose/followup-11\n2026/10/13 19:33:12 Shutdown开始：停止监听，等待在途请求，最多5秒\n2026/10/13 19:33:12 Shutdown等待结束，准备释放资源\n--- PASS: TestInFlightRequestsFinishBeforeResourcesClose (0.87s)\n    --- PASS: TestInFlightRequestsFinishBeforeResourcesClose/followup-08 (0.42s)\n    --- PASS: TestInFlightRequestsFinishBeforeResourcesClose/followup-09 (0.14s)\n    --- PASS: TestInFlightRequestsFinishBeforeResourcesClose/followup-10 (0.15s)\n    --- PASS: TestInFlightRequestsFinishBeforeResourcesClose/followup-11 (0.16s)\nPASS\nok  \texample.com/shutdown-proof\t3.146s\n"
+}

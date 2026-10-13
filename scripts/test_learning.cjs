@@ -106,7 +106,7 @@ fs.mkdirSync(qa, { recursive: true });
       for (const [hash, title] of [
         ['/knowledge', '把知识连成一张地图'], ['/practice', '挑一个任务，留下实际结果'],
         ['/topic/go-collections', 'slice、map 与 Unicode'], ['/exercise/go-health', '用测试读懂 /health 与 /add'],
-        ['/exercise/web-form', '做一个可用键盘填写的表单'], ['/web', '从第一张网页开始'], ['/go', '从一个 Go 程序开始']
+        ['/exercise/web-form', '做一个可用键盘填写的表单'], ['/web', 'Web 从网页基础到完整应用'], ['/go', 'Go 从语法入门到后端项目']
       ]) {
         await navigate(hash, title);
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);

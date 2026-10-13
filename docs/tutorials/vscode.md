@@ -386,20 +386,15 @@ VS Code 有“用户设置”和“工作区设置”。本教程的 `.vscode/se
 
 `type: go` 选择 Go 扩展的调试器；`request: launch` 表示启动新的调试程序；`mode: debug` 由调试器构建当前源码；`program` 与 `cwd` 都使用当前独立项目。调试不是继续启动你昨天编译的 hello.exe，也不需要先点击“编译”才 F5。[Go 扩展官方调试说明](https://github.com/golang/vscode-go/blob/master/docs/debugging.md)
 
-### A. 保留 Go 第1课的源码，直接调试 greeting
+### A. 保留 Go 第1课的最小源码
 
-如果你的 main 函数里是 `fmt.Println(greeting("Go"))`，跟这组步骤；不需要为了调试覆盖自己的源码。先保存，左侧“运行和调试”选 **Go: 调试当前项目**。
+新版第1课只有 `fmt.Println("你好，Go")`。在这行按F9设置断点，再按F5，程序应在打印前暂停。main还没有name/message，变量面板没有它们正常；按F10执行这条打印，再继续结束。
 
-1. 在你文件里实际的 `fmt.Println(greeting("Go"))` 这一行按 F9，行号旁应出现红色断点点；不要去找这份源码没有的 `fmt.Println(message)`。
-2. F5 启动，应在该语句执行前暂停。此时 main 还没有 name/message 这两个局部变量，Variables 没有它们是正常的。
-3. 按 F11 进入 greeting，查看调用栈是否为 `main.greeting`，Locals 的参数 **name** 应为 **Go**。name 是 greeting 的参数，不是 main 的局部变量；修改源码里调用的名字后，对应实际值也会变化。
-4. 用 F10 观察返回语句，或 Shift+F11 返回调用者，再 F5 继续。底部 **Debug Console** 应显示你源码里的两行文字；运行结束后不会一直停在断点上。
-
-如果你已经改过这个调用，断点应设在自己的实际语句上，观察自己传入的参数。想跟下面的 name/message 演示，可回 [第9节的独立示例](../../index.html#/setup?topic=editor&step=module)，在新的练习目录使用它，保留原作品。
+这个例子不定义greeting函数，不要求进入不存在的函数。已有旧草稿含greeting时，按自己的实际源码设置断点；想学习参数与局部变量，先学函数和作用域，再用下面第9节的完整示例。
 
 ### B. 使用第9节的变量示例，观察 name 和 message
 
-下面六步对应第9节完整源码中的 `name := "Go"`、`message := greeting(name)` 和 `fmt.Println(message)`。先核对文件确实包含这些语句，再照做；两份程序的输出相同，不代表变量和断点位置相同。
+下面六步对应第9节完整源码中的 `name := "Go"`、`message := greeting(name)` 和 `fmt.Println(message)`。先核对文件确实包含这些语句，再照做；两份程序不同，不代表变量和断点位置相同。
 
 1. 按 `Ctrl+S` 保存 `main.go`，确定第8节 dlv 安装成功。左侧点击 **Run and Debug（运行和调试，带小虫的三角图标）**，顶部下拉选择 **Go: 调试当前项目**。
 2. 在 `fmt.Println(message)` 这一行点行号左侧空白区域，或把光标放该行按 **F9**；应该出现红色断点点。笔记本功能键需 Fn 时按 Fn+F9，也可用 Run 菜单的 Toggle Breakpoint（切换断点）。

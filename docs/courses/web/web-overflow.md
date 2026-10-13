@@ -1,0 +1,63 @@
+# 图片裁剪与长内容溢出
+
+处理长串换行和图片展示比例，定位撑宽原因。
+
+## 图片裁剪与长内容溢出是什么意思
+
+溢出来自内容尺寸大于可用空间。文本换行、布局允许收缩、图像限制尺寸是三种不同处理。object-fit:cover裁剪填充展示框，不是改变原图片文件。
+
+## 分别检查文本和图像
+
+**先找到超出容器的内容，再选择换行、缩放或裁剪。** 长单词没有正常断点，`overflow-wrap:anywhere` 允许在必要位置断开；`width:100%` 随容器走，`max-width:400px` 限制上限。`min-width:0` 对需要收缩的 Flex/Grid 项尤其有用，避免默认最小内容尺寸把布局撑开。
+
+本例先用长文本观察：按 F12 打开开发者工具，选择 Elements（元素），用左上角的元素选择工具点击这段 p；在 Styles（样式）中取消或重新勾选 overflow-wrap 声明。再打开设备工具栏（通常 Ctrl+Shift+M），输入 320px 宽，观察长串是否超出卡片、页面底部是否出现横向滚动条，恢复规则后再比较。Computed（计算值）的盒模型图可看段落所在盒子的宽度。
+
+scrollWidth 是 DOM 中描述内容所需横向宽度的属性，clientWidth 是当前内部可见宽度，它们不是 CSS 声明，不能在 Styles 中按普通样式属性查找。**本节还没学 JavaScript，不要求读取这两个数值；当前验收只观察长串换行和横向滚动。** 数值读取放到后面的 DOM 学习范围，不用一条未解释的控制台代码替代当前操作。
+
+图片部分使用前面学过的 img：如果只要等比例缩放，给它 `max-width:100%; height:auto`。如果想在固定展示框内填满，可以给 `width:100%; height:160px; object-fit:cover`；cover 保持比例并裁掉超出框的部分，contain 保持比例且完整显示，可能留下空白。这些只改变展示，不修改原图片文件。
+
+用前面的本地图像单独试 cover 与 contain，比较图像内容有没有被裁掉。不要把 `overflow-x:hidden` 作为第一步，它只把超出的内容藏起来，可能让文字或控件无法访问。
+
+## 先看一个完整例子
+
+在自己的独立练习文件夹新建 index.html，保存下面完整内容，用浏览器打开。修改后先保存，再刷新。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>本节小练习</title>
+  <style>
+* { box-sizing: border-box; }
+body { margin: 16px; }
+/* 卡片随容器缩窄，同时给出宽度上限，不锁死手机布局。 */
+article { width: 100%; max-width: 400px; min-width: 0; }
+/* 必要时断开没有空格的长串，防止内容把容器撑宽。 */
+p { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+<article><h1>活动说明</h1><p>verylongunbrokencontentabcdefghijklmnopqrstuvwxyz0123456789</p></article>
+</body>
+</html>
+```
+
+## 逐步读懂这个例子
+
+长串没有空格，默认可能无法在合适位置断开。overflow-wrap:anywhere允许必要时换行。width:100%按容器计算，max-width设上限。先找到超宽元素，再决定改文本还是布局。
+
+## 自己改一处再观察
+
+按上面的 Elements/Styles 步骤取消 overflow-wrap，在320px观察长串是否撑出卡片、页面是否横向滚动；再勾选恢复。
+
+### 参考答案
+
+长串可能造成横向溢出，恢复后应能在卡片内断行。
+
+## 本节容易混淆的地方
+
+用overflow-x:hidden藏住内容不能证明布局修好了。图片用max-width:100%，需要裁切才加固定比例与object-fit。
+
+参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

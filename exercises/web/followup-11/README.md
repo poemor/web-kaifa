@@ -10,6 +10,8 @@ Compose：先安装并启动Docker，docker version确认Server可用；复制.e
 
 备份：PowerShell `./deploy/backup.ps1`；恢复到新独立演练库 `./deploy/restore-practice.ps1 -BackupFile 'backups/实际文件.dump' -TargetDatabase 'club_restore_test01'`。脚本不会覆盖业务库、不删除已存在演练库，验证计数/孤儿/版本；备份需包含一条报名关系。dump/哈希/个人数据受保护，不提交。RPO/RTO、异机备份与回滚详见讲义。
 
+恢复库的 HTTP 验收：按 [恢复课“让独立 API 读取恢复库”](../../../docs/courses/go/go-recovery.md) 的完整 PowerShell 步骤授予 `club_app` 恢复库权限，再用 `docker compose run` 新开 `club-restore-api`，覆盖恢复库连接与 `APP_ORIGIN`，只发布本机 `18771`。该实例继承应用数据库密码，留在原 Compose 网络中；不把容器的 `db:5432` 当本机地址。独立浏览器重新登录，核对备份时的活动与报名，最后只停止和删除演练容器。原 API、恢复库与备份文件保留；这些步骤须在有 Docker 和实际备份的环境执行，本轮没有把源码审查计作恢复端到端通过。
+
 CI：将本完整目录作为自己的独立Git仓库，复制ci/verify.yml到.github/workflows/verify.yml；工作流真实vet/test/build/迁移/E2E，无--if-present。此学习仓库的ci示例本身没有在远程执行，不声称创建文件即测试绿。
 
 公网：实际云主机/域名/DNS/80、443/受控secret/防火墙/备份准备好后，填写DOMAIN，使用compose.production.yml覆盖，会移除app主机端口并启HTTPS Secure Cookie。仍需补可信代理IP/共享限速会话/账户恢复/监控/真实容量验证，不能把本机开发服务直接开放。当前审核机仅Compose配置解析，容器daemon、云DNS/TLS没有实跑；原生API/SQL/浏览器与pg_dump/restore实跑有报告。

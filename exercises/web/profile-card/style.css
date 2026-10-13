@@ -1,0 +1,11 @@
+/* 全部元素采用 border-box，让声明宽度包含内边距与边框。 */
+* { box-sizing: border-box; }
+/* font 简写为 字号/行高 字体；sans-serif 使用设备的无衬线字体。 */
+body { margin: 0; padding: 20px; font: 16px/1.7 sans-serif; background: #f4f7fa; color: #1e293b; }
+/* 小屏占满可用宽度，大屏上限 480px；左右 auto 分配剩余空间。 */
+.card { width: 100%; max-width: 480px; padding: 24px; margin: 20px auto; background: white; border: 1px solid #cbd5e1; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.2rem; }
+a { color: #164e80; }
+/* Tab 聚焦链接时显示外框，不靠颜色变化猜测位置。 */
+a:focus-visible { outline: 3px solid #164e80; outline-offset: 4px; }

@@ -27,8 +27,16 @@ func hashPassword(password string) (string, error) {
 	return fmt.Sprintf("$argon2id$v=19$m=65536,t=3,p=4$%s$%s", base64.RawStdEncoding.EncodeToString(salt), base64.RawStdEncoding.EncodeToString(hash)), nil
 }
 func verifyPassword(encoded, password string) bool {
+	// 先限制编码文本，避免 Split 和 Base64 解码为任意长存储值分配空间。
+	if len(encoded) > 128 {
+		return false
+	}
 	p := strings.Split(encoded, "$")
 	if len(p) != 6 || p[1] != "argon2id" || p[2] != "v=19" || p[3] != "m=65536,t=3,p=4" {
+		return false
+	}
+	// 固定16字节盐、32字节结果；解码前就核对对应编码长度。
+	if len(p[4]) != base64.RawStdEncoding.EncodedLen(16) || len(p[5]) != base64.RawStdEncoding.EncodedLen(32) {
 		return false
 	}
 	salt, e1 := base64.RawStdEncoding.DecodeString(p[4])

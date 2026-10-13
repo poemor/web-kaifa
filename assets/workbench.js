@@ -134,6 +134,16 @@
 
   function updateOutline(lesson) {
     const outline = $('#course-outline');
+    const bookRoute=window.CourseBook.routeInfo();
+    if(bookRoute){
+      outline.hidden=false;
+      outline.innerHTML=window.CourseBook.outline(bookRoute.track,bookRoute.id,bookRoute.params);
+      requestAnimationFrame(()=>{
+        const list=outline.querySelector('.outline-links'),active=outline.querySelector('[aria-current="page"]');
+        if(list?.clientHeight && active)list.scrollTop+=active.getBoundingClientRect().top-list.getBoundingClientRect().top-list.clientHeight/2;
+      });
+      return;
+    }
     const match = location.hash.match(/^#\/followup\/web\/(\d+)(?:[?]|$)/);
     if (!lesson && match && window.LEARNING_CURRICULUM.web.followups[Number(match[1])]) {
       outline.hidden = false;
@@ -167,6 +177,7 @@
     if(currentLesson)return currentLesson;
     const [kind,id,stage]=location.hash.replace(/^#\/?/,'').split('?')[0].split('/');
     const data=window.LEARNING_LAB;
+    if(kind==='learn')return window.CourseBook.context(id,stage);
     if(kind==='followup' && id==='web' && /^\d+$/.test(stage||'')){
       const index=Number(stage),item=window.LEARNING_CURRICULUM.web.followups[index];
       if(item)return {id:'followup/web/'+index,title:item.title,task:item.task,checks:item.checks,starterCode:''};
@@ -348,8 +359,10 @@
     currentLesson = lesson;
     currentKey = learningContext()?.id || 'custom';
     draft = { ...(drafts.get(currentKey) || emptyDraft()) };
-    const courseView = Boolean(lesson) || route === 'followup';
+    const bookView=Boolean(window.CourseBook.routeInfo());
+    const courseView = Boolean(lesson) || route === 'followup' || bookView;
     document.body.classList.toggle('lesson-view', courseView);
+    document.body.classList.toggle('book-view',bookView);
     document.body.dataset.route = route;
     $('#site-navigation').open = !courseView;
     updateOutline(lesson);

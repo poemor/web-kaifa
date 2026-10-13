@@ -1,0 +1,1351 @@
+{
+  "scope": [
+    "web-roles",
+    "web-document",
+    "web-elements",
+    "web-text",
+    "web-links",
+    "web-images",
+    "web-sections",
+    "web-forms",
+    "web-css",
+    "web-selectors",
+    "web-cascade",
+    "web-units",
+    "web-box",
+    "web-project-profile",
+    "web-flow",
+    "web-flex",
+    "web-grid",
+    "web-responsive",
+    "web-position",
+    "web-overflow",
+    "web-css-variables",
+    "web-project-responsive",
+    "web-js-start",
+    "web-js-variables",
+    "web-js-operators",
+    "web-js-strings",
+    "web-js-if",
+    "web-js-loops",
+    "web-js-functions",
+    "web-js-scope",
+    "web-js-arrays",
+    "web-js-objects",
+    "web-json",
+    "web-js-callbacks",
+    "web-js-map",
+    "web-dom",
+    "web-events",
+    "web-dom-list",
+    "web-ui-state",
+    "web-js-errors",
+    "web-promise",
+    "web-async",
+    "web-modules",
+    "web-storage",
+    "web-fetch",
+    "web-request-states",
+    "web-cancel-request",
+    "web-rendering",
+    "web-git",
+    "web-npm",
+    "web-frameworks",
+    "web-typescript",
+    "web-narrowing",
+    "web-react",
+    "web-vue",
+    "web-component-requests",
+    "web-testing",
+    "web-quality",
+    "web-deploy",
+    "web-fullstack"
+  ],
+  "reviews": [
+    {
+      "id": "web-roles",
+      "verdict": "pass",
+      "evidence": "复读完整正文，新增课程介绍页需求分工，包含跨电脑存储边界，明确本章只需文字判断，不要求未教实现。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "完整 index.html 与 catalog 一致；编辑器、浏览器、保存/刷新及三种语言职责清楚。当前练习仅分别改 h1 与 title，验收仍复述示例职责。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "增加不看示例的概念变式：给出一张课程介绍页的新需求（简介内容、窄屏间距、点击后改变计数），让读者为每项选择语言并解释运行位置；给出自查要点，保持本章仅认识职责的范围。"
+        }
+      ],
+      "repairEvidence": "复读完整正文，新增课程介绍页需求分工，包含跨电脑存储边界，明确本章只需文字判断，不要求未教实现。",
+      "reviewedPrerequisites": [],
+      "sourceSha256": "1caa4876292cd761e5d2a3dc69b5d6445fa9baa56ebe3473f08e3d194e104b81"
+    },
+    {
+      "id": "web-document",
+      "verdict": "pass",
+      "evidence": "复读完整正文，新增空recipe/index.html的独立菜名与两段食谱，标签页/正文位置与错误结构自查具体。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "head/body、doctype、lang、UTF-8、viewport、title/h1 有逐项作用说明，正常文字和标签页位置明确，完整文件一致。练习只有更换 title/h1。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "要求从空 index.html 写一个不同主题的标题和段落，先写标签页与正文的预期；不提供整份答案，给出 head/body 和两个显示位置的验收清单。"
+        }
+      ],
+      "repairEvidence": "复读完整正文，新增空recipe/index.html的独立菜名与两段食谱，标签页/正文位置与错误结构自查具体。",
+      "reviewedPrerequisites": [
+        "web-roles"
+      ],
+      "sourceSha256": "9c7e34b9cc2949f580b2c74e33f71df81648f6fbe8b1383e9950495640193caa"
+    },
+    {
+      "id": "web-elements",
+      "verdict": "pass",
+      "evidence": "复读完整正文，新通知只强调截止时间并自定唯一id/注释；正常显示与错误嵌套关闭顺序可核对。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "开始/结束标签、属性名和值、strong 嵌套和 HTML 注释已定义；错误闭合结构有明确提醒。练习只是移动已有 strong。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一条新段落，给它自己的 id 并只强调句中一小段，预测强调范围；让读者说明嵌套关闭顺序，并给出结构与显示的自查结果。"
+        }
+      ],
+      "repairEvidence": "复读完整正文，新通知只强调截止时间并自定唯一id/注释；正常显示与错误嵌套关闭顺序可核对。",
+      "reviewedPrerequisites": [
+        "web-document"
+      ],
+      "sourceSha256": "60e8f8824a5233787c9f7bf9e4da51e1a2f744d9ce17c8c3138bd25a6c1a3f60"
+    },
+    {
+      "id": "web-text",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：标题/段落/列表定义与新增第三项、ul→ol的独立小变式保持首轮合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "标题层级、p/ul/ol/li、源码空白和 br 的区别清楚；完整页可核对一个 h1、h2、段落、两项列表。添加自己第三项并把无序列表改成有序列表构成小变式，编号结果可自查；前置 elements 足够。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：标题/段落/列表定义与新增第三项、ul→ol的独立小变式保持首轮合格。",
+      "reviewedPrerequisites": [
+        "web-elements"
+      ],
+      "sourceSha256": "590c4ec82a645daee46d41c802ff3a18d73a5d081a04a1f04d37aa64fbb7bc1c"
+    },
+    {
+      "id": "web-links",
+      "verdict": "pass",
+      "evidence": "复读完整正文，主例锚点改为已教h2；独立双页往返/页内跳转和移动about到pages的相对路径失败有反馈。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "href、完整/相对/上级/片段路径与键盘操作已解释；锚点失配再恢复有反馈。主例含 section，当前章未解释其职责，且它在后面的 sections 才系统教学。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立创建同目录的 about.html，给两页写往返链接；先预测地址与页面结果，再故意移动一个文件验证相对路径失败，给出目录/链接自查表。"
+        },
+        {
+          "severity": "P2",
+          "location": "完整例子中的 <section id=\"events\">",
+          "problem": "第一次使用 section 早于语义区块章节，当前正文没有定义这个标签。",
+          "reason": "初学者能理解 id，却不知道 section 是什么，会把未讲的标签当成链接必须的固定外壳。",
+          "fix": "在当前章用一句具体说明 section 是有主题的分区、此处作为已存在的链接目标；或改用已经学过的标签并保持目标有效。"
+        }
+      ],
+      "repairEvidence": "复读完整正文，主例锚点改为已教h2；独立双页往返/页内跳转和移动about到pages的相对路径失败有反馈。",
+      "reviewedPrerequisites": [
+        "web-text"
+      ],
+      "sourceSha256": "6417c4758be72eec8415c8d305ddfa980949e1700b7aa83bfa660dc16cc9e8da"
+    },
+    {
+      "id": "web-images",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：自有images/photo.png路径/alt的迁移任务和缺图反馈、数据地址说明保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "src/alt、空元素、宽高、data 地址、SVG/像素格式均作了当前范围解释；120×80 蓝底白圆与缺图反馈明确。正文给出独立本地图像 images/photo.png 的文件和路径替换步骤并要求描述实际信息，能从内嵌图迁移到自己的素材；完整代码与 catalog 一致。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：自有images/photo.png路径/alt的迁移任务和缺图反馈、数据地址说明保持合格。",
+      "reviewedPrerequisites": [
+        "web-links"
+      ],
+      "sourceSha256": "9baf4af55fd65491a9c9399a7df04f4570d9bb5ee1610f6564f844339477141c"
+    },
+    {
+      "id": "web-sections",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：区域职责、父子后代定义与独立新增同级section/h2/p结构任务保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "header/nav/main/section/footer 和 div/article 职责明确，定义了父子/后代关系，说明语义不会自动定位。完整例子的导航目标存在；新增一个带 h2、段落的 section 是独立结构变式，可按一个主主题、两个同级分区核对。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：区域职责、父子后代定义与独立新增同级section/h2/p结构任务保持合格。",
+      "reviewedPrerequisites": [
+        "web-text",
+        "web-links"
+      ],
+      "sourceSha256": "27ff74c0d43c688294ed6fd5d4ac3d4e3e677b1f901c359e95071ec4c9c80769"
+    },
+    {
+      "id": "web-forms",
+      "verdict": "pass",
+      "evidence": "复读完整正文，两字段必填表单需自写唯一id/name/label；空一项、虚构值查询、重复id/for失配与键盘均可验收。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "label/for/id/name、input/button 类型、required、GET/query 及无后端边界清楚；空输入、虚构输入、标签失配和键盘结果都有反馈。缺第二个独立控件组合任务。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立增加“学习目标”文字输入与对应 label，使用新的唯一 id/name；验收点击两个标签分别聚焦正确控件，必填反馈与虚构字段查询值可观察，仍说明没有后端保存。"
+        }
+      ],
+      "repairEvidence": "复读完整正文，两字段必填表单需自写唯一id/name/label；空一项、虚构值查询、重复id/for失配与键盘均可验收。",
+      "reviewedPrerequisites": [
+        "web-elements"
+      ],
+      "sourceSha256": "2faded9b804edcb9d6e33c71e18779128450ed2cb0b9b8755cd557d9d7d95ae1"
+    },
+    {
+      "id": "web-css",
+      "verdict": "pass",
+      "evidence": "复读完整正文，新提示页从空文件写h1和两个p及外部样式；独立两组颜色/背景、错属性仍保留其他规则的结果明确。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "选择器/声明块、冒号分号、color/background-color、三种引入和外部文件步骤明确，注释有效。练习只改同一段的颜色并增加给定背景。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立为新标题和新段落写不同的文字/背景规则，再拆为 style.css；先预测两个元素结果，故意拼错一项属性观察仅该声明失效，给出自查结果。"
+        }
+      ],
+      "repairEvidence": "复读完整正文，新提示页从空文件写h1和两个p及外部样式；独立两组颜色/背景、错属性仍保留其他规则的结果明确。",
+      "reviewedPrerequisites": [
+        "web-sections"
+      ],
+      "sourceSha256": "a86a104389d43313f014d438c82e5e95cb70df04102796b7bf047a8be65a9b64"
+    },
+    {
+      "id": "web-selectors",
+      "verdict": "pass",
+      "evidence": "新增从空白制作主标题/三公告，要求自定共享类与唯一id，并验证第三公告加入/移除类的匹配数量。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "标签/类/ID、组合和后代选择器、多类与唯一 id 讲清；主例只类标题绿，元数据准确。练习是在原两项上加同一类或把选择器改成 h2。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "给读者三条自己写的内容，要求仅两条共享样式、另一个唯一主标题有不同颜色；从空规则独立选择 class/id，提供匹配数量和默认项自查结果。"
+        }
+      ],
+      "repairEvidence": "新增从空白制作主标题/三公告，要求自定共享类与唯一id，并验证第三公告加入/移除类的匹配数量。",
+      "reviewedPrerequisites": [
+        "web-css"
+      ],
+      "sourceSha256": "339a3c9ac4d0fc616f4839b1ad3c7a2f6086453454cfc7f4b52526f12a37f05d"
+    },
+    {
+      "id": "web-cascade",
+      "verdict": "pass",
+      "evidence": "新增自写父容器/两段：一段继承，一段两个同权重直接类规则，顺序交换和移除直接声明的结果可观察。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "普通同来源未分层规则的权重边界、直接赋值与继承、红→蓝→绿输出和 DevTools 划线说明正确；目前只删除已有规则。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一个父容器和两个段落，设计同权重前后覆盖与继承两种结果；先预测颜色，再改变规则顺序核对，验收必须说出匹配、直接声明与继承的原因。"
+        }
+      ],
+      "repairEvidence": "新增自写父容器/两段：一段继承，一段两个同权重直接类规则，顺序交换和移除直接声明的结果可观察。",
+      "reviewedPrerequisites": [
+        "web-selectors"
+      ],
+      "sourceSha256": "ab3ce363cb20155d4242f30655ff0da969181ae3ee13064ab7ca4e5ccaafcde2"
+    },
+    {
+      "id": "web-units",
+      "verdict": "pass",
+      "evidence": "新增独立两个阅读区，20/25px字号、32/40px行高、384/480px上限与固定12px结果正确，单位空格有无效反馈。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "px/rem/em/% 的参照、16px→480px、无单位行高和上限含义具体，主例结果一致；练习只把根字号改成 20。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立给一段自己的文字设置 rem 上限、字号与无单位行高；自行选择根字号并手算上限和行高，在大小窗口/放大后核对，提供一个单位空格拼写失败的反馈。"
+        }
+      ],
+      "repairEvidence": "新增独立两个阅读区，20/25px字号、32/40px行高、384/480px上限与固定12px结果正确，单位空格有无效反馈。",
+      "reviewedPrerequisites": [
+        "web-cascade"
+      ],
+      "sourceSha256": "13f9d3c5c452d4cfdfdea0a85946c7ef5cfec369b979539cc12a620cb8da8df2"
+    },
+    {
+      "id": "web-box",
+      "verdict": "pass",
+      "evidence": "独立240/12/2价格牌的content-box外缘268及border-box内容212算值正确，并要求实际盒模型测量。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "四层盒模型、content-box 342 与 border-box 300/258、padding=30 后数值均正确；DevTools 测量位置明确。只有改原卡片数值。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一张不同宽度、padding、border 的盒子，分别算 content-box 和 border-box 的内容/边框外缘宽度，再实测；题目给具体数值与自查结果但不直接给完整 CSS。"
+        }
+      ],
+      "repairEvidence": "独立240/12/2价格牌的content-box外缘268及border-box内容212算值正确，并要求实际盒模型测量。",
+      "reviewedPrerequisites": [
+        "web-units"
+      ],
+      "sourceSha256": "8deb6dffe499736a09eb07e7bec31053bcc56780f6a79b252c566a1b58a0915d"
+    },
+    {
+      "id": "web-project-profile",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：从空两文件重建、完整CSS新属性说明与三宽度/长文本/真实锚点键盘验收保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "正文给出两个完整文件与目录，解释外部 CSS、通配符、font 简写、十六进制色、居中与 focus-visible；README 明确从空目录重写、三宽度/长目标/键盘验收及无 JS 后端边界，catalog 文件逐份一致。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：从空两文件重建、完整CSS新属性说明与三宽度/长文本/真实锚点键盘验收保持合格。",
+      "reviewedPrerequisites": [
+        "web-box",
+        "web-links"
+      ],
+      "sourceSha256": "f2bd9c483976ba3a72b5b2232cf3a1f1c72944ea813dd0aca5027fc4cb2998ad"
+    },
+    {
+      "id": "web-flow",
+      "verdict": "pass",
+      "evidence": "新增从空白在段落中写80px步骤span，行内块/块/普通inline及窄屏换行的可观察差别明确。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "正常流、block/inline/inline-block/none、span 与 div 语义、118px 手算讲清；原例并排/分行与 width 行为可观察。没有新的布局目标。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一段文字中嵌入两个有宽高的小标签，要求切换一种 display 并解释文字流变化；先画或写预期，使用不等于原例的宽度/内容核对，不用 br 或空格拼布局。"
+        }
+      ],
+      "repairEvidence": "新增从空白在段落中写80px步骤span，行内块/块/普通inline及窄屏换行的可观察差别明确。",
+      "reviewedPrerequisites": [
+        "web-box"
+      ],
+      "sourceSha256": "bc16ca765889ecd705b754aca21f1d1569a97f56eccb8c7836a67ac2ff9a1496"
+    },
+    {
+      "id": "web-flex",
+      "verdict": "pass",
+      "evidence": "新增四真实链接/标题，独立横向换行与竖向240px最小高度，对齐轴、剩余空间和键盘结果均可自查。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "容器直接子项、row/column 主/交叉轴、gap/space-between 和剩余空间讲清；注明锚点只是布局用且未提供目标。练习只有 column 替换。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写四项导航并提供真实目标，先做横向换行再改竖向；给一个有剩余空间的容器尺寸，预测两条对齐轴，验收长内容、窄屏与键盘跳转。"
+        }
+      ],
+      "repairEvidence": "新增四真实链接/标题，独立横向换行与竖向240px最小高度，对齐轴、剩余空间和键盘结果均可自查。",
+      "reviewedPrerequisites": [
+        "web-flow"
+      ],
+      "sourceSha256": "4e9be8f3f5989cba6f3c2e62f8fe989fb3697cdbb43f4fa417e200f6a58a64e2"
+    },
+    {
+      "id": "web-grid",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：fr扣gap、repeat/minmax/直接子项与第五卡三列排列反馈保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "fr 扣除 gap 的 612→300px 例子、repeat/minmax、直接子项及 article 语义清楚；添加第五卡并独立调整为三列的变式有明确前三/后两排列反馈；不夸大长内容永不溢出。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：fr扣gap、repeat/minmax/直接子项与第五卡三列排列反馈保持合格。",
+      "reviewedPrerequisites": [
+        "web-flex"
+      ],
+      "sourceSha256": "0888b477e84a8de37c925960d1c712abab01a7f654a57ec941b627a8423af519"
+    },
+    {
+      "id": "web-responsive",
+      "verdict": "pass",
+      "evidence": "新增空白三卡布局，自选有理由的断点，阈值−1/等于/+1和三宽度/文字放大预期具体。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "视口、CSS 像素、断点、@media 条件、viewport 与 699/700/701 边界定义明确；示例的三宽度结果和 900px 改动正确。没有不同页面目标。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立从三张新卡片的单列开始写一个自己选择断点的两列布局；说明为什么选该阈值，在阈值前/等于/后及放大文字下验收，不提供整条可直接替换的媒体查询。"
+        }
+      ],
+      "repairEvidence": "新增空白三卡布局，自选有理由的断点，阈值−1/等于/+1和三宽度/文字放大预期具体。",
+      "reviewedPrerequisites": [
+        "web-grid"
+      ],
+      "sourceSha256": "17c0f7aeb2039b3fd86a8fde0f6ce92fc2e3a3710f79b03088f5621bcba6b55d"
+    },
+    {
+      "id": "web-position",
+      "verdict": "pass",
+      "evidence": "新增空白两卡仅第二卡左下角角标，12px偏移、不遮正文、移除参照的失败需要独立选择CSS。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "relative 保留流与参照、absolute 脱流、最近祖先/初始包含块、偏移和 padding 都说明；去 relative 的故障能观察。练习没有独立定位一个新角标。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立在第二张卡片放左下角角标，给出与参考不同的偏移和正文内容；预测它相对谁、是否占流，去掉参照再验证；正常结果不能盖住正文。"
+        }
+      ],
+      "repairEvidence": "新增空白两卡仅第二卡左下角角标，12px偏移、不遮正文、移除参照的失败需要独立选择CSS。",
+      "reviewedPrerequisites": [
+        "web-flow"
+      ],
+      "sourceSha256": "7d71450dd8a22cef6068e0839124bf61ffe715794f419bee9d36538d858075cb"
+    },
+    {
+      "id": "web-overflow",
+      "verdict": "pass",
+      "evidence": "完整正文改为Elements选元素、Styles勾选、设备320px下看长串与横向滚动；明确scrollWidth/clientWidth属DOM且本章不要求读取数值。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "文本收缩/换行与图片 cover/contain/等比例缩放区分清楚；完整例子与 catalog 一致，移除 overflow-wrap 的失败场景和用自己前面图像比较裁剪的变式具体。工具验证还有操作缺口。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "分别检查文本和图像／自己改一处再观察",
+          "problem": "要求在 DevTools 选中 p 后比较 scrollWidth/clientWidth，但没有说明这两个 DOM 属性从哪个面板或具体操作读取。",
+          "reason": "此时尚未学 JavaScript，初学者在 Styles/Computed 查不到这两个普通 CSS 属性，无法按要求完成数值验收。",
+          "fix": "给出 Elements→Properties 中读取的具体步骤（若不同浏览器不便，提供可执行的 Console 只读表达式并解释工具用法），或把当前章验收改为可直接观察横向滚动与长串换行，数值测量放到 DOM 之后。"
+        }
+      ],
+      "repairEvidence": "完整正文改为Elements选元素、Styles勾选、设备320px下看长串与横向滚动；明确scrollWidth/clientWidth属DOM且本章不要求读取数值。",
+      "reviewedPrerequisites": [
+        "web-responsive"
+      ],
+      "sourceSha256": "b765e42b5aa889f584de6e9426926442b0e17fa5ec111f5c13f5595873befcc6"
+    },
+    {
+      "id": "web-css-variables",
+      "verdict": "pass",
+      "evidence": "独立--space共用padding与另一间距，自写真实链接hover/focus-visible，修改一次变量、错名与键盘反馈可核对。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "--brand、:root、var、继承层叠、伪类、hover/focus-visible、outline 和键盘路径已解释；改变已有 brand 的结果清楚。没有自写新共享属性。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立增加一个 --space 间距变量供两个已学 CSS 声明共用，再写一个新原生链接的 hover 和键盘焦点状态；改一次变量核对两个位置同步，并用 Tab/Enter 验收。"
+        }
+      ],
+      "repairEvidence": "独立--space共用padding与另一间距，自写真实链接hover/focus-visible，修改一次变量、错名与键盘反馈可核对。",
+      "reviewedPrerequisites": [
+        "web-selectors",
+        "web-responsive"
+      ],
+      "sourceSha256": "64aa0387fe68504832517f179aa833cc84f4f2f91bf58ce58e6c05c129e1ad79"
+    },
+    {
+      "id": "web-project-responsive",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：空文件搭建、四步单列到多列、第四卡/长串/阈值/键盘及静态边界保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "两个完整文件与真实目录/README一致；四步构建从单列到Flex/Grid/媒体查询，定义 wrap 和 minmax。明确从空文件重建，第四卡、长英文、断点边界、三宽度和键盘都有具体结果，没有把静态页说成报名服务。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：空文件搭建、四步单列到多列、第四卡/长串/阈值/键盘及静态边界保持合格。",
+      "reviewedPrerequisites": [
+        "web-css-variables",
+        "web-overflow"
+      ],
+      "sourceSha256": "2d4df4ecdbb88d39d431f91bdfcbd252c1ed50f879661c382ef8b03482409471"
+    },
+    {
+      "id": "web-js-start",
+      "verdict": "pass",
+      "evidence": "独立控制台小收据需要自组织三行输出，给15与正文未变的预期；漏配对括号错误与恢复明确，未要求变量/DOM。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "控制台对象/方法调用、字符串/表达式、分号、注释、F12 Console 与保存刷新都解释，日志“第一行/5”准确。唯一改动是 2+3→2*3。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一份短 script，输出自己的学习主题与一个不同算式，先预测输出顺序、数值与正文是否变化；故意漏一个配对括号观察语法错误并恢复，保持仅语言起步范围。"
+        }
+      ],
+      "repairEvidence": "独立控制台小收据需要自组织三行输出，给15与正文未变的预期；漏配对括号错误与恢复明确，未要求变量/DOM。",
+      "reviewedPrerequisites": [
+        "web-document"
+      ],
+      "sourceSha256": "5ae56f1734add657c5c9175bade837f1cbd76630d1e0ab9d05e2dfc2b0b7c9a9"
+    },
+    {
+      "id": "web-js-variables",
+      "verdict": "pass",
+      "evidence": "独立计划20→35，学习主题与达到30的判断及number/string/boolean需要自声明更新，false/true与const错误反馈明确。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "声明/重新赋值、const绑定、= 与比较、类型/null/undefined、typeof、大小写明确；30/string/true 与 const TypeError 故障准确。缺不同变量设计任务。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立声明计划分钟、学习主题和是否完成三种值，更新一个 let 后输出类型及比较；选用 let/const 并说明原因，给出具体输入和自查输出，不直接复制原名字/赋值顺序。"
+        }
+      ],
+      "repairEvidence": "独立计划20→35，学习主题与达到30的判断及number/string/boolean需要自声明更新，false/true与const错误反馈明确。",
+      "reviewedPrerequisites": [
+        "web-js-start"
+      ],
+      "sourceSha256": "7d2a41585e829904d0710ae7599fbed22a678e0f449f94371fc3af9636b03507"
+    },
+    {
+      "id": "web-js-operators",
+      "verdict": "pass",
+      "evidence": "独立采购字符串12.5/2/3转换后28，abc/空串/空格的NaN或0反馈正确；明确此时未教trim/条件，不提前要求完整校验。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "加法/拼接、算术/余数、严格比较、Number/NaN 检查、空白转0风险都具体；输出匹配元数据。实验只是试三个已给转换字符串。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立用两个模拟输入字符串计算总分钟，先拒绝去空白后的空值/不可转换值再计算；若不想提前用条件，可先独立输出转换与 NaN 检查表，完整校验明确回链条件章节，提供 '5'、'abc'、空白的预期。"
+        }
+      ],
+      "repairEvidence": "独立采购字符串12.5/2/3转换后28，abc/空串/空格的NaN或0反馈正确；明确此时未教trim/条件，不提前要求完整校验。",
+      "reviewedPrerequisites": [
+        "web-js-variables"
+      ],
+      "sourceSha256": "f7558a325caaa58bd9e1c2bb5dfc4e24478ad61b739a80175bab15bbe8e4eac0"
+    },
+    {
+      "id": "web-js-strings",
+      "verdict": "pass",
+      "evidence": "独立李 小雨/Web通知，原8与trim后4长度核对正确，保留中间空格和原值，普通引号故障有反馈。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "模板反引号、插值、trim 方法与 length 属性、UTF-16 边界、原值不变都有说明；正常日志准确。练习仅给 name 加空格与试表情。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立把新的姓名/课程变量组成一条模板通知，并保留原文与trim结果分别输出；给一个含中间空格输入，先预测哪些空格保留以及 length，再用普通引号故障核对。"
+        }
+      ],
+      "repairEvidence": "独立李 小雨/Web通知，原8与trim后4长度核对正确，保留中间空格和原值，普通引号故障有反馈。",
+      "reviewedPrerequisites": [
+        "web-js-operators"
+      ],
+      "sourceSha256": "c3588c25a82ad7796940bcea89039e3e6b931b774360a62d1af241c377807f4e"
+    },
+    {
+      "id": "web-js-if",
+      "verdict": "pass",
+      "evidence": "独立金额/运费互斥分类，−1/abc/0/59/60/61正常和转换失败边界明确，先列测试再写条件。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "if链最多一分支、||/&&/!、合法范围优先、60边界路径清晰，-1/0/59/60/100/101反馈正确。没有独立新决策规则。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立按学习时长写“非法/未达到/达到”互斥分类（给明确上下界与目标）；先列边界预期，再从空条件代码写出判断，临时改含等号边界证实错误。"
+        }
+      ],
+      "repairEvidence": "独立金额/运费互斥分类，−1/abc/0/59/60/61正常和转换失败边界明确，先列测试再写条件。",
+      "reviewedPrerequisites": [
+        "web-js-operators"
+      ],
+      "sourceSha256": "38a7448b2ab6f23c1b4404c38828087a7f2c97e97134d516acf9de9c6f057170"
+    },
+    {
+      "id": "web-js-loops",
+      "verdict": "pass",
+      "evidence": "独立4→1倒计时与轮数累计，0次不入循环；4/3/2/1和最终4结果正确，明确无计时延迟避免错误概念。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "初始化/条件/更新/循环体顺序与 1→15 跟踪表解释清楚；上限3/0、<5结果明确。没有独立不同累加目标。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立计算2到6的和或1到5的平方和，先手算预期，再写新循环；测试不进入循环的范围，并让读者解释累加器为什么在外面，避免无限循环实验。"
+        }
+      ],
+      "repairEvidence": "独立4→1倒计时与轮数累计，0次不入循环；4/3/2/1和最终4结果正确，明确无计时延迟避免错误概念。",
+      "reviewedPrerequisites": [
+        "web-js-if"
+      ],
+      "sourceSha256": "40b9c940697abac8214cca04f52134d09243a5975b77bff6de17bb9e8e3fdb9a"
+    },
+    {
+      "id": "web-js-functions",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：定义/调用/return与打印、去return失败和独立multiply正数/零/负数保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "定义与调用、实参与形参、return 与打印、undefined、结束执行及顺序明确。正常 add 输出、去 return 故障及独立 multiply 的正数/零/负数验证构成完整闭环；catalog 一致。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：定义/调用/return与打印、去return失败和独立multiply正数/零/负数保持合格。",
+      "reviewedPrerequisites": [
+        "web-js-loops"
+      ],
+      "sourceSha256": "820117bbe183c328c961d8dd29374f4b8c26fb6396997e8fd5228389640b877f"
+    },
+    {
+      "id": "web-js-scope",
+      "verdict": "pass",
+      "evidence": "独立余额函数10→15、未接回/接回、同名局部与外部文字及ReferenceError预期，要求自写函数组合。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "局部参数、块作用域、数字值传递及显式接返回值解释清楚；9/3 与 ReferenceError 有结果。练习只在原函数外读 value。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一个返回新数字但不改外部值的函数，再显式接回结果，分别预测两份日志；另建局部同名变量验证读取范围，给自查输出而不直接给完整函数。"
+        }
+      ],
+      "repairEvidence": "独立余额函数10→15、未接回/接回、同名局部与外部文字及ReferenceError预期，要求自写函数组合。",
+      "reviewedPrerequisites": [
+        "web-js-functions"
+      ],
+      "sourceSha256": "0af1c82ae1dba2c7f5b0ff4b669a2c0ea70b2ac56457a2c829f0f1766f78d71b"
+    },
+    {
+      "id": "web-js-arrays",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：索引0、push/const、越界undefined及独立for求和240/空数组0、<=越界边界保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "[] 字面量/索引、push 修改、length 属性、const 与内容更新、越界 undefined 和 <= 导致 NaN 有说明。独立用for累计三项及空数组的变式需读者组合已学循环，240/0可核对；主例与元数据一致。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：索引0、push/const、越界undefined及独立for求和240/空数组0、<=越界边界保持合格。",
+      "reviewedPrerequisites": [
+        "web-js-functions"
+      ],
+      "sourceSha256": "1ad9149b4d890a4515b6637dfa2b60995baab6fcb23f17802480a07e03f48c97"
+    },
+    {
+      "id": "web-js-objects",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：对象字面量/引用与独立浅副本改seats原值8的反馈、嵌套共享边界保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "对象字面量冒号/逗号、点/动态键、共享引用、const 与浅展开副本定义清楚；主例8结果正确。独立创建浅副本并改 seats、核对原8的变式有明确反馈，明确深层仍共享的边界。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：对象字面量/引用与独立浅副本改seats原值8的反馈、嵌套共享边界保持合格。",
+      "reviewedPrerequisites": [
+        "web-js-arrays"
+      ],
+      "sourceSha256": "45a47796aea3a420dbbe49b855605ad5513793089c66f763c582f505c4cbcf2b"
+    },
+    {
+      "id": "web-json",
+      "verdict": "pass",
+      "evidence": "独立两目标对象数组的文字往返/第二项读取，合法文字却minutes类型错与SyntaxError分开核对；错误处理回链改为准确的后续errors章。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "JavaScript 外层单引号与 JSON 内双引号、parse/stringify、格式与字段需求区别明确；string/Go/序列化输出及 SyntaxError 有反馈。缺独立其他形状的往返。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立把自己的两条目标组成数组或对象，stringify后parse再读取一项，先预测类型与字段；测试一个合法但字段类型不合需求的值，不能把合法格式当验收全部。"
+        },
+        {
+          "severity": "P3",
+          "location": "修改实验",
+          "problem": "写“下一节学习catch这种失败”，catalog中下一节实际为回调filter，try/catch在后面。",
+          "reason": "读者按下一节导航期待错误处理，会误以为自己遗漏了前置。",
+          "fix": "改为“后面的 try/catch 与失败分支章节”，给准确章节回链。"
+        }
+      ],
+      "repairEvidence": "独立两目标对象数组的文字往返/第二项读取，合法文字却minutes类型错与SyntaxError分开核对；错误处理回链改为准确的后续errors章。",
+      "reviewedPrerequisites": [
+        "web-js-objects"
+      ],
+      "sourceSha256": "a9515d5bb0a73d3b66882c9b8719f60bda2ebceac169e7b71fec3e06970d7a37"
+    },
+    {
+      "id": "web-js-callbacks",
+      "verdict": "pass",
+      "evidence": "独立命名谓词筛选[0,−2,1,2,3,4]正偶数得到[2,4]，全不匹配/空数组与原数组不变有预期，调用函数/漏return的失败需解释。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "函数作为值与 passed() 调用差别、filter同步、每项判断、原数组不变、丢return为空及 TypeError 都解释；输出准确。练习只是60门槛改80。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一个判断函数保留某个新数组的偶数或非空文字，传给filter而不是先调用；先给正常/全不匹配/空数组预期，输出原数组与结果核对。"
+        }
+      ],
+      "repairEvidence": "独立命名谓词筛选[0,−2,1,2,3,4]正偶数得到[2,4]，全不匹配/空数组与原数组不变有预期，调用函数/漏return的失败需解释。",
+      "reviewedPrerequisites": [
+        "web-js-objects",
+        "web-json"
+      ],
+      "sourceSha256": "54a7db3a631655dc605e7f34fd40a9e2e9a05bf55d35790a7776b940074b75d9"
+    },
+    {
+      "id": "web-js-map",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：map/filter职责、匿名/箭头/return与独立价格字符串转换、丢return失败保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "map转换与filter筛选、匿名/箭头函数、表达式隐式返回与块体显式return、副作用边界解释清楚。独立转成“价格：...”字符串是新的输出形状，三条文字结果可查；漏return反例明确，代码和catalog一致。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：map/filter职责、匿名/箭头/return与独立价格字符串转换、丢return失败保持合格。",
+      "reviewedPrerequisites": [
+        "web-js-callbacks"
+      ],
+      "sourceSha256": "e7663924b5da898daaeeb564b52bf4b7ebdfa8647059be34155474a202eb9698"
+    },
+    {
+      "id": "web-dom",
+      "verdict": "pass",
+      "evidence": "独立双元素改成设备在线/已检查1台，要求自己用条件报告null而不继续访问；DOM与磁盘原文、错误选择器可自查。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "DOM内存树/document、querySelector首匹配/null、textContent赋值、脚本时机、源码与Elements区别讲清；#missing TypeError有反馈。练习只破坏原选择器。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立为一个新页面找到两个不同元素并改一项正文、一项计数说明，说明修改哪个对象属性；检查磁盘原文未变、错误选择器反馈和恢复，提供目标文字验收而不直接给完整脚本。"
+        }
+      ],
+      "repairEvidence": "独立双元素改成设备在线/已检查1台，要求自己用条件报告null而不继续访问；DOM与磁盘原文、错误选择器可自查。",
+      "reviewedPrerequisites": [
+        "web-js-objects",
+        "web-selectors"
+      ],
+      "sourceSha256": "866e7cc4c85e9b7da545ceb5c430447399e373c5b5c471996031da10777a568c"
+    },
+    {
+      "id": "web-events",
+      "verdict": "pass",
+      "evidence": "独立两个点赞/撤回按钮共用计数且下界0，0→2→1→0与刷新/键盘的正常边界明确。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "事件类型与处理函数、登记/执行顺序、外部count持久于回调、String和原生button键盘行为清楚；两次2、刷新0结果准确。没有独立第二个动作。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立增加一个“减少”或“重置”按钮，共享已有计数状态；要求每个回调更新状态后同步文字，给初始/两次增加/减少或重置/刷新的自查结果和键盘路径。"
+        }
+      ],
+      "repairEvidence": "独立两个点赞/撤回按钮共用计数且下界0，0→2→1→0与刷新/键盘的正常边界明确。",
+      "reviewedPrerequisites": [
+        "web-dom",
+        "web-js-callbacks"
+      ],
+      "sourceSha256": "33579fbb53f84c8122e7d945beadb4187d5692e3b98ef498fe95b7e4b33258c3"
+    },
+    {
+      "id": "web-dom-list",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：for...of/createElement/textContent/append解释与独立封装render两次、清空防重复反馈保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "新for...of已定义；每轮createElement→textContent→append及单节点移动、replaceChildren作用清楚。尖括号被当文字、b数量0与catalog一致；独立封装render并执行两次再先清空是需组合函数/循环的变式，有重复项与恢复反馈。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：for...of/createElement/textContent/append解释与独立封装render两次、清空防重复反馈保持合格。",
+      "reviewedPrerequisites": [
+        "web-events",
+        "web-js-arrays"
+      ],
+      "sourceSha256": "2f413aa78c5907bb344b749c47fad57c80362bc5d0bedff42e290b6c7a6a9f12"
+    },
+    {
+      "id": "web-ui-state",
+      "verdict": "pass",
+      "evidence": "独立对象书籍数组筛选并显示页数，笔记2项120/80、无匹配0、清空3有验收；故意数量/列表不同步后集中同一派生结果。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "输入.value/trim/includes/箭头函数、同一found驱动数量和列表、初次render与input事件、空关键词语义已讲；1/0/2结果可观察。没有独立新筛选数据流。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立把数据换成三项对象，筛选title且同时显示一项新字段，数量/列表仍来自同一结果；给有匹配/无匹配/清空的预期，故意只改一个显示位置核对不同步。"
+        }
+      ],
+      "repairEvidence": "独立对象书籍数组筛选并显示页数，笔记2项120/80、无匹配0、清空3有验收；故意数量/列表不同步后集中同一派生结果。",
+      "reviewedPrerequisites": [
+        "web-dom-list",
+        "web-js-callbacks"
+      ],
+      "sourceSha256": "7d9edf63df727227c9f0f58fe6fd4e551a0666204d78519e9215d049e4d27894"
+    },
+    {
+      "id": "web-js-errors",
+      "verdict": "pass",
+      "evidence": "独立双倍函数与负数自定义Error，3→6、−1失败message和结束日志清楚，未捕获改变执行和恢复catch有反馈。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "throw/new Error/message、try失败跳转、catch局部变量与继续执行、异步拒绝边界清楚；解析失败/之后继续与元数据一致。只有把坏JSON换合法。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一个对负数抛自定义Error、正常返回结果的已学函数，再用try/catch调用；给正常/失败/后续日志的预期，保留message，明确不把失败当成功。"
+        }
+      ],
+      "repairEvidence": "独立双倍函数与负数自定义Error，3→6、−1失败message和结束日志清楚，未捕获改变执行和恢复catch有反馈。",
+      "reviewedPrerequisites": [
+        "web-json"
+      ],
+      "sourceSha256": "cc00dd562c77fa0c006a0a15d76e69b670676aa6bb4cfc6eebce539ccdf54d4e"
+    },
+    {
+      "id": "web-promise",
+      "verdict": "pass",
+      "evidence": "补明then回调return向后续传值/缺return为undefined/抛错传播；独立4→12成功链、订单无效失败链、同步日志先后可核对。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "pending/fulfilled/rejected、resolve/reject、then/catch、Promise不是数据、同步日志先后与回调队列解释明确。成功及拒绝实验都是现成一行替换。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立建立一条 Promise 成功链，把一个数转换为新值再输出，并单独构造拒绝链保留message；先预测同步和回调日志顺序，用已有then返回Promise概念说明结果，不要求未学复杂并发。"
+        }
+      ],
+      "repairEvidence": "补明then回调return向后续传值/缺return为undefined/抛错传播；独立4→12成功链、订单无效失败链、同步日志先后可核对。",
+      "reviewedPrerequisites": [
+        "web-js-callbacks",
+        "web-js-errors"
+      ],
+      "sourceSha256": "169704d6bc43539121f66a88f8d7f02fa11f937dd0e7eba90bfe64cda3c4175c"
+    },
+    {
+      "id": "web-async",
+      "verdict": "pass",
+      "evidence": "独立async账单20+3返回23，由调用者读完成值，先同步日志/拒绝价格不可用不伪造数字的反馈清楚。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "async返回Promise、await只暂停当前函数、拒绝在await处抛错、定义/调用和调用方错误责任明确；resolve5/reject加载失败都可核对。没有新async函数练习。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立写一个async计算函数，await已有Promise后return另一数值，再由调用者await或then读取；给成功、拒绝和调用后同步日志的预期，不把返回Promise当最终数字。"
+        }
+      ],
+      "repairEvidence": "独立async账单20+3返回23，由调用者读完成值，先同步日志/拒绝价格不可用不伪造数字的反馈清楚。",
+      "reviewedPrerequisites": [
+        "web-promise"
+      ],
+      "sourceSha256": "01e0bb6b9c963cdf41b21cb1a27cfbeea3e5ed55cd2cc41b48ef8734845cee8c"
+    },
+    {
+      "id": "web-modules",
+      "verdict": "pass",
+      "evidence": "独立index/main/utils/cost跨目录命名导出导入，3×7显示21；路径错误和名称错误分别核对，HTTP前提完整。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "三个完整文件、命名导入/导出、导入列表不是对象、私有作用域、module延后解析、HTTP与Python/LiveServer目录/停止方式都明确；路径和导出名故障准确。缺独立新跨文件功能。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立在新文件导出multiply或formatTitle，在另一模块导入并写到新元素；给目录结构与显示目标，故意写错相对目录或导出名验证区别，不直接沿用add文件。"
+        }
+      ],
+      "repairEvidence": "独立index/main/utils/cost跨目录命名导出导入，3×7显示21；路径错误和名称错误分别核对，HTTP前提完整。",
+      "reviewedPrerequisites": [
+        "web-dom",
+        "web-js-functions"
+      ],
+      "sourceSha256": "eaf11a6386454636077e1a18c6cb0f386343fc202af9d1d55026e55cad450a4f"
+    },
+    {
+      "id": "web-storage",
+      "verdict": "pass",
+      "evidence": "补storage-demo目录、终端位置、Python命令/HTTP地址/Ctrl+C与准确前章回链；独立own-reading-preferences两字段、缺键/坏JSON/错类型/主动恢复明确定义。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "键/字符串值/getItem的null、stringify/parse/形状检查、同来源及异常原文保留讲清；演示只主动保存且不clear其他记录。没有新结构的独立往返。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立用另一个专用练习键保存自己的简单对象，并读取验证两字段类型；刷新、缺键、坏JSON和恢复各给预期，坏原文保留，恢复必须主动且不clear整个来源。"
+        },
+        {
+          "severity": "P2",
+          "location": "一份浏览器存储如何读写／先看一个完整例子",
+          "problem": "正文要求本地HTTP，完整例子运行提示仍只是“用浏览器打开”；当前章没有目录启动命令、地址、停止或具体前章回链。",
+          "reason": "读者容易双击成file来源，无法核对同源存储及不同端口边界；本章要求的运行条件没有落实到操作。",
+          "fix": "在本章给独立目录下 python -m http.server 8765、HTTP地址和Ctrl+C，或准确回链模块章节对应运行步骤；删除双击式泛化提示。"
+        }
+      ],
+      "repairEvidence": "补storage-demo目录、终端位置、Python命令/HTTP地址/Ctrl+C与准确前章回链；独立own-reading-preferences两字段、缺键/坏JSON/错类型/主动恢复明确定义。",
+      "reviewedPrerequisites": [
+        "web-ui-state",
+        "web-async"
+      ],
+      "sourceSha256": "5e7d3941b5a47a7e51b7f23cccab1c0b96875678c8715b4bf1d4e7cdeae34672"
+    },
+    {
+      "id": "web-fetch",
+      "verdict": "pass",
+      "evidence": "独立book对象name/pages的真实GET，正常算法手记/120，404/解析错/null/数组/数字字段错分别检查，Network证据与不伪造正常值要求具体。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "HTTP客户端/服务器/URL协议主机端口路径、方法/头/正文、200/404/500/连接失败、Response.ok与json等待都具体；双文件HTTP启动与Network步骤完整，三类失败明确。缺独立新资源展示。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立请求一个新JSON对象/数组并显示另一字段，自己确定并检查字段类型；给200正常、404、坏JSON、合法但坏形状结果，自写验证与显示而不只替换title字面值。"
+        }
+      ],
+      "repairEvidence": "独立book对象name/pages的真实GET，正常算法手记/120，404/解析错/null/数组/数字字段错分别检查，Network证据与不伪造正常值要求具体。",
+      "reviewedPrerequisites": [
+        "web-async",
+        "web-ui-state"
+      ],
+      "sourceSha256": "745f7338652c88da44f3afa65a86584a845c06899c4ff4491b8850ca77c48755"
+    },
+    {
+      "id": "web-request-states",
+      "verdict": "pass",
+      "evidence": "独立书籍对象清单的正常两行/空/坏字段/404/限速加载、数量列表同源清楚；明确先等结束再读，未宣称覆盖重叠且准确回链。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "Array.isArray/some/短路、三元表达式与0假值、加载/成功/空/失败四状态及三文件情况解释充分；HTTP和限速观察完整。仅改events.json。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立给另一组对象资源写四状态渲染，先定义正常、空、字段错与HTTP失败的界面预期；数量与列表同源，明确当前单次流程的重叠边界并回链下一章。"
+        }
+      ],
+      "repairEvidence": "独立书籍对象清单的正常两行/空/坏字段/404/限速加载、数量列表同源清楚；明确先等结束再读，未宣称覆盖重叠且准确回链。",
+      "reviewedPrerequisites": [
+        "web-fetch"
+      ],
+      "sourceSha256": "52dbb94aec9b475436884cf926f437b81f48b9967e5cd242f33621bb8a08f2f2"
+    },
+    {
+      "id": "web-cancel-request",
+      "verdict": "pass",
+      "evidence": "独立甲乙丙600/100/300ms先模拟等待再fetch，要求保护每个显示出口，旧成功/404不覆盖丙与丙失败不被乙成功覆盖的边界明确。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "完整三文件真实fetch＋明确人为处理延迟，latest/request作用域、new Promise/resolve/setTimeout、成功与失败保护和AbortController边界都解释，去保护能出现旧覆盖。没有不同输入的独立时间实验。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立增加第三个选择及不同延迟，先列启动/完成顺序和最终应显示哪份；用已有编号实现保护，包含旧成功与旧失败自查，不把人为延迟当网络测量。"
+        }
+      ],
+      "repairEvidence": "独立甲乙丙600/100/300ms先模拟等待再fetch，要求保护每个显示出口，旧成功/404不覆盖丙与丙失败不被乙成功覆盖的边界明确。",
+      "reviewedPrerequisites": [
+        "web-request-states"
+      ],
+      "sourceSha256": "d923f5ae462f46b9a1abe0992ed2a30ce88fcfb50a15393b94f5ae0d86533fb1"
+    },
+    {
+      "id": "web-rendering",
+      "verdict": "pass",
+      "evidence": "新增空白公告HTML/动态午餐JSON两个来源，禁JS/缺JSON/正常Response及DOM的预期具体，Go模板仅概念判断不要求未教后端代码。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "API/SSR/CSR、静态/模板/JSON路由及三语言/后端职责清楚；top-level await和role=status补定义。Network原文与Elements DOM、禁JS结果及Go两条实现链接明确。任务只改现成JSON和h1。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立制作初始HTML里的一个信息和请求后显示的另一信息，用Network和Elements标出两份来源；给禁JS/丢JSON的预期，并口述同一需求改为Go模板后哪端负责填入，不要求现在写未学Go。"
+        }
+      ],
+      "repairEvidence": "新增空白公告HTML/动态午餐JSON两个来源，禁JS/缺JSON/正常Response及DOM的预期具体，Go模板仅概念判断不要求未教后端代码。",
+      "reviewedPrerequisites": [
+        "web-fetch",
+        "web-dom",
+        "web-json"
+      ],
+      "sourceSha256": "bbece034d152153facfd558633de6031ec292552656adcddedca34ab96f357e0"
+    },
+    {
+      "id": "web-git",
+      "verdict": "pass",
+      "evidence": "新增独立第二文件+暂存HTML后再编辑，要求预测工作区/暂存区版本并两次选择性提交；cached只含选中版本及未暂存新行有反馈。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "独立仓库、Git/GitHub、init、version、身份、status/diff/add/cached/commit/log、未跟踪差异和暂存后再编辑均解释；源码与秘密限制清楚。实验仍是按给定序列提交标题。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立新增第二文件并分两次选择性提交：先暂存后再改一行，提交前预测工作区/暂存区各是哪版；给status与cached应出现的差异自查，不引入reset或force操作。"
+        }
+      ],
+      "repairEvidence": "新增独立第二文件+暂存HTML后再编辑，要求预测工作区/暂存区版本并两次选择性提交；cached只含选中版本及未暂存新行有反馈。",
+      "reviewedPrerequisites": [
+        "web-ui-state"
+      ],
+      "sourceSha256": "7168403c3914e663237fe58f4b09dc2345882909e1891a076a696b619ac61f8b"
+    },
+    {
+      "id": "web-npm",
+      "verdict": "pass",
+      "evidence": "撤除未教Vitest源码要求，明确当前只读通过/失败数量；新增自己选scripts完成产物A/devB/未重建previewA/重建B与const故障阻止build，入口沿真实03项目。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "Node/npm/浏览器职责、包依赖、锁文件、npm.cmd、Node>=24.15.0、目录/8803/8903/停止、脚本含义与失败分类完整。实际followup-03脚本和入口一致；结尾缺独立脚本任务，且引导阅读尚未教的Vitest测试。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立给已有工程增加一个名为check的脚本组合当前已解释的typecheck与build，先预测成功/故意类型错误时的顺序；或独立记录dev改动、未重建preview旧版、重建新版的具体对照结果，提供验收表。"
+        },
+        {
+          "severity": "P2",
+          "location": "自己做一次实验",
+          "problem": "要求读src/events.test.ts并说明test检查什么，但首次出现的Vitest describe/expect/it、断言与TS写法尚未在本节讲授，测试章节在后面。",
+          "reason": "初学者刚学npm职责，需要靠未教测试框架源码才能完成本节验收，容易把运行工具与会读测试混为一谈。",
+          "fix": "本节只要求运行并读通过/失败数量，明确源码在TypeScript与测试章之后复读；若保留当前阅读任务，补最小断言含义和具体需求对照，而不要求理解整份未知源码。"
+        }
+      ],
+      "repairEvidence": "撤除未教Vitest源码要求，明确当前只读通过/失败数量；新增自己选scripts完成产物A/devB/未重建previewA/重建B与const故障阻止build，入口沿真实03项目。",
+      "reviewedPrerequisites": [
+        "web-js-functions",
+        "web-fetch",
+        "web-modules"
+      ],
+      "sourceSha256": "3c42a1f2ac563a13a7d14ef82fc03fd0800ba2d054f248267d3a56632dd6098c"
+    },
+    {
+      "id": "web-frameworks",
+      "verdict": "pass",
+      "evidence": "独立预算15的消费/余额/超支三处同源render，0/15/未超支、15/0/未超支、20/−5/超支及重置反馈明确，故意漏更新定位同步责任。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "原生state→render两个显示位置及漏render反例清楚；组件/Props/State、React/Vue、Vite/npm、后端框架职责具体且Vue边界诚实。代码和catalog一致。任务只是把目标20改30。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立给原生数据面板增加一个由同一数据派生的第三显示位置（例如距目标差多少），先制造漏更新再集中render；用实际同步责任说明组件为何有用，给0/达标/超标预期。"
+        }
+      ],
+      "repairEvidence": "独立预算15的消费/余额/超支三处同源render，0/15/未超支、15/0/未超支、20/−5/超支及重置反馈明确，故意漏更新定位同步责任。",
+      "reviewedPrerequisites": [
+        "web-ui-state",
+        "web-modules",
+        "web-npm"
+      ],
+      "sourceSha256": "23c75b46db1e62ad7005f28af0f6b3efa51a8cad917a66fe1989a5dcde3fa5e9"
+    },
+    {
+      "id": "web-typescript",
+      "verdict": "pass",
+      "evidence": "前置修为准确npm章节+ZIP+README；新增空main商品name/price/quantity、数字总价与文字展示，7×3=21/零数量0/错类型和错返回开发检查边界明确。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "完整src/main.ts替换、#app入口、type形状/注解/返回类型/空export、typecheck/dev/build与运行时边界明确；类型错误实验正确，实际工程入口一致。缺独立另一类型函数。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立定义一份课程对象类型及返回字符串的展示函数，给正常对象、错字段类型、错返回类型预期；在真实入口调用并页面显示，先typecheck再运行。"
+        },
+        {
+          "severity": "P3",
+          "location": "在已经跑通的独立项目里替换一个完整文件",
+          "problem": "写“使用上一节的followup-03下载包”，实际上一章为frameworks，下载入口在npm章。",
+          "reason": "跟按章导航的读者无法在上一页找到所需包。",
+          "fix": "准确回链Node/npm章节的源码下载和运行步骤，或在本章直接提供followup-03 ZIP与README入口。"
+        }
+      ],
+      "repairEvidence": "前置修为准确npm章节+ZIP+README；新增空main商品name/price/quantity、数字总价与文字展示，7×3=21/零数量0/错类型和错返回开发检查边界明确。",
+      "reviewedPrerequisites": [
+        "web-npm",
+        "web-js-objects"
+      ],
+      "sourceSha256": "d4c95860093029b8254e39b41b604279953f51c69b389e0634162b5cb8961b3f"
+    },
+    {
+      "id": "web-narrowing",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：判别联合类型/return收窄与独立新增空状态、loading错读items的确定类型失败保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "联合|与JS||、kind字面量判别、string[]/State[]、return后范围缩小都逐项解释；完整入口与固定三态结果准确。把items搬到loading的确定类型失败、空成功0项与独立新增空态的任务满足迁移练习，明确类型不能制造网络结果。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：判别联合类型/return收窄与独立新增空状态、loading错读items的确定类型失败保持合格。",
+      "reviewedPrerequisites": [
+        "web-typescript"
+      ],
+      "sourceSha256": "be79194803064e16a9bfb70c21b56f4abe6730bf35bae504a4e6385ae3142231"
+    },
+    {
+      "id": "web-react",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：真实工程完整App、JSX/Props/Hook/解构/状态更新新语法和独立重置/键盘、刷新0边界保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "真实React项目入口和完整App替换明确；TSX/JSX大小写/大括号/注释/className/default导入、Props、Hook顶层、数组解构与函数状态更新都解释。0→2→刷新0、故障及独立重置按钮/键盘任务明确；无请求身份功能夸大。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：真实工程完整App、JSX/Props/Hook/解构/状态更新新语法和独立重置/键盘、刷新0边界保持合格。",
+      "reviewedPrerequisites": [
+        "web-narrowing",
+        "web-events",
+        "web-frameworks"
+      ],
+      "sourceSha256": "e70cb9434896f7d0f7f738f819f6faa273fd8175680c7676e28f3a1c6e761813"
+    },
+    {
+      "id": "web-vue",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：两个完整SFC/真实入口、ref与模板/宏/输入等定义和独立reset保持合格，未虚称Vue全面类型/完整同等React工程。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "真实vue.html/#vue-app/vue-main与Vite Vue插件、两个完整SFC明确；script setup/lang/ref.value/模板解包/v-bind/v-on/插值/defineProps类型宏都有作用说明。独立reset、冒号故障及构建/浏览器验收可做；诚实说明无vue-tsc及React功能不对等。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：两个完整SFC/真实入口、ref与模板/宏/输入等定义和独立reset保持合格，未虚称Vue全面类型/完整同等React工程。",
+      "reviewedPrerequisites": [
+        "web-narrowing",
+        "web-events",
+        "web-frameworks"
+      ],
+      "sourceSha256": "c7bfbfa9f94ecbbfe9b9f4a033365e39a1ce23e38e3df1bca767b29f66467d48"
+    },
+    {
+      "id": "web-component-requests",
+      "verdict": "pass",
+      "evidence": "完整正文新增App的shown与url，RequestPanel用父传props.url依赖；JSX条件真正移除子组件、清理abort、隐藏期换URL不请求与重新挂载新状态均有具体操作，明确关标签不能证明React清理。独立从空请求面板新增重试编号/Props/依赖，普通同URL不必新请求、明确重试须新请求及慢速旧结果边界明确。另核对改写者专项报告：该canonical替换实际typecheck/build及Edge卸载取消/隐藏不请求/当前URL重挂通过；独立教学校验根据完整源码、父子数据流与可复现操作步骤，而不以报告数量代替讲解。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "挂载/更新/卸载/副作用、useEffect依赖/返回清理、AbortController signal/aborted、unknown/instanceof、同url不重取和StrictMode解释具体；完整App/JSON在实际followup-05可编译，正常/404/字段错有反馈。没有独立重试或退出实现。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立加一个重试编号作为Effect依赖，让同url重试也重新请求；先预测同url普通按钮与重试的差别，再验证合法/404/形状错和旧结果不覆盖。"
+        },
+        {
+          "severity": "P2",
+          "location": "真实验证与故障实验",
+          "problem": "要求“关闭或切换离开该组件”验证卸载清理，但完整替换后的App只有两个换url按钮，没有卸载请求组件的操作；关闭标签页也由浏览器自行停止请求。",
+          "reason": "读者无法照本章入口触发并观察React调用卸载清理，容易把关网页导致网络取消当成清理函数已验证。",
+          "fix": "把请求抽成子组件并给父组件显示/隐藏按钮，或提供实际能卸载的工程路由与具体步骤；定义慢响应/卸载/重新挂载的可观察结果，说明关闭页面本身不单独证明清理。"
+        }
+      ],
+      "repairEvidence": "完整正文新增App的shown与url，RequestPanel用父传props.url依赖；JSX条件真正移除子组件、清理abort、隐藏期换URL不请求与重新挂载新状态均有具体操作，明确关标签不能证明React清理。独立从空请求面板新增重试编号/Props/依赖，普通同URL不必新请求、明确重试须新请求及慢速旧结果边界明确。另核对改写者专项报告：该canonical替换实际typecheck/build及Edge卸载取消/隐藏不请求/当前URL重挂通过；独立教学校验根据完整源码、父子数据流与可复现操作步骤，而不以报告数量代替讲解。",
+      "reviewedPrerequisites": [
+        "web-react",
+        "web-cancel-request"
+      ],
+      "sourceSha256": "3e773583fec2cda59900d920c3d6b084907979a5b5915dd8ab3d772ba4086ade"
+    },
+    {
+      "id": "web-testing",
+      "verdict": "pass",
+      "evidence": "第二轮也完整复读：Node两个mjs、独立需求期望、故意startsWith第一项失败和自补非修改/空格断言保持合格。",
+      "issues": [],
+      "originalVerdict": "pass",
+      "originalEvidence": "两个完整mjs无需安装包，Node内置模块/test/deepEqual及需求独立期望解释清楚；三项正常与includes→startsWith确定第一项失败匹配元数据。独立补非修改/空白测试有明确需求，边界与页面网络验证区别诚实。",
+      "originalIssues": [],
+      "repairEvidence": "第二轮也完整复读：Node两个mjs、独立需求期望、故意startsWith第一项失败和自补非修改/空格断言保持合格。",
+      "reviewedPrerequisites": [
+        "web-npm",
+        "web-js-callbacks"
+      ],
+      "sourceSha256": "cad1f68e4d6bda90abfbc8de957b29396d5adbe77634b361679bec303575b3fc"
+    },
+    {
+      "id": "web-quality",
+      "verdict": "pass",
+      "evidence": "完整正文独立慢页测量与键盘/资源/性能限制保持合格；最终catalog的PerformancePanel已含className=banner，全部60章逐文件代码核对无差异，首轮唯一元数据缺口已关闭。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "正文有效区分键盘、资源体积与性能，给完整工程/真实路由/错误和空状态/Network条件，实际源码使用相同图形并人为增加注释的限制诚实；独立慢页基线复测任务合格。当前正文与catalog组件还有一次差异。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "catalog.json 的 web-quality.example.files 与完整组件",
+          "problem": "正文PerformancePanel的img含className=\"banner\"，catalog当前副本没有该属性，逐文件等值核对唯一失败项。",
+          "reason": "读者从正文和AI/测试元数据取得不同代码，复制到完整工程后图片宽度样式与窄屏表现可能不同，且构建校验明确要求一致。",
+          "fix": "把已补的className同步到catalog例子，重建课程数据后核对正文/元数据代码一致；不需要重复整个bulk测试。"
+        }
+      ],
+      "repairEvidence": "完整正文独立慢页测量与键盘/资源/性能限制保持合格；最终catalog的PerformancePanel已含className=banner，全部60章逐文件代码核对无差异，首轮唯一元数据缺口已关闭。",
+      "reviewedPrerequisites": [
+        "web-component-requests",
+        "web-testing",
+        "web-css-variables"
+      ],
+      "sourceSha256": "3e5149130693ddd897c1a583d92adb2c4dc9c2bfa7eec378d96ea9aa84d62d5b"
+    },
+    {
+      "id": "web-deploy",
+      "verdict": "pass",
+      "evidence": "首次源码ZIP/README与项目根目录文件清单已补；独立保留A/制作B/坏资源/恢复A并重新构建preview要求真实地址/Network、键盘和三宽度验收，明确仅本机恢复不冒充线上回滚。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "源码/dev/build/dist/deploy、hash与资源基路径、真实GitHub工作流YAML/权限/任务先后、本地preview 8906和回滚限制清楚；实际followup-06脚本/工作流/多页输出相符。首次使用该项目却未提供下载入口，回滚只有说明未安排实际实验。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立保留已验收版本A，再改一处文字构建版本B，刻意破坏一项资源路径，确认失败后恢复A并再次构建/preview验收；记录实际版本与地址，远程发布没做不能记为线上回滚。"
+        },
+        {
+          "severity": "P2",
+          "location": "先在独立项目验证生产文件",
+          "problem": "首次要求“下载followup-06原版”但没有ZIP或README链接；课程页不根据example.directory自动生成配套下载入口。",
+          "reason": "读者找不到当前命令所依赖的完整项目，会在只有讲义片段的空目录运行npm ci。",
+          "fix": "在本章提供web-followup-06.zip和对应README的可点击入口，明确解压后的项目根目录文件与命令位置。"
+        }
+      ],
+      "repairEvidence": "首次源码ZIP/README与项目根目录文件清单已补；独立保留A/制作B/坏资源/恢复A并重新构建preview要求真实地址/Network、键盘和三宽度验收，明确仅本机恢复不冒充线上回滚。",
+      "reviewedPrerequisites": [
+        "web-quality",
+        "web-git"
+      ],
+      "sourceSha256": "4cf3411d9952ead7669703f838532479a3735f76628c79994b22822a44236123"
+    },
+    {
+      "id": "web-fullstack",
+      "verdict": "pass",
+      "evidence": "完整正文/代码共享latest版本与creating写锁，旧成功/失败均校验后才提交列表，创建禁用三个控件并确认后自动真实GET。message保留已创建与刷新失败的区别；独立location表单/显示title与location、自定字段检查和重叠边界反馈具体。针对canonical app.js独立执行8个延迟DOM/fetch反例均通过：新/旧成功失败，读POST自动GET相撞，创建确认后刷新失败，空白新提交，POST失败保留输入，两次创建与自动读相撞。",
+      "issues": [],
+      "originalVerdict": "needs_fix",
+      "originalEvidence": "HTTP GET/POST/PATCH/DELETE及200/201/204、Go环境/独立模块/同源服务、两个完整替换文件、选项/Content-Type/body/preventDefault/finally、CORS与无持久账号边界具体；实际Go路由合同一致。还存在重叠读取可复现重复行。",
+      "originalIssues": [
+        {
+          "severity": "P2",
+          "location": "修改实验／本节验收",
+          "problem": "有原例的观察或改动，但没有要求独立实现不同目标的变式。",
+          "reason": "读者按提示改同一处可得到正确结果，仍无法区分自己会组合已学知识与仅复现参考。教学标准要求最后独立做一个变式。",
+          "fix": "独立为创建表单增加location字段或读取指定id的详情功能，写自己的字段校验和请求；给有效、空白/类型错、缺资源、停服务预期，保留失败输入且仅依据真实约定响应确认成功。"
+        },
+        {
+          "severity": "P1",
+          "location": "web/app.js 的 load()",
+          "problem": "两次load重叠时各自在开始清空列表，随后每份响应都append。初次读取未完成就点重新读取，会把同一条API记录追加两遍，提示仍报告一条。",
+          "reason": "这违反已经学过的过期请求保护，也使当前完整小例子的列表与数量不同步；零基础读者依照合法操作会遇到错误界面而无法按成功结果验收。",
+          "fix": "复用web-cancel-request的latest编号或等价保护，在成功渲染/失败状态写入前校验本次编号，只让最新读取提交列表；同时处理读取与创建状态相互覆盖。正文解释新增编号与边界，并验证初始请求+手动重读/连续点击时列表不重复。针对catalog原app.js的延迟fetch/DOM桩复现得到pendingReads=2、visibleRows=2、status='服务器返回 1 条活动'。"
+        }
+      ],
+      "repairEvidence": "完整正文/代码共享latest版本与creating写锁，旧成功/失败均校验后才提交列表，创建禁用三个控件并确认后自动真实GET。message保留已创建与刷新失败的区别；独立location表单/显示title与location、自定字段检查和重叠边界反馈具体。针对canonical app.js独立执行8个延迟DOM/fetch反例均通过：新/旧成功失败，读POST自动GET相撞，创建确认后刷新失败，空白新提交，POST失败保留输入，两次创建与自动读相撞。",
+      "reviewedPrerequisites": [
+        "web-fetch",
+        "web-react"
+      ],
+      "sourceSha256": "87ec80d3550e79095d3e8cdbf85ff5a272da8de8d06ff234c889fab12c59b41f"
+    }
+  ],
+  "summary": "二轮独立复审完成：首轮15章通过、45章返修；本轮完整复读全部60章正文、前置与所有示例，45章缺口均已关闭，最终60章pass、0章needs_fix。每章保留originalVerdict/originalEvidence/originalIssues，补repairEvidence、实际前置和当前源码SHA256。独立任务需从空白（或保留工程工具外壳）产生新结果，正常/边界反馈与当前教学范围相符；具体首次定义/HTTP启动/准确回链/下载/父子卸载缺口已核对。全部60章正文和catalog示例代码逐文件一致。对canonical全栈app.js另独立执行8个延迟DOM/fetch反例，旧成功/旧失败/读取与创建及自动重新读取相撞均通过。Effect父子卸载与依赖源码已独立复核，真实typecheck/build/Edge卸载取消、隐藏不请求、重挂当前URL的专项证据另来自改写者运行报告；已有真实Go+Edge联调报告也已核对。没有重复整套浏览器bulk，也没有把模拟反例、构建、Vue基础验收或本机恢复称为真实网络测速、Vue全面类型验收或线上发布。Root后续中文粗体边界空格仅改变渲染标记间隔，不改代码围栏或语义。"
+}

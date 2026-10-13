@@ -1,0 +1,188 @@
+{
+  "toolchain": "go version go1.26.9 windows/amd64",
+  "result": "PASS",
+  "modules": [
+    {
+      "module": "followup-08",
+      "result": "PASS",
+      "testsPassed": 4,
+      "skipped": [],
+      "checks": [
+        {
+          "command": [
+            "go",
+            "vet",
+            "-mod=readonly",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": ""
+        },
+        {
+          "command": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-count=1",
+            "-v",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": "=== RUN   TestCRUDAndFailures\n--- PASS: TestCRUDAndFailures (0.00s)\n=== RUN   TestCORSPrefight\n--- PASS: TestCORSPrefight (0.00s)\n=== RUN   TestInternalErrorDoesNotLeak\n2026/10/13 19:40:21 store_failure request_id=16 category=internal type=*errors.errorString\n--- PASS: TestInternalErrorDoesNotLeak (0.06s)\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nPASS\nok  \texample.com/learn/followup-08\t1.605s\n"
+        },
+        {
+          "command": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-o",
+            "E:\\AI\\学习\\.qa\\backend-modules\\followup-08.exe",
+            "."
+          ],
+          "exitCode": 0,
+          "output": ""
+        }
+      ],
+      "requirementsUnchanged": true
+    },
+    {
+      "module": "followup-09",
+      "result": "PASS",
+      "testsPassed": 4,
+      "skipped": [
+        "TestRealDatabase"
+      ],
+      "checks": [
+        {
+          "command": [
+            "go",
+            "vet",
+            "-mod=readonly",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": ""
+        },
+        {
+          "command": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-count=1",
+            "-v",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": "=== RUN   TestCRUDAndFailures\n--- PASS: TestCRUDAndFailures (0.00s)\n=== RUN   TestCORSPrefight\n--- PASS: TestCORSPrefight (0.00s)\n=== RUN   TestInternalErrorDoesNotLeak\n2026/10/13 19:40:30 store_failure request_id=16 category=internal type=*errors.errorString\n--- PASS: TestInternalErrorDoesNotLeak (0.06s)\n=== RUN   TestRealDatabase\n    db_test.go:15: 未设置独立 TEST_DATABASE_URL，未执行真实数据库测试\n--- SKIP: TestRealDatabase (0.00s)\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nPASS\nok  \texample.com/learn/followup-09\t1.224s\n"
+        },
+        {
+          "command": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-o",
+            "E:\\AI\\学习\\.qa\\backend-modules\\followup-09.exe",
+            "."
+          ],
+          "exitCode": 0,
+          "output": ""
+        }
+      ],
+      "requirementsUnchanged": true
+    },
+    {
+      "module": "followup-10",
+      "result": "PASS",
+      "testsPassed": 5,
+      "skipped": [],
+      "checks": [
+        {
+          "command": [
+            "go",
+            "vet",
+            "-mod=readonly",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": ""
+        },
+        {
+          "command": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-count=1",
+            "-v",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\n=== RUN   TestSessionsOwnershipCSRFAndRoles\n--- PASS: TestSessionsOwnershipCSRFAndRoles (0.51s)\n=== RUN   TestOriginAndRateLimit\n--- PASS: TestOriginAndRateLimit (0.73s)\n=== RUN   TestArgon2SaltAndVerify\n--- PASS: TestArgon2SaltAndVerify (0.42s)\n=== RUN   TestVerifyPasswordRejectsMalformedStorage\n--- PASS: TestVerifyPasswordRejectsMalformedStorage (0.00s)\nPASS\nok  \texample.com/learn/followup-10\t2.564s\n"
+        },
+        {
+          "command": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-o",
+            "E:\\AI\\学习\\.qa\\backend-modules\\followup-10.exe",
+            "."
+          ],
+          "exitCode": 0,
+          "output": ""
+        }
+      ],
+      "requirementsUnchanged": true
+    },
+    {
+      "module": "followup-11",
+      "result": "PASS",
+      "testsPassed": 5,
+      "skipped": [
+        "TestRealSQLIdentityOwnership",
+        "TestRealDatabase"
+      ],
+      "checks": [
+        {
+          "command": [
+            "go",
+            "vet",
+            "-mod=readonly",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": ""
+        },
+        {
+          "command": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-count=1",
+            "-v",
+            "./..."
+          ],
+          "exitCode": 0,
+          "output": "=== RUN   TestRealSQLIdentityOwnership\n    db_security_test.go:15: 未设置独立测试库，未执行SQL权限实测\n--- SKIP: TestRealSQLIdentityOwnership (0.00s)\n=== RUN   TestRealDatabase\n    db_test.go:15: 未设置独立 TEST_DATABASE_URL，未执行真实数据库测试\n--- SKIP: TestRealDatabase (0.00s)\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\n=== RUN   TestSessionsOwnershipCSRFAndRoles\n--- PASS: TestSessionsOwnershipCSRFAndRoles (0.82s)\n=== RUN   TestOriginAndRateLimit\n--- PASS: TestOriginAndRateLimit (1.65s)\n=== RUN   TestArgon2SaltAndVerify\n--- PASS: TestArgon2SaltAndVerify (1.82s)\n=== RUN   TestVerifyPasswordRejectsMalformedStorage\n--- PASS: TestVerifyPasswordRejectsMalformedStorage (0.01s)\nPASS\nok  \texample.com/learn/followup-11\t5.560s\n"
+        },
+        {
+          "command": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-o",
+            "E:\\AI\\学习\\.qa\\backend-modules\\followup-11.exe",
+            "."
+          ],
+          "exitCode": 0,
+          "output": ""
+        }
+      ],
+      "requirementsUnchanged": true
+    }
+  ],
+  "limitations": [
+    "TEST_DATABASE_URL explicitly unset: all real PostgreSQL tests are reported as SKIP, not PASS.",
+    "Build outputs are in ignored .qa only.",
+    "No Docker daemon, Linux OS signal, remote CI, cloud release, or restored-database HTTP end-to-end claim."
+  ]
+}

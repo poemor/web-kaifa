@@ -1,5 +1,17 @@
+# 独立解压后也不能提交自己的配置、依赖、备份和构建产物。
+.env
+.env.*
+!.env.example
+node_modules/
 backups/
 *.dump
 playwright-report/
 test-results/
-.env
+/followup-11
+/followup-11.exe
+/bin/
+/dist/
+/coverage/
+*.test
+*.out
+*.prof

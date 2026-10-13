@@ -120,6 +120,7 @@
   const effectiveLesson = id => {
     if (!knownLesson(id)) return undefined;
     const lesson = byId[id];
+    if (id === 'go-01' && window.COURSE_BOOK) return { ...lesson, starterCode: window.CourseBook.chapter('go-program').example.files['main.go'] };
     if (id === 'go-02' && state.audience === 'new' && window.LEARNING_ADAPTATIONS?.goBeginner02) return { ...lesson, ...window.LEARNING_ADAPTATIONS.goBeginner02, sourceMarkdown: window.LEARNING_KNOWLEDGE_GUIDES['go-control'].markdown };
     if (id === 'web-12' && window.LEARNING_ADAPTATIONS?.webForm12) return { ...lesson, ...window.LEARNING_ADAPTATIONS.webForm12 };
     const revisedLecture = window.LEARNING_LESSON_GUIDES?.[id];
@@ -131,7 +132,7 @@
   function updateSidebar() {
     const total = allLessons.length;
     const count = state.completed.length;
-    document.querySelector('#side-progress').innerHTML = `<div class="progress-label"><strong>已完成 ${count} 节</strong><span>${count} / ${total}</span></div><progress value="${count}" max="${total}" aria-label="课时完成进度"></progress>`;
+    document.querySelector('#side-progress').innerHTML = `<div class="progress-label"><strong>项目练习 ${count} 项已验收</strong><span>${count} / ${total}</span></div><progress value="${count}" max="${total}" aria-label="原项目练习完成进度"></progress>`;
   }
   function notify(message, undo) {
     clearTimeout(noticeTimer); undoAction = undo || null;
@@ -196,6 +197,10 @@
   }
   function renderTrack(track) {
     state.activeTrack = track; persist();
+    if (window.CourseBook) {
+      main.innerHTML = window.CourseBook.catalogueMarkup(track);
+      return;
+    }
     const course = courses[track];
     main.innerHTML = pageHeading(track === 'web' ? '从第一张网页开始' : '从一个 Go 程序开始', trackDescription(track))
       + `<div class="callout"><strong>${state.audience === 'new' ? '还没写过代码？' : '已经会一点编程？'}</strong><p>${state.audience === 'new' ? (track === 'web' ? '从第 1 课创建文件和打开页面开始。遇到新词可以直接在 AI 提问台要求解释，一次完成一个动作。' : '先做第 1 课的安装与运行，再学变量、函数和数据结构。Go 教材里的 C++ 对照可以先跳过；没有 C++ 基础也可以按顺序练习。') : (track === 'web' ? '先看每课的动手任务和验收。能独立完成再跳过阅读；布局、浏览器和无障碍仍值得亲手试。' : '优先检查 Go 与已有语言不同的地方：slice 共享、error、接口和并发。通过实际练习后，再进入 HTTP 与数据库。')}</p></div>`
@@ -228,7 +233,7 @@
     const index = course.lessons.findIndex(item => item.id === id);
     const code = state.drafts[id] ?? lesson.starterCode;
     const canPreview = lesson.track === 'web' && ['html', 'css', 'javascript'].includes(lesson.language);
-    const firstGoRun = id === 'go-01' ? `<section class="go-first-run" aria-labelledby="go-first-run-title"><h2 id="go-first-run-title">第一次运行，先按这四步做</h2><p>粘贴 <code>main.go</code> 后，还要建立 Go 模块。先在终端跑成功，再配置 F5 调试。</p><ol><li><strong>打开自己的 Go 项目文件夹</strong><span>右键这个文件夹 → 在集成终端中打开。确认终端目录与 <code>main.go</code> 的目录相同。</span></li><li><strong>先确认项目所属模块</strong><span>先用 <code>go env GOMOD</code> 查看模块路径；确认独立项目没有所属模块，再执行下方初始化。已有模块直接沿用。</span></li><li><strong>保存，然后运行 go run .</strong><span>原示例输出“你好，Go”和“编译后的程序也能独立运行”；改过代码就对照自己的预期。有错误先处理，不继续按 F5。</span></li><li><strong>再安装调试工具、配置 F5</strong><span><code>dlv</code> 安装成功、工作区指向正确项目后，设置断点并调试。</span></li></ol><div class="go-init-command"><p>确认当前是自己的独立练习目录、还没有所属模块时，只执行一次：</p><pre id="go-first-init-command"><code>go mod init example.com/learn/go-tools</code></pre><button class="button small" data-knowledge-copy="go-first-init-command">复制模块初始化命令</button></div><div class="button-row"><a class="button primary" href="#/setup?topic=go&amp;step=module">从创建文件夹到运行，逐步跟做 →</a><a class="button" href="#/setup?topic=editor&amp;step=module">运行成功后，配置 VS Code →</a><a href="#/setup?topic=go&amp;step=missing-module">遇到 go.mod file not found？直接修复 →</a></div></section>` : '';
+    const firstGoRun = id === 'go-01' ? '<details class="go-first-run"><summary>还没跑通？查看运行前准备</summary><p>打开独立项目，确认 go.mod 与 main.go 在同一目录；保存后在终端运行 go run .。本节先读懂程序结构。</p><div class="go-init-command"><p>新建独立目录且没有模块时，初始化一次：</p><pre id="go-first-init-command"><code>go mod init example.com/learn/hello</code></pre><button class="button small" data-knowledge-copy="go-first-init-command">复制模块初始化命令</button></div><div class="button-row"><a href="#/setup?topic=go&amp;step=module">从创建文件夹到运行，逐步跟做 →</a><a href="#/setup?topic=go&amp;step=missing-module">遇到 go.mod file not found？直接修复 →</a><a href="#/setup?topic=editor&amp;step=module">运行成功后，配置 VS Code →</a></div><p>F5 调试可在学过变量后再做，当前只需 go run . 得到输出。</p></details>' : '';
     main.innerHTML = `<header class="lesson-header"><h1>${escape(lesson.title)}</h1><div class="lesson-meta"><span>${lesson.track === 'web' ? 'Web 开发' : 'Go 后端'} · 第 ${lesson.day} 课</span><span>约 ${lesson.minutes} 分钟，可分几次做</span><span>${isDone(id) ? '✓ 已完成' : '待练习'}</span></div><p>${escape(lesson.summary)}</p><ul class="concept-list">${lesson.concepts.map(item => `<li>${escape(item)}</li>`).join('')}</ul></header>
       ${firstGoRun}${id === 'go-02' && state.audience === 'new' ? '<div class="callout"><strong>没有 C++ 基础也可以做。</strong><p>不用先学另一门语言。直接练习：输入几个分数，用 Go 的循环求总和，用 if 判断是否及格，再试空输入和非法分数。教材中的 C++ 对照可以先跳过。</p></div>' : ''}
       <div class="lesson-grid"><div class="lesson-main"><section class="task-box"><h2>这一课，动手做什么</h2><p>${escape(lesson.task)}</p></section>
@@ -245,6 +250,7 @@
       } else runPreview(lesson);
     }
     window.Workbench.mountLesson(lesson);
+    window.ReaderLayout.refresh('lesson');
   }
   function runPreview(lesson) {
     const editor = document.querySelector('#lesson-code');
@@ -355,10 +361,11 @@
     const labResults = window.LearningLab.search(normalized);
     const setupResults = window.GettingStarted.search(normalized);
     const followups = normalized ? courses.web.followups.map((item, index) => ({...item, index})).filter(item => [item.title, item.range, item.task, window.LEARNING_FOLLOWUP_GUIDES?.['web-' + String(item.index).padStart(2, '0')]?.markdown].filter(Boolean).join(' ').toLowerCase().includes(normalized)) : [];
-    const hasResults = results.length || labResults.topics.length || labResults.exercises.length || setupResults.length || followups.length;
+    const bookResults = window.CourseBook?.searchMarkup(normalized) || '';
+    const hasResults = results.length || labResults.topics.length || labResults.exercises.length || setupResults.length || followups.length || bookResults;
     main.innerHTML = pageHeading(normalized ? `查找“${query.slice(0, 60)}”` : '先写一个想找的词', normalized ? `找到 ${results.length} 节课程、${followups.length} 个后续阶段、${labResults.topics.length} 个知识主题、${labResults.exercises.length} 个练习、${setupResults.length} 篇起步教程。` : '可以搜索 HTML、切片、HTTP、测试或数据库。')
       + (results.length ? `<section><h2>相关课程 · ${results.length}</h2><div class="lesson-list">${results.map(lessonRow).join('')}</div></section>` : hasResults ? '' : `<div class="empty-state"><h2>${normalized ? '换个词再找找' : '课程也可以按路线找'}</h2><p>${normalized ? '试试更短的词，例如“表单”“error”或“SQL”。上方搜索框随时可以重试。' : 'Web 和 Go 路线里有全部课程。'}</p><div class="button-row">${button('Web 路线', '#/web', true)}${button('Go 路线', '#/go')}</div></div>`)
-      + (followups.length ? `<section class="followup-search-results"><h2>后续阶段 · ${followups.length}</h2><div class="followup-grid">${followups.map(item => `<a class="followup-card" href="#/followup/web/${item.index}"><small>${escape(item.range)}</small><h3>${escape(item.title)}</h3><p>${escape(item.description)}</p><span>学习讲解与完整示例 →</span></a>`).join('')}</div></section>` : '') + window.LearningLab.searchMarkup(normalized) + window.GettingStarted.searchMarkup(normalized);
+      + bookResults + (followups.length ? `<section class="followup-search-results"><h2>后续阶段 · ${followups.length}</h2><div class="followup-grid">${followups.map(item => `<a class="followup-card" href="#/followup/web/${item.index}"><small>${escape(item.range)}</small><h3>${escape(item.title)}</h3><p>${escape(item.description)}</p><span>学习讲解与完整示例 →</span></a>`).join('')}</div></section>` : '') + window.LearningLab.searchMarkup(normalized) + window.GettingStarted.searchMarkup(normalized);
   }
   function renderMissing() {
     main.innerHTML = pageHeading('这里还没有这节课', '链接可能不完整，先回路线中找找。') + `<div class="button-row">${button('Web 路线', '#/web', true)}${button('Go 路线', '#/go')}</div>`;
@@ -403,23 +410,35 @@
       if (status) status.textContent = '没有导入：请选用“导出完整记录”生成的 JSON（不超过 10 MB）。当前记录没有改变。';
     }
   }
+  let renderedBookPath;
   function route() {
     const raw = location.hash.replace(/^#\/?/, '') || 'home';
     const [path, query = ''] = raw.split('?');
     const parts = path.split('/');
     const params = new URLSearchParams(query);
+    const bookRoute=window.CourseBook.routeInfo();
+    if(bookRoute&&bookRoute.path===renderedBookPath){
+      window.CourseBook.refreshDirectory();
+      return;
+    }
+    renderedBookPath=bookRoute?.path;
     routeKey = parts[0];
-    const nav = routeKey === 'lesson' ? byId[parts[1]]?.track : routeKey === 'followup' ? parts[1] : routeKey === 'topic' ? 'knowledge' : routeKey === 'exercise' ? 'practice' : routeKey;
+    const nav = routeKey === 'lesson' ? byId[parts[1]]?.track : ['followup','learn'].includes(routeKey) ? parts[1] : routeKey === 'topic' ? 'knowledge' : routeKey === 'exercise' ? 'practice' : routeKey;
     document.querySelectorAll('[data-nav]').forEach(link => {
       if (link.dataset.nav === nav) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
     });
     const titles = { home: '开始学习', web: 'Web 开发', go: 'Go 后端', knowledge: '知识地图', practice: '练习工坊', ai: 'AI 提问台', 'ai-method': '怎样用 AI 开发', resources: '资料与参考', progress: '我的进度', search: '查找学习内容' };
     titles.setup = '安装与起步教程';
+    titles.learn = window.CourseBook?.chapter(parts[2])?.title || '系统教程';
     const labDetail = routeKey === 'topic' ? window.LEARNING_LAB.topics.find(item => item.id === parts[1]) : routeKey === 'exercise' ? window.LEARNING_LAB.exercises.find(item => item.id === parts[1]) : null;
     document.querySelector('#breadcrumb').innerHTML = routeKey === 'lesson' || routeKey === 'followup' ? `<a href="#/${nav || 'home'}">${nav === 'go' ? 'Go 后端' : 'Web 开发'}</a> / ${routeKey === 'lesson' ? '课内练习' : '后续阶段'}` : labDetail ? `<a href="#/${nav}">${titles[nav]}</a> / ${routeKey === 'topic' ? '概念讲解' : '练习任务'}` : escape(titles[routeKey] || '开始学习');
     document.title = `${routeKey === 'lesson' && knownLesson(parts[1]) ? effectiveLesson(parts[1]).title : labDetail?.title || titles[routeKey] || '开发练习册'} · 开发练习册`;
     if (routeKey === 'home') renderHome();
     else if (routeKey === 'setup') main.innerHTML = window.GettingStarted.markup(params);
+    else if (routeKey === 'learn') {
+      const content=window.CourseBook.chapterMarkup(parts[1],parts[2]);
+      if(content===null)renderMissing();else main.innerHTML=content;
+    }
     else if (routeKey === 'web' || routeKey === 'go') renderTrack(routeKey);
     else if (routeKey === 'lesson') renderLesson(parts[1]);
     else if (routeKey === 'followup') renderFollowup(parts[1], Number(parts[2]));
@@ -436,11 +455,14 @@
     else renderMissing();
     document.querySelector('#sidebar').dataset.open = 'false';
     document.querySelector('#menu-toggle').setAttribute('aria-expanded', 'false');
-    document.querySelector('#menu-toggle').setAttribute('aria-label', '展开导航');
+    const readingMenu=bookRoute || routeKey === 'lesson' && knownLesson(parts[1]);
+    document.querySelector('#menu-toggle').setAttribute('aria-label', readingMenu?'展开阅读目录':'展开导航');
+    document.querySelector('#menu-toggle').textContent=readingMenu?'目录':'☰';
     window.scrollTo({ top: 0, behavior: 'instant' });
     main.focus({ preventScroll: true });
     updateSidebar();
     window.Workbench.routeChanged(routeKey, routeKey === 'lesson' && knownLesson(parts[1]) ? effectiveLesson(parts[1]) : null);
+    if (routeKey !== 'lesson' || !knownLesson(parts[1])) window.ReaderLayout.refresh(routeKey);
     if (routeKey === 'setup') window.GettingStarted.focusRequested(params);
   }
   document.querySelector('.skip-link').addEventListener('click', event => {
@@ -452,7 +474,8 @@
     const sidebar = document.querySelector('#sidebar');
     const open = sidebar.dataset.open !== 'true'; sidebar.dataset.open = String(open);
     document.querySelector('#menu-toggle').setAttribute('aria-expanded', String(open));
-    document.querySelector('#menu-toggle').setAttribute('aria-label', open ? '收起导航' : '展开导航');
+    const reading=document.body.classList.contains('reading-view');
+    document.querySelector('#menu-toggle').setAttribute('aria-label', reading?(open?'收起阅读目录':'展开阅读目录'):(open?'收起导航':'展开导航'));
   });
   document.querySelector('#search-form').addEventListener('submit', event => {
     event.preventDefault(); location.hash = '/search?q=' + encodeURIComponent(document.querySelector('#global-search').value.trim().slice(0, 200));
@@ -465,7 +488,7 @@
       if (sidebar.dataset.open === 'true' && sidebar.contains(document.activeElement)) toggle.focus();
       sidebar.dataset.open = 'false';
       toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', '展开导航');
+      toggle.setAttribute('aria-label', document.body.classList.contains('reading-view')?'展开阅读目录':'展开导航');
     }
   });
   document.addEventListener('change', event => {
@@ -550,6 +573,7 @@
   window.Workbench.configure({ copy: copyText, lesson: effectiveLesson, draft: id => state.drafts[id], completed: () => [...state.completed] });
   window.LearningLab.configure({ copy: copyText, markdown });
   window.GettingStarted.configure({ copy: copyText, markdown });
+  window.CourseBook.configure({ copy: copyText, markdown });
   window.addEventListener('hashchange', route);
   route();
 })();

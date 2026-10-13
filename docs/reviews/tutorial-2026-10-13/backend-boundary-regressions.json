@@ -1,0 +1,73 @@
+{
+  "result": "PASS",
+  "localToolchain": "go version go1.26.2 windows/amd64",
+  "cases": [
+    {
+      "name": "followup-08-json",
+      "result": "PASS",
+      "mutationResult": "rejected",
+      "testOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nPASS\nok  \texample.com/boundary-proof\t1.997s\n",
+      "mutationOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n    boundary_test.go:38: ok=false status=400 body={\"error\":{\"code\":\"invalid_json\",\"message\":\"only one object\"}}\n        ; want ok=false status=413\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- FAIL: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- FAIL: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nFAIL\nFAIL\texample.com/boundary-proof\t1.436s\nFAIL\n",
+      "limitation": "Actual writeJSON/fail/decodeJSON and tracked tests isolated with the standard library. Not the complete DB application.",
+      "source": "E:\\AI\\学习\\exercises\\web\\followup-08\\api.go",
+      "sourceSHA256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391",
+      "checks": 6
+    },
+    {
+      "name": "followup-09-json",
+      "result": "PASS",
+      "mutationResult": "rejected",
+      "testOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nPASS\nok  \texample.com/boundary-proof\t0.056s\n",
+      "mutationOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n    boundary_test.go:38: ok=false status=400 body={\"error\":{\"code\":\"invalid_json\",\"message\":\"only one object\"}}\n        ; want ok=false status=413\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- FAIL: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- FAIL: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nFAIL\nFAIL\texample.com/boundary-proof\t0.049s\nFAIL\n",
+      "limitation": "Actual writeJSON/fail/decodeJSON and tracked tests isolated with the standard library. Not the complete DB application.",
+      "source": "E:\\AI\\学习\\exercises\\web\\followup-09\\api.go",
+      "sourceSHA256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391",
+      "checks": 6
+    },
+    {
+      "name": "followup-10-json",
+      "result": "PASS",
+      "mutationResult": "rejected",
+      "testOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nPASS\nok  \texample.com/boundary-proof\t0.060s\n",
+      "mutationOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n    boundary_test.go:38: ok=false status=400 body={\"error\":{\"code\":\"invalid_json\",\"message\":\"only one object\"}}\n        ; want ok=false status=413\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- FAIL: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- FAIL: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nFAIL\nFAIL\texample.com/boundary-proof\t0.122s\nFAIL\n",
+      "limitation": "Actual writeJSON/fail/decodeJSON and tracked tests isolated with the standard library. Not the complete DB application.",
+      "source": "E:\\AI\\学习\\exercises\\web\\followup-10\\api.go",
+      "sourceSHA256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391",
+      "checks": 6
+    },
+    {
+      "name": "followup-11-json",
+      "result": "PASS",
+      "mutationResult": "rejected",
+      "testOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- PASS: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nPASS\nok  \texample.com/boundary-proof\t0.054s\n",
+      "mutationOutput": "=== RUN   TestDecodeJSONBodyLimitAndTrailingValues\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace\n    boundary_test.go:38: ok=false status=400 body={\"error\":{\"code\":\"invalid_json\",\"message\":\"only one object\"}}\n        ; want ok=false status=413\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/second_value\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes\n=== RUN   TestDecodeJSONBodyLimitAndTrailingValues/large_first_value\n--- FAIL: TestDecodeJSONBodyLimitAndTrailingValues (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/small_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/exact_byte_limit (0.00s)\n    --- FAIL: TestDecodeJSONBodyLimitAndTrailingValues/large_trailing_whitespace (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/second_value (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/bad_trailing_bytes (0.00s)\n    --- PASS: TestDecodeJSONBodyLimitAndTrailingValues/large_first_value (0.00s)\nFAIL\nFAIL\texample.com/boundary-proof\t0.052s\nFAIL\n",
+      "limitation": "Actual writeJSON/fail/decodeJSON and tracked tests isolated with the standard library. Not the complete DB application.",
+      "source": "E:\\AI\\学习\\exercises\\web\\followup-11\\api.go",
+      "sourceSHA256": "69f6c8dbb31c868c7f21ecc05c471367878da519b0cfdc1a011faba3e1bf4391",
+      "checks": 6
+    },
+    {
+      "name": "followup-10-storage-guard",
+      "result": "PASS",
+      "mutationResult": "rejected",
+      "testOutput": "=== RUN   TestVerifyPasswordRejectsMalformedStorage\n--- PASS: TestVerifyPasswordRejectsMalformedStorage (0.00s)\nPASS\nok  \texample.com/boundary-proof\t0.807s\n",
+      "mutationOutput": "=== RUN   TestVerifyPasswordRejectsMalformedStorage\n    boundary_test.go:18: 超长格式应提前拒绝，实际分配 1 次\n--- FAIL: TestVerifyPasswordRejectsMalformedStorage (0.00s)\nFAIL\nFAIL\texample.com/boundary-proof\t0.882s\nFAIL\n",
+      "limitation": "Actual verifyPassword malformed-format guard only; Argon2 replaced by a panic stub to assert it is never reached. No password-hash/login/DB claim.",
+      "source": "E:\\AI\\学习\\exercises\\web\\followup-10\\security.go",
+      "sourceSHA256": "76f1b332cebfe7c849f1aaa62b9bc18b02386efe7de155e862ad80c729c800e5"
+    },
+    {
+      "name": "followup-11-storage-guard",
+      "result": "PASS",
+      "mutationResult": "rejected",
+      "testOutput": "=== RUN   TestVerifyPasswordRejectsMalformedStorage\n--- PASS: TestVerifyPasswordRejectsMalformedStorage (0.00s)\nPASS\nok  \texample.com/boundary-proof\t0.837s\n",
+      "mutationOutput": "=== RUN   TestVerifyPasswordRejectsMalformedStorage\n    boundary_test.go:18: 超长格式应提前拒绝，实际分配 1 次\n--- FAIL: TestVerifyPasswordRejectsMalformedStorage (0.00s)\nFAIL\nFAIL\texample.com/boundary-proof\t0.996s\nFAIL\n",
+      "limitation": "Actual verifyPassword malformed-format guard only; Argon2 replaced by a panic stub to assert it is never reached. No password-hash/login/DB claim.",
+      "source": "E:\\AI\\学习\\exercises\\web\\followup-11\\security.go",
+      "sourceSHA256": "76f1b332cebfe7c849f1aaa62b9bc18b02386efe7de155e862ad80c729c800e5"
+    }
+  ],
+  "limits": [
+    "Full followup-08..11 modules require their own Go 1.26.9/dependencies and environment. These isolated checks do not claim full module or PostgreSQL/Docker/remote CI execution."
+  ]
+}

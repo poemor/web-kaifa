@@ -1,0 +1,65 @@
+# JSON 文字与 JavaScript 对象
+
+在字符串与对象之间转换，检查坏JSON为何失败。
+
+## JSON是一种文字格式
+
+JSON使用双引号包住键与字符串，表示数组、对象及一些基本值。JavaScript对象可有方法和其他值，并非任何对象都能原样表示成JSON。JSON.parse解读文字，JSON.stringify输出JSON文字。
+
+## 在文字和对象之间转换
+
+JSON（JavaScript Object Notation）是一种数据文字格式，可用来保存或传输数据。它不是网络连接，也不会自己更新页面。**JSON 字符串与解析后的 JavaScript 对象是两个不同的值。**
+
+本例外层单引号属于 JavaScript，用来声明字符串；内层双引号属于字符串中的 JSON 格式。JSON 的属性名和字符串必须用双引号，可以包含对象、数组、数字、true/false、null；不能写函数、undefined、注释或末尾多余逗号。
+
+`JSON.parse(text)` 把合法文字解析成值；`JSON.stringify(item)` 把可表示的值转成 JSON 文字。本例 text 的类型是 string，item 才能按 item.title 读取属性。stringify 返回新字符串，不改变 item 的类型。
+
+在独立目录保存完整 index.html，浏览器打开，F12 的 Console 刷新后应出现下方三行。删除 JSON 键周围的双引号，会看到 SyntaxError（语法错误），本次脚本后续语句可能停下；恢复后再读后面的 try/catch 章节。合法的 `{"seats":"两人"}` 仍可能不符合“seats 必须为数字”的业务要求。
+
+## 完整例子
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>JSON</title></head>
+<body>
+<p>打开Console看结果。</p>
+<script>
+// 外层单引号声明 JS 字符串；里面仍遵守 JSON 的双引号规则。
+const text = '{"title":"Go","seats":2}';
+// 解析字符串得到对象，之后才能按属性读取 title。
+const item = JSON.parse(text);
+console.log(typeof text);
+console.log(item.title);
+// 把对象重新写成 JSON 文字便于保存或传输，不改变 item 本身。
+console.log(JSON.stringify(item));
+</script>
+</body>
+</html>
+```
+
+## 控制台结果
+
+```output
+string
+Go
+{"title":"Go","seats":2}
+```
+
+text保存字符串，不能把text.title当对象字段读。parse得到item后才可读取title。stringify返回新的字符串，不会把item变量改成字符串。
+
+## 修改实验
+
+把JSON键的双引号去掉，读取会抛SyntaxError。先恢复有效格式，后面的 [try、catch 与失败分支](#/learn/web/web-js-errors) 再学习怎样处理这种失败。
+
+### 参考答案
+
+格式合法还不代表业务字段正确。seats换成文字仍是合法JSON，但应用可能不能接受。
+
+## 独立变式：学习目标的文字往返
+
+**先合上原例，再从空白文件完成下面的目标。** 可以查本节概念和已经学过的章节，先写自己的预期；不要复制参考程序再换几个字。使用数组/对象、stringify/parse 与属性读取；错误处理将在后面的指定章节学习。
+
+自己定义两条目标，每条有 title 字符串与 minutes 数字；序列化为 JSON 字符串，再解析并读取第二条目标。运行前写出序列化结果的类型、解析结果的结构及第二条字段预期。
+
+自查：序列化变量是 string，解析后是含两对象的数组，第二条 title/minutes 与输入一致。把 minutes 改成字符串仍可成为合法 JSON，但不符合数字时长需求；删键的双引号会 SyntaxError。格式与业务形状分两项核对。

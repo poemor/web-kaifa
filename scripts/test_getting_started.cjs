@@ -15,7 +15,8 @@ const BASE=process.env.SITE_TEST_URL||'http://127.0.0.1:8743/';
     page.on('request',r=>{if(/^https?:/.test(r.url())&&!r.url().startsWith(BASE))external.push(r.url());});
     await page.goto(BASE+'#/setup');await page.locator('.setup-article').waitFor();
     const baseline=await page.evaluate(()=>localStorage.getItem('web-kaifa-study-v1'));
-    const go=async topic=>{await page.evaluate(x=>location.hash='/setup?topic='+x,topic);await page.locator(`.setup-nav [href="#/setup?topic=${topic}"][aria-current="page"]`).waitFor();};
+    const go=async topic=>{await page.evaluate(x=>location.hash='/setup?topic='+x,topic);await page.locator(`.setup-nav [href="#/setup?topic=${topic}"][aria-current="page"]`).waitFor({state:'attached'});};
+    const openReaderMenu=async()=>{const menu=page.locator('#menu-toggle');if(await menu.isVisible()&&await menu.getAttribute('aria-expanded')==='false')await menu.click();};
     for(const width of [320,375,414,768,1024,1280,1440]){
       await page.setViewportSize({width,height:1000});
       for(const topic of ['editor','web','go','ask']){
@@ -24,12 +25,13 @@ const BASE=process.env.SITE_TEST_URL||'http://127.0.0.1:8743/';
         assert.equal(await page.locator('main h1').count(),1);
         if(topic==='go')assert(await page.locator('code.language-output').count()>0);
         assert.equal(await page.locator('.setup-code:has(code.language-output) button').count(),0,'expected output has no command-copy button');
-        await page.locator('[data-setup-jump]').first().click();
+        await openReaderMenu();await page.locator('#reader-outline [data-setup-jump]').first().click();
         const target=await page.locator('[data-setup-jump]').first().getAttribute('data-setup-jump');
         assert.equal(await page.evaluate(()=>document.activeElement.id),target,'chapter jump receives keyboard focus');
         const position=await page.locator('#'+target).boundingBox();
         assert(position.y>=68&&position.y<800,'chapter heading is below fixed header');
         if(topic==='go'&&[375,1440].includes(width)){
+          await openReaderMenu();
           await page.getByRole('button',{name:'6. 在 VS Code 编译，并启动生成的程序',exact:true}).click();
           await page.screenshot({path:path.join(qa,`tutorial-go-build-${width}.png`)});
         }
@@ -95,7 +97,7 @@ const BASE=process.env.SITE_TEST_URL||'http://127.0.0.1:8743/';
     let actualError='';
     try{execFileSync('go',['run','.'],{cwd:exampleDir,encoding:'utf8',stdio:'pipe'});assert.fail('expected Go case error');}
     catch(error){actualError=String(error.stderr||'');assert.match(actualError,/undefined: fmt\.printLn/);}
-    await go('ask');await page.locator('[data-setup-jump="question-workshop"]').click();
+    await go('ask');await openReaderMenu();await page.locator('#reader-outline [data-setup-jump="question-workshop"]').click();
     assert.equal(await page.evaluate(()=>document.activeElement.id),'question-workshop');
     for(const [id,value] of Object.entries({goal:'运行自己的 Go 程序',environment:'Windows / PowerShell，独立练习目录；'+execFileSync('go',['version'],{encoding:'utf8'}).trim(),expected:'go run . 输出我今天运行了两次程序',actual:actualError,code:'main.go\n'+modified.replace('fmt.Println','fmt.printLn'),tried:'保存后重跑，仍然报错'}))await page.locator('#setup-'+id).fill(value);
     await page.locator('#setup-question-form [type=submit]').click();
@@ -112,15 +114,7 @@ const BASE=process.env.SITE_TEST_URL||'http://127.0.0.1:8743/';
     execFileSync('go',['build','-o',executable,'.'],{cwd:exampleDir,stdio:'pipe'});
     assert.equal(execFileSync(executable,[],{encoding:'utf8'}).trim(),'重新构建后才更新');
     const goSnippets=[...fs.readFileSync(path.join(root,'docs/tutorials/go-environment.md'),'utf8').replace(/\r\n/g,'\n').matchAll(/```go\n([\s\S]*?)\n```/g)].map(x=>x[1]);
-    assert.equal(goSnippets.length,4,'full program, two function replacements, input program');
-    const expectations=['第一步：保存文件\n第二步：运行并检查结果','每天分钟数： 20\n累计分钟数： 60'];
-    for(let i=1;i<=2;i++){
-      fs.writeFileSync(path.join(exampleDir,'main.go'),'package main\nimport "fmt"\n'+goSnippets[i]+'\n');
-      assert.equal(execFileSync('go',['run','.'],{cwd:exampleDir,encoding:'utf8'}).trim().replace(/\r\n/g,'\n'),expectations[i-1]);
-    }
-    fs.writeFileSync(path.join(exampleDir,'main.go'),goSnippets[3]+'\n');
-    assert.equal(execFileSync('go',['run','.'],{cwd:exampleDir,encoding:'utf8',input:'小林\n'}).trim().replace(/\r\n/g,'\n'),'请输入一个不含空格的称呼，再按回车：\n你好，小林！今天也来写一点代码。');
-    assert(execFileSync('go',['run','.'],{cwd:exampleDir,encoding:'utf8',input:''}).includes('没有读到称呼'),'input error handled');
+    assert.equal(goSnippets.length,1,'setup guide teaches only one minimal environment-check program');
     // Clipboard denial must leave the question visible for manual selection.
     await page.evaluate(()=>{Object.defineProperty(navigator.clipboard,'writeText',{configurable:true,value:async()=>{throw new Error('denied');}});});
     await page.locator('[data-setup-copy]').click();
@@ -128,6 +122,6 @@ const BASE=process.env.SITE_TEST_URL||'http://127.0.0.1:8743/';
     assert(await page.locator('#setup-question-output').isVisible());
     assert.equal(await page.evaluate(()=>localStorage.getItem('web-kaifa-study-v1')),baseline,'complete troubleshooting flow leaves course progress unchanged');
     assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
-    console.log('PASS: 4 guides × 7 widths, focus/copy/records, real HTML save and click/reset, Go edits/errors/build/stale binary/rebuild/variables/input/EOF, question and recovery.');
+    console.log('PASS: 4 guides × 7 widths, focus/copy/records, real HTML save and click/reset, Go edits/errors/build/stale binary/rebuild; language examples checked by test_course_book, question and recovery.');
   }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

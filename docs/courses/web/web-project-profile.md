@@ -1,0 +1,75 @@
+# 实战 学习名片页
+
+从空文件写出结构清楚、可读且能键盘操作的一页。
+
+## 项目任务
+
+至少一个主标题、简介、目标列表与联系说明。样式放style.css，通过link引入。用320、768、1440px与键盘验证，改一项颜色和全部文字为自己的内容。
+
+## 启动完整参考
+
+[下载源码ZIP](../../../assets/downloads/web-profile-card.zip)，解压后打开profile-card。启动与验证条件见目录README。先按README观察真实结果，再从空文件独立重写。
+
+用浏览器打开index.html，修改后保存并刷新。
+
+## 从零搭建时按这个顺序
+
+**HTML 负责内容，style.css 负责外观；两份文件都要保存。** 先建独立的 profile-card 文件夹，创建下面同名的两个文件。HTML 中的 link 按同目录寻找 style.css，不能把两个文件放在不同目录而仍用这个地址。
+
+先只写 h1、介绍段落、h2 和目标列表，打开确认文字正确；再加指向 contact 的链接和分区；最后逐条加 CSS。`*` 选择所有元素，`font:16px/1.7 sans-serif` 是字号、行高与字体的简写，`#f4f7fa` 是十六进制颜色值。`margin:20px auto` 表示上下 20px，左右自动分配空间使卡片居中。
+
+这个项目提前使用一个很小的交互状态：`:focus-visible` 是键盘等操作需要明显焦点时匹配的伪类，outline 是不挤占布局的外框，outline-offset 把框往外移 4px。这里用原生 a，不需要 JavaScript 才能按 Enter 跳转。
+
+验收时在 320、768、1440 CSS 像素宽度检查：文字可读、卡片边框没有出屏、链接可用 Tab 找到、按 Enter 到联系分区。再把一个目标改成长句，观察换行。没有表单提交、网络请求或持久化，不把这些写成已实现功能。
+
+## 完整参考文件
+
+### index.html
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>我的学习名片</title>
+ <!-- 读取同目录的样式文件；CSS 不需要写进正文。 -->
+ <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ <main class="card">
+  <h1>我的学习名片</h1>
+  <p>我正在学习 Web 开发。</p>
+  <h2>这个月的目标</h2>
+  <ul><li>看懂一张网页</li><li>独立修改样式</li></ul>
+  <!-- 链接用键盘也能操作，目标是下面的 contact 分区。 -->
+  <a href="#contact">查看联系说明</a>
+  <section id="contact"><h2>联系说明</h2><p>这是本地练习，没有报名或消息发送功能。</p></section>
+ </main>
+</body>
+</html>
+```
+
+### style.css
+
+```css
+/* 全部元素采用 border-box，让声明宽度包含内边距与边框。 */
+* { box-sizing: border-box; }
+/* font 简写为 字号/行高 字体；sans-serif 使用设备的无衬线字体。 */
+body { margin: 0; padding: 20px; font: 16px/1.7 sans-serif; background: #f4f7fa; color: #1e293b; }
+/* 小屏占满可用宽度，大屏上限 480px；左右 auto 分配剩余空间。 */
+.card { width: 100%; max-width: 480px; padding: 24px; margin: 20px auto; background: white; border: 1px solid #cbd5e1; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.2rem; }
+a { color: #164e80; }
+/* Tab 聚焦链接时显示外框，不靠颜色变化猜测位置。 */
+a:focus-visible { outline: 3px solid #164e80; outline-offset: 4px; }
+```
+
+## 自己完成与验收
+
+修改一个输入或内容，先写预期，再运行；再测试README所列边界。记录启动方式、实际结果与自己能解释的代码。参考项目运行成功不会自动记录课程完成。
+
+### 参考答案
+
+按各文件职责解释：入口负责组织操作，数据或样式负责自己的部分。不能只复制完整文件后把“能够打开”当成独立掌握。

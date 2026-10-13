@@ -1,0 +1,80 @@
+/* Hallmark · macrostructure: single-rail long document · tone: quiet editorial · anchor hue: terracotta
+ * Existing DESIGN.md system · pre-emit critique: P5 H5 E4 S5 R5 V4 */
+body.reading-view { --rail-width: 280px; }
+.reading-view .sidebar { padding: 0 var(--space-lg) var(--space-lg); }
+.reading-view .brand-row { min-height: 68px; padding: var(--space-md) var(--space-lg); margin-inline: calc(-1 * var(--space-lg)); border-bottom: 1px solid var(--color-rule); background: var(--color-paper); }
+.reading-view .brand small { display: none; }
+.reading-view .side-content { min-height: calc(100dvh - 68px); padding-top: var(--space-lg); }
+.reading-view .topbar { min-height: 68px; padding: var(--space-md) var(--space-2xl); }
+.reading-view main { max-width: none; margin: 0; padding: var(--space-xl) var(--space-2xl) var(--space-3xl); }
+.reading-view .page-heading, .reading-view .lesson-header { margin-bottom: var(--space-lg); }
+.reading-view .page-heading h1, .reading-view .lesson-header h1 { font-size: clamp(1.7rem, 2.2vw, 2.15rem); line-height: 1.4; }
+.reading-view .page-heading p { max-width: 90ch; margin-top: var(--space-sm); font-size: 14px; line-height: 1.8; }
+.reading-view .workbook-eyebrow { margin-bottom: var(--space-sm); }
+.reading-view .site-navigation > summary { display: block; }
+.reading-view .site-navigation { border-block: 1px solid var(--color-rule); }
+.reading-view .side-progress, .reading-view .side-note { display: none; }
+.reading-view .repo-link { margin-top: auto; }
+#reader-outline { min-width: 0; margin: 0 0 var(--space-lg); }
+.reading-view .outline-title { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+#reader-outline .reader-directory-label, #reader-outline .setup-toc > p, #reader-outline .knowledge-toc > p { color: var(--color-muted); margin: 0 0 var(--space-sm); padding-inline: var(--space-sm); font-size: 12px; }
+#reader-outline nav { display: flex; flex-direction: column; gap: 0; margin: 0; max-width: none; min-width: 0; }
+#reader-outline .setup-nav { border: 0; margin-bottom: var(--space-lg); padding: 0; }
+#reader-outline .setup-nav a { display: flex; min-height: 44px; padding: var(--space-sm); margin: 0; font-size: 14px; font-weight: 400; }
+#reader-outline .setup-toc, #reader-outline .knowledge-toc { position: static; max-height: none; overflow: visible; border: 0; padding: var(--space-lg) 0 0; border-top: 1px solid var(--color-rule); }
+#reader-outline button, #reader-outline [data-book-jump] { width: 100%; min-height: 44px; padding: var(--space-sm); border: 0; border-radius: var(--radius-sm); background: var(--color-transparent); color: var(--color-muted); font: 13px/1.6 var(--font-body); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+#reader-outline button:hover, #reader-outline [data-book-jump]:hover { background: var(--color-paper); text-decoration: none; }
+#reader-outline [aria-current="location"] { background: var(--color-tint); color: var(--color-accent); }
+#reader-outline button:active, #reader-outline [data-book-jump]:active { background: var(--color-paper-2); }
+#reader-outline .book-page-toc { margin: 0; max-width: none; border: 0; }
+#reader-outline .book-page-toc summary { min-height: 44px; padding: var(--space-sm); font-size: 13px; }
+#reader-outline .book-page-toc nav { padding-bottom: var(--space-sm); }
+#reader-outline .lab-back { margin-bottom: var(--space-lg); }
+#reader-outline .lab-back .button { width: 100%; justify-content: flex-start; }
+.reading-view .setup-layout { display: block; }
+.reading-view .setup-article, .reading-view .knowledge-prose, .reading-view .book-prose { max-width: none; width: 100%; }
+.reading-view :is(.setup-article,.knowledge-prose,.book-prose) > :is(p,ul,ol,dl,blockquote,h2,h3,h4) { max-width: 90ch; }
+.reading-view :is(.setup-article,.knowledge-prose,.book-prose) > :is(.table-scroll,.setup-code,.knowledge-code,.book-code) { max-width: 1360px; }
+.reading-view :is(.setup-article,.knowledge-prose,.book-prose) h2 { margin-top: var(--space-xl); scroll-margin-top: 88px; }
+.reading-view :is(.setup-article,.knowledge-prose,.book-prose) { font-size: 16px; line-height: 1.9; }
+.reading-view :is(.setup-article,.knowledge-prose,.book-prose,.lab-code) pre, .reading-view main pre:has(code) { font-size: 14px; line-height: 1.8; white-space: pre; overflow-wrap: normal; word-break: normal; overflow-x: auto; }
+.reading-view :is(.book-code,.setup-code,.knowledge-code) { margin-block: var(--space-lg); }
+.reading-view .reader-preparation { max-width: 90ch; margin-block: var(--space-md); background: var(--color-transparent); border-inline: 0; border-radius: 0; }
+.reader-preparation > summary { padding: var(--space-sm) 0; min-height: 44px; font-size: 13px; }
+.reader-preparation > :not(summary) { margin: 0; padding-block: var(--space-md); }
+.reader-preparation .followup-start { border: 0; }
+.reader-project-tools { margin-block: var(--space-md) var(--space-lg); }
+.reading-view .book-prerequisites { max-width: 90ch; margin-block: var(--space-md); font-size: 13px; }
+.reading-view .table-scroll { min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+.reading-view .table-scroll:focus-visible, .reading-view pre:focus-visible { outline-offset: -3px; }
+.reader-table-hint, .reader-code-hint { font-size: 12px; color: var(--color-muted); margin: var(--space-sm) 0; }
+.reading-view .table-scroll :is(th,td) { padding: var(--space-md); vertical-align: top; line-height: 1.8; }
+.reading-view .site-footer { max-width: none; margin: 0; padding-inline: var(--space-2xl); }
+.reading-view :is(.book-next,.book-overview,.book-start,.setup-worksheet) { max-width: 90ch; }
+@media (min-width: 1200px) {
+  .reading-view.assistant-open main { padding-inline: var(--space-xl); }
+  .reading-view.assistant-open #assistant-root { padding-top: var(--space-xl); }
+}
+@media (max-width: 960px) {
+  .reading-view .sidebar { padding-bottom: 0; }
+  .reading-view .brand-row { min-height: 60px; padding-block: var(--space-sm); }
+  .reading-view .side-content { min-height: 0; max-height: calc(100dvh - 60px); padding: var(--space-md) 0 var(--space-lg); }
+  .reading-view #menu-toggle { width: auto; min-width: 54px; padding-inline: var(--space-sm); font-size: 13px; }
+  .reading-view main, .reading-view.assistant-open main { padding: var(--space-xl) var(--space-xl) var(--space-2xl); }
+  .reading-view .topbar { padding: var(--space-sm) var(--space-xl); }
+  .reading-view .workbook-tabs { top: 60px; }
+}
+@media (max-width: 600px) {
+  .reading-view .topbar { min-height: 60px; gap: var(--space-sm); padding-inline: var(--space-lg); flex-wrap: nowrap; }
+  .reading-view .topbar .breadcrumb { display: none; }
+  .reading-view .search-form { flex: 1; min-width: 0; width: auto; }
+  .search-form .icon-button { min-width: 44px; width: 44px; min-height: 44px; }
+  .reading-view #assistant-toggle { font-size: 12px; padding-inline: var(--space-sm); }
+  .reading-view main, .reading-view.assistant-open main { padding: var(--space-lg) var(--space-lg) var(--space-2xl); }
+  .reading-view .page-heading p { font-size: 13px; }
+  .reading-view :is(.setup-article,.knowledge-prose,.book-prose) { font-size: 15px; }
+  .reading-view .table-scroll table { min-width: max(440px, calc(var(--reader-columns, 3) * 160px)); }
+  .reading-view .table-scroll :is(th,td) { font-size: 13px; }
+  .reading-view :is(.setup-article,.knowledge-prose,.book-prose) pre { font-size: 13px; padding: var(--space-md); }
+  .reading-view .site-footer { padding-inline: var(--space-lg); }
+}

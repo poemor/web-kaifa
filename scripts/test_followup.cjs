@@ -17,6 +17,7 @@ const KEY='web-kaifa-study-v1';
     await page.locator('main > .page-heading').waitFor();
     assert.equal(await page.locator('.followup-guide').count(),1,'stage must contain an expanded teaching guide, not just the original checklist');
     const baseline=await page.evaluate(key=>localStorage.getItem(key),KEY);
+    const openReaderMenu=async()=>{const menu=page.locator('#menu-toggle');if(await menu.isVisible()&&await menu.getAttribute('aria-expanded')==='false')await menu.click();};
     const stages=await page.evaluate(()=>window.LEARNING_CURRICULUM.web.followups);
     const navigate=async index=>{
       await page.evaluate(index=>location.hash='/followup/web/'+index,index);
@@ -32,7 +33,8 @@ const KEY='web-kaifa-study-v1';
         assert.equal(await page.locator('#course-outline a').count(),12);
         assert.equal(await page.locator('#course-outline [aria-current="page"]').getAttribute('href'),'#/followup/web/'+index);
         assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'stage '+index+' overflow at '+width);
-        const jump=page.locator('.followup-guide [data-knowledge-jump]').last();
+        await openReaderMenu();
+        const jump=page.locator('#reader-outline [data-knowledge-jump]').last();
         await jump.click();
         const id=await jump.getAttribute('data-knowledge-jump');
         assert.equal(await page.evaluate(()=>document.activeElement.id),id);
