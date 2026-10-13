@@ -47,4 +47,14 @@ AI 服务选择刷新后返回 Claude；本地提问草稿刷新后清空。页�
 
 新增 `scripts/test_workbench.cjs` 回归覆盖多行问题、Ctrl/Cmd 快捷键、中文输入法选词以及 375/768/1440 px 深滚动切换、End 键与焦点可见性，本地完整工作台回归通过。独立线上走查脚本在本地 `http://127.0.0.1:8743/` 重跑，165 项全部通过，没有浏览器脚本错误或失败请求。375 px 修复后验收题目起点为 `y = 140.2`，固定标签底部为 `y = 112.4`；截图为 `.qa/live-beginner-review-tab-fixed.png`。
 
-最终部署和修复后线上闭环由主代理完成后补记。
+## 部署后独立复验
+
+2026-10-13，在实际线上入口完整重跑以上 165 项检查，全部通过：`issues = []`、`errors = []`、`requestsFailed = []`。两项交互修复在已部署页面有效；流程数据保存为 `.qa/live-beginner-review-deployed-be27673.json`。
+
+本次核对的实施提交为 `be276736c6c6e413b56837b17fa5b0badf4a1dc9`。通过 GitHub CLI 独立查询 [Pages 部署 38342956838](https://github.com/zhouwu97/web-kaifa/actions/runs/38342956838)，其状态为 `completed`、结果为 `success`，`headSha` 与该提交一致。线上与本地入口均引用 `assets/workbench.js?v=a894e84215b0`，脚本内容按项目使用的 LF 归一化逐字一致，SHA-256 均为 `a894e84215b0890ab13cb1fcca01f0db670cadeaa33445c54eb48f6a7fc8d60f`。
+
+复验将课程页标题检查限定为 `.lesson-header > h1`：新版 Go 第 1 课的折叠完整讲义保留教材自身标题，查询所有 `main h1` 会同时选中课程标题与讲义标题。其余 165 项走查范围保持不变。
+
+另记录一次未稳定复现的浏览器等待异常：在逐个检查 24 个知识主题后，进入 Web 第 1 课，点击“动手写”、填入带唯一 `actual-marker` 的 HTML，再点击当前“运行预览”，Playwright 曾报告 marker 存在但不可见。该次没有采集错误当下的 `iframe.hidden`、选中标签或计算样式，因此没有证据将它归因于产品代码或前一页的元素。
+
+随后按相同步骤直接检查并保存 `.qa/live-preview-diagnostic.json` 与 `.qa/live-preview-diagnostic.png`：选中标签为 `workbook-tab-code`，iframe 与代码面板的 `hidden` 均为 `false`、计算样式均为 `display: block; visibility: visible`，预览状态为“已运行当前代码，请检查实际结果。”，iframe 高度为 250 px，正确 `srcdoc` 含该 marker 且只找到 1 个。再加失败时诊断钩子完整重跑线上 165 项通过，未触发该钩子。上述异常按测试观察保留，没有据此扩大产品改动。
