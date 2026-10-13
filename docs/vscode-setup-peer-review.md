@@ -84,6 +84,16 @@ launch的type=go/request=launch/mode=debug/program/cwd/internalConsole，与[Go�
 
 ## 保存的运行证据
 
+### 同日继续修复：缺模块与教程操作顺序
+
+用户再次提供F5截图：Delve已经监听，但构建报go.mod file not found；目录只有main.go。本次把Go第1课顶部改成常驻四步起步说明，单独复制初始化命令；Go环境/工具链讲义用动作、文件与输出逐步验收。cmd的目录检查使用cd/dir，已有项目用go env GOMOD核对所属模块，不覆盖源码或在资料根初始化。错误入口和搜索可直接定位章节，刷新/返回保留URL中的步骤。
+
+独立QA实际复现只有main.go时的缺模块错误；go run main.go可成功却不会创建模块，init后go run .与调试构建成功，重复init拒绝且源码/mod不变。若QA目录位于Git资料仓库内，Go会给cannot find main module并建议向上级初始化，教程明确只在独立练习目录建模块。保留的scripts/test_vscode_starter.cjs加入这条恢复回归；scripts/test_go_start_path.cjs验证入口、复制、步骤跳转、搜索、刷新/返回、未知参数、7宽度和原学习记录保留。
+
+子代理额外实际启动Delve DAP：缺模块时能监听但launch失败；同目录按教程init后，在原Go第1课fmt.Println(greeting("Go"))处命中断点，F11进入greeting并读到参数name=Go，stepOut/continue实际输出两行。VS Code教程因此区分A保留Go01原源码的断点/参数与B第9节name/message变量示例，不让新手寻找自己文件里不存在的语句。独立浏览器148项检查与原Go01默认源码对应验证通过，未改变完成/check/quiz/notes/drafts。
+
+本次也未操作用户桌面、全局编辑器设置或原生F5界面；DAP实测与浏览器验收的边界保留。证据位于.qa/go-module-recovery-results.json、.qa/go-module-dap-results.json及.qa/go-module-path-peer/results.json。
+
 临时QA证据均在.qa/vscode-setup-peer：task-results.json（完整命令/cwd/退出码/输出）、dap-results.json（断点/variables/evaluate/next/输出与协议记录）、schema-results.json（正文/ZIP/schema）。复跑脚本test-tasks.cjs与test-dap.cjs不触碰真正练习目录，安装的dlv.exe及hello/__debug_bin只在忽略的QA目录，未提交产物。
 
 本组未发现待修的源码/配置问题；已具备清楚且实跑过的cmd错误定位、菜单任务、构建失败阻断和断点观察证据。跨系统GUI与fmt.Scan交互式调试仍按报告边界人工验证，不把说明文本当成实际验收。

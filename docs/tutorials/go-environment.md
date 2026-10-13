@@ -4,6 +4,10 @@ Go 不要求先学 C++。先认识三件事：VS Code 负责编辑，Go 工具�
 
 先完成“安装 VS Code”的打开文件夹步骤，再按本篇操作。你可以直接学 Go，不必先完成 Web 环境。代码写进 `main.go`，命令输进 VS Code 底部终端；每条命令按一次 Enter，查看结果后再继续。
 
+**已经粘贴 main.go，但 F5 报 `go.mod file not found`？** 直接查看本文“F5 报 go.mod file not found”章节。新建文件夹不会自动初始化模块，安装 Go 插件或 dlv 也不会创建 go.mod。正常跟做顺序是：打开独立目录 → 初始化模块 → 保存源码 → `go run .` 成功 → 再配置 F5。
+
+[直接定位缺模块的修复步骤](../../index.html#/setup?topic=go&step=missing-module) · [运行已成功，配置 VS Code 与调试](../../index.html#/setup?topic=editor&step=module)
+
 ## 1. 下载与验证 Go
 
 从 [Go 官方下载页](https://go.dev/dl/) 选择稳定版、对应操作系统与处理器。Windows 用 MSI 安装程序，macOS 用对应安装包；Linux 按官方安装页的 Linux 标签操作。已有 Go 环境时先检查版本，再决定是否更新，不要直接删除已有安装。[Go 官方安装说明](https://go.dev/doc/install)
@@ -34,29 +38,47 @@ go version
 
 ## 3. 在独立练习目录初始化
 
-用 VS Code 左侧资源管理器展开 `exercises` → `go`，在里面新建 `setup-check`（已有空目录则继续用，有旧作品则换新名字）。**右键这个练习文件夹 → 在集成终端中打开**，这样不用先记住整条路径。
+**动作一：打开你实际要运行的文件夹。** 已有本仓库时，在 `exercises/go` 下新建 `setup-check`。没有下载仓库也可以在“文档”中新建 `go-first-program`，用“文件 → 打开文件夹”直接打开它；不需要先建整套资料目录。已有自己创建的 `go` 文件夹和 main.go 时可以继续用，不要为了跟教程换名字而丢掉旧代码。
 
-先输入下面一条命令，按 Enter：
+**动作二：在这个文件夹里打开终端。** 左侧资源管理器右键最上方项目文件夹 → **在集成终端中打开**。确认提示符对应这个目录。单独打开 main.go 标签不等于终端已进入它的目录。
+
+| 当前终端 | 查看当前位置 | 查看目录中的文件 | 预期 |
+| --- | --- | --- | --- |
+| PowerShell，提示符通常有 PS | `Get-Location` 或 `pwd` | `Get-ChildItem` 或 `ls` | 指向你打开的独立练习目录 |
+| cmd，提示符通常是 C:\某个目录> | `cd`（只输入这两个字母，不加路径） | `dir` | 同上；cmd 不用 pwd/ls |
+| macOS/Linux zsh/bash | `pwd` | `ls` | 同上 |
+
+位置不对时，重新右键正确文件夹打开终端；也可用 `cd "你实际的目录路径"` 切换，Windows cmd 跨盘符用 `cd /d "实际路径"`。这里的中文是占位说明，不是一条可照抄的路径。仓库用户的目录末尾应为 `exercises/go/setup-check`；自己建立其他文件夹的人按自己的名字核对，不要求所有人都在同一条路径。
+
+**动作三：先确认是否已有模块。** 下面命令在三种终端里相同：
 
 ```sh
-pwd
+go env GOMOD
 ```
 
-预期：路径以 `exercises/go/setup-check` 结尾（Windows 的分隔符是 `\`）。如果不是，在左侧重新右键正确目录打开终端，再查一次。**只在你确认当前位于仓库根目录时**，也可运行 `cd exercises/go/setup-check` 进入；`cd` 表示切换目录，已经进入后不要重复执行这句相对路径命令。
+若输出当前项目的 go.mod 完整路径，已有模块，**跳过初始化**。如果输出的是上级项目的 go.mod，说明当前代码属于那个模块，先打开正确的项目根目录；不要随手在子目录再建一个模块。若输出 `NUL`（Windows）、`/dev/null`（Unix）或空值，表示此处未找到生效的模块文件；确认它是你准备独立练习的目录后再初始化。该命令只查看环境，不创建或删除文件。
 
-确认位置后，单独执行：
+**动作四：新项目初始化一次。** 只有当前目录还没有所属模块时，单独执行：
 
 ```sh
 go mod init example.com/setup-check
 ```
 
-预期：终端提示创建 `go.mod`，左侧练习目录出现这个文件。若提示 `go.mod already exists`，先确认它属于本次练习，然后继续下一步，不要删除它。模块是一起管理的一组 Go 代码，本练习只含一个文件；在独立练习目录初始化，不在整个资料仓库根目录建立。
+预期终端提示：
+
+```output
+go: creating new go.mod: module example.com/setup-check
+```
+
+左侧练习目录新增 **go.mod**。点开它，第一行应为 `module example.com/setup-check`，Go 版本行由工具按你的环境生成，不需要手填；标准库小程序暂时没有 go.sum 也正常。再运行 `go env GOMOD`，应指向刚创建的文件。**看到了这个文件再进入下一步**。
+
+若提示 `go.mod already exists`，确认现有模块所属后直接继续，不删除文件来消除提示。若报权限问题，先确认目录可写，不继续 F5。若不小心在错误目录运行，先保留报错和文件位置排查，不按“删整个文件夹”的建议操作。
 
 `go.mod` 记录模块信息；`example.com/setup-check` 是练习用模块名，不要求购买域名。
 
 ## 4. 新建 main.go
 
-右键刚才的 `setup-check` 目录 → 新建文件 → 输入 `main.go`。若之前已建空文件，直接打开。把下面代码完整放进文件，按 `Ctrl+S`（Mac 为 `Cmd+S`）保存；注意保留英文双引号、括号与大小写：
+右键刚才的 `setup-check`（或你自己的实际项目目录）→ 新建文件 → 输入 `main.go`。若之前已建空文件，直接打开。把下面代码完整放进文件，按 `Ctrl+S`（Mac 为 `Cmd+S`）保存；注意保留英文双引号、括号与大小写：
 
 ```go
 package main
@@ -85,6 +107,43 @@ go run .
 先记住：`package main` 表示可执行程序的包，`main` 函数是入口，`fmt.Println` 在终端打印一行文字，双引号包围要打印的字符串。本次修改引号里的文字即可，后续课程再逐项学习语法。
 
 `go run .` 中的点表示当前包。这里没有数据库、远程依赖或服务器；程序输出后退出是正常现象。
+
+到这里的独立项目应是：
+
+```text
+setup-check/（或你自己的 go-first-program / go 文件夹）
+  go.mod
+  main.go
+```
+
+两个文件属于同一个项目，终端也在这里。**只有 go version 成功、go.mod 出现、保存后的 go run . 输出正确，才继续 F5 调试**。配置步骤见“安装 VS Code”第9–12节；不会因为创建一个 .vscode 文件夹而自动补上 go.mod。
+
+## F5 报 go.mod file not found：按这四步恢复
+
+如果调试控制台已经出现 `Starting ... dlv ...`、`DAP server listening ...`，随后是 `Build Error` 和 `go.mod file not found in current directory or any parent directory`，说明 **Delve 已启动，接下来构建当前项目时找不到模块**。此时优先检查项目目录和 go.mod；不需要先重装 Go 插件、dlv 或 fmt。
+
+在已下载的 Git 资料仓库内，还可能显示 **`cannot find main module, but found .git/config`**，并建议去上级目录初始化。这也是缺模块的一种提示；本仓库是资料集合，**不要照提示在整套资料根建立模块**。下面只在自己的独立 Go 练习目录初始化。
+
+1. 停止这次失败调试。左侧确认 main.go 在哪个文件夹，用“文件 → 打开文件夹”打开这个独立项目。右键它 → 在集成终端中打开。cmd 用 `cd`/`dir`，PowerShell 用 `Get-Location`/`Get-ChildItem` 核对；别把调试控制台当作终端。若源码放在整套教材资料根目录，先把这份源码复制到新建的独立练习文件夹，并直接打开那层；保留原文件，不在资料根初始化模块。
+2. 执行 `go env GOMOD`。若已给出路径，打开该模块根目录再运行；若未找到模块，确认没有上级项目要沿用，单独输入以下初始化命令。它保留你的 main.go，不重写源码。
+
+```sh
+go mod init example.com/learn/hello
+```
+
+3. 确认项目里出现 go.mod，再在**同一个终端**运行：
+
+```sh
+go run .
+```
+
+看到你 main.go 实际的打印文字才算运行验证成功。例如 Go 第1课的问候源码应输出“你好，Go”和“编译后的程序也能独立运行”；本篇最小例子则输出“我能运行自己的 Go 程序”。报错时停在这一步，保留错误原文。
+
+4. 已有配置时回到 `.vscode/launch.json`；没有这份文件的人按下方“配置 VS Code”入口创建。本教程的 program/cwd 是 `${workspaceFolder}`：F5 调试**当前打开的项目目录**。确保该工作区就是刚运行成功的模块目录，再按 F5。main.go 的编辑标签开着，不代表调试目标也指向这个文件夹。
+
+**为什么 go run main.go 有时能跑，F5 却失败？** `go run main.go` 可以直接构建指定的标准库单文件；本教程的 `go run .` 和 F5 按项目包运行，需要识别模块。单文件成功不能代替项目准备。保留模块设置，按目录初始化和验证，不用关闭模块模式或反复更换运行插件绕过错误。[Go 官方起步：先初始化模块，再运行当前包](https://go.dev/doc/tutorial/getting-started)
+
+**下一步去哪？** 已跑出结果但还没创建编辑器配置，先 [配置 VS Code](../../index.html#/setup?topic=editor&step=module)；已有 launch.json 的人可 [继续设置 F5 断点](../../index.html#/setup?topic=editor&step=debug)。若仍失败，到“学会问 AI”提供工作区文件树、实际终端类型、go env GOMOD 输出、执行动作和完整错误。个人路径可打码，但保留文件夹层级。
 
 ## 5. 逐行看懂自己的第一个程序
 
@@ -143,7 +202,7 @@ func main() {
 
 **编译**是把源码检查并转换成可执行程序；**运行**是让这个程序真正执行。`go run .` 把编译和运行连起来，适合频繁练习；`go build` 构建出保留在磁盘上的程序，成功后不会自动打印你的学习目标。[Go 命令说明](https://pkg.go.dev/cmd/go)
 
-先保存文件，右键 `setup-check` → 在集成终端中打开，用 `pwd` 核对路径。下面按系统选择一组，每次只运行一条。
+先保存文件，右键自己的项目目录 → 在集成终端中打开，按第3节的终端表核对路径：cmd 用 `cd`/`dir`，PowerShell 用 `Get-Location`/`Get-ChildItem`，macOS/Linux 用 `pwd`/`ls`。下面按系统选择一组，每次只运行一条。
 
 ### Windows PowerShell
 
@@ -245,7 +304,7 @@ func main() {
 | 完整报错或现象 | 含义与下一步 |
 | --- | --- |
 | `go` 不是命令 / command not found | 重开终端再试；Windows PowerShell 用 `Get-Command go`、macOS/Linux 用 `command -v go` 检查命令路径，记录输出 |
-| `go.mod file not found` | 用 `pwd` 和 `ls` 确认当前目录；应能看到 `go.mod` 与 `main.go`，不要随处反复初始化 |
+| `go.mod file not found` | 按第3节终端表核对目录（cmd 用 cd/dir），再看 [缺模块修复步骤](../../index.html#/setup?topic=go&step=missing-module)；已有模块先找正确项目，不随处反复初始化 |
 | `go.mod already exists` | 通常已有模块；查看目录和模块文件后直接运行，不删除文件来消除提示 |
 | `no Go files` | 当前目录是否正确、文件是否保存、是否误写成 `main.go.txt` |
 | `main redeclared in this block` | 同一个包出现了多个 main；检查是否把替换片段追加了进去，或目录里保留了另一份带 main 的 `.go` 文件 |

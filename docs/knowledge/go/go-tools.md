@@ -8,21 +8,139 @@
 
 模块路径 `example.com/learn/go-tools` 在这份本地练习中是标识，不表示你需要购买域名或先部署网站。自己建立练习时，在独立目录初始化模块；不要把整个教材仓库变成一个 Go 项目。已有 `go.mod` 的练习不用再次初始化。标准库如 `fmt` 随 Go 提供，不需要 `go get fmt`。
 
-## 在 VS Code 建立独立练习
+## 在 VS Code 建立独立练习：先初始化，再运行，最后调试
 
-1. 建立 `exercises/go/go-tools` 文件夹，在 VS Code 选择“文件 → 打开文件夹”，打开这个目录。
-2. 左侧资源管理器点“新建文件”，命名为 `main.go`，贴入下面**完整程序**，按 `Ctrl+S`。
-3. 新建终端，Windows PowerShell 输入 `Get-Location`，cmd 输入 `cd`（不带参数），macOS/Linux 输入 `pwd`。最后目录必须是 `go-tools`，而不是上一级 `go`。提示符以 `PS` 开头通常是 PowerShell；`C:\...>` 通常是 cmd，启动 exe 的写法不同。
-4. 首次执行 `go mod init example.com/learn/go-tools`。左侧应出现 `go.mod`。再逐行输入下面命令；命令不写进 `main.go`。
+按下面顺序做，每一步先看预期结果，再继续。**独立新建目录只有main.go，不等于已经初始化了Go模块**；装好了Go扩展和Delve，也不能跳过模块准备。
+
+### 第1步：打开装着源码的文件夹
+
+**动作**：第一次新建练习，可以创建`exercises/go/go-tools`，用VS Code“文件 → 打开文件夹”选它。已经在桌面建了一个叫`go`的文件夹并写了main.go，就直接打开这个已有文件夹，不要求改名或重新抄一遍。打开的是文件夹，不是只双击main.go。
+
+**应看到**：左侧最上层是你的独立项目文件夹，下面能找到main.go。下载起步包的人应同时看到main.go、go.mod、.vscode；他们跳过第4步的初始化。
+
+**不一致时**：若最上层是整个教材仓库、桌面、下载目录或ZIP文件，请重新“打开文件夹”选择真正放main.go的那一层。不要在教材仓库根目录为了消除报错初始化模块。已有源码先保留；本课“完整程序”供新练习建立或对照，不要求覆盖你自己的代码。
+
+### 第2步：保存完整源码
+
+**动作**：新练习在左侧点“新建文件”，命名main.go，复制下方“完整程序：main.go”，按Ctrl+S（Mac用Cmd+S）。已有main.go的人先保存当前代码，不另建一个也含func main的重复文件。
+
+**应看到**：文件标签的未保存圆点消失，文件名是main.go，右下角语言模式是Go。
+
+**不一致时**：main.go.txt要改成正确扩展名；空文件要补齐程序。main.go里的内容应以package main开始，Go命令要输入终端，不写进源码。
+
+### 第3步：先核对终端目录和Go工具
+
+**动作**：菜单“终端 → 新建终端”。根据提示符选择下面一组目录检查命令：
+
+Windows PowerShell通常有PS前缀：
+
+```powershell
+Get-Location
+Get-ChildItem
+```
+
+Windows cmd通常只有盘符和路径：
+
+```bat
+cd
+dir
+```
+
+macOS/Linux终端：
+
+```sh
+pwd
+ls
+```
+
+**应看到**：当前路径就是第1步打开的独立项目，文件列表有刚保存的main.go。文件夹不一定叫go-tools，关键是路径与源码所在位置一致。然后在同一个终端运行：
+
+```powershell
+go version
+```
+
+**应看到**：实际Go版本。**不一致时**：目录错了先回“打开文件夹”选对项目，再新建终端重新核对；go不是命令则先按[Go环境教程](../../../index.html#/setup?topic=go)安装SDK并重开VS Code。看到Delve的监听信息不能代替go version与目录检查。
+
+### 第4步：没有go.mod才初始化（已有文件夹也需要）
+
+**动作**：查看第3步列出的文件。只有main.go、没有go.mod的新建目录，执行下面这一条；它在PowerShell、cmd和macOS/Linux中写法相同，可以单独复制。
+
+如果这里其实是一个已有Go项目的子目录，父级已经有该项目的go.mod，请按那个项目README打开模块根目录，不在子包下再建一套嵌套模块。下面针对的是本课独立新建的练习目录。
+
+```powershell
+go mod init example.com/learn/go-tools
+```
+
+**应看到**：终端提示创建go.mod，左侧main.go旁边新增go.mod。模块路径只是本练习的标识，不用购买域名。该命令创建项目元数据，不重写main.go，也不安装VS Code插件。
+
+```output
+go: creating new go.mod: module example.com/learn/go-tools
+```
+
+有时还会提示go mod tidy；当前只有fmt标准库的完整例子可以直接继续运行，不需要go get fmt。
+
+**已有go.mod时**：下载起步包或已有项目直接跳到第5步，不再init、不删除原文件。如果提示go.mod already exists，先确认当前目录确实有正确模块文件，然后运行；不要把“再初始化一次”当成每次打开项目都要做的动作。
+
+### 第5步：先用go run .看到真正的结果
+
+**动作**：先保存main.go，在刚才同一个项目终端运行：
+
+```powershell
+go run .
+```
+
+**应看到**：使用本课完整程序时有“你好，Go”和“编译后的程序也能独立运行”两行。改greeting里的调用参数、保存、重跑后输出也应改变。结果在底部Terminal，不在网页、Output或Debug Console里找。
+
+**失败时**：go.mod file not found先用下一节的缺模块恢复步骤；源码错误按文件名/行号修正并保存，再重跑同一条命令。这里成功之前先不按F5，否则环境、模块和调试问题混在一起更难判断。
+
+### 第6步：运行成功后再整理、检查、构建或F5
+
+这些检查不会替你创建模块。已有go.mod且go run .成功后，再逐条运行：
 
 ```powershell
 go fmt ./...
-go run .
 go test ./...
 go vet ./...
 ```
 
-这些 Go 命令在三种终端中相同。构建和启动则按下面选择，**不要把不同终端的启动命令混用**：
+`go fmt`整理缩进，成功时可能显示被修改文件名。`go test`运行测试；本例没有测试会显示[no test files]，这不是失败。`go vet`做静态检查，未发现问题时通常安静结束，不等于所有业务逻辑已经正确。
+
+需要断点时，继续[VS Code插件与调试配置](../../../index.html#/setup?topic=editor)，核实gopls/dlv与launch.json，再设置断点、F5。F5的mode:debug会构建当前项目，不是启动你昨天编译的exe。先让模块运行成功，再让调试器暂停看变量，两个验收分别进行。
+
+## F5报go.mod file not found：只有main.go的目录怎样恢复
+
+如果像截图那样Delve已经启动，随后出现go.mod file not found，而工作目录里只写了main.go，这说明还没建立当前Go项目的模块；“能启动调试器”和“项目能构建”是两步。先保留源码，不重装扩展、不把launch.json改成启动旧exe。
+
+**先回到终端核对位置和文件**：PowerShell使用Get-Location与Get-ChildItem；cmd使用下面两条（cd不带参数是查看当前目录）；Mac/Linux使用pwd与ls。不要在错误目录继续init。
+
+```bat
+cd
+dir
+```
+
+**应确认两件事**：路径是自己main.go所在的独立文件夹；文件列表确实有main.go且没有go.mod。如果当前目录是上一级，请在VS Code重新“打开文件夹”选源码那一层，然后新建终端，重复核对。文件夹名叫go也可以，不必为了教程路径改名。
+
+**确认缺模块后，只初始化一次**：
+
+```powershell
+go mod init example.com/learn/go-tools
+```
+
+**看见go.mod后，先运行当前项目**：
+
+```powershell
+go run .
+```
+
+看到自己的程序输出，再回Run and Debug选择当前项目配置，设断点后F5。若仍提示缺模块，请看错误写出的cwd是不是刚才初始化的文件夹；go.mod出现在另一目录并不能修复这个工作区。若报go.mod already exists，先核对目录并直接go run .，不删除文件重来。
+
+在资料仓库内练习时，也可能出现cannot find main module，随后根据.git位置建议你cd到上级再go mod init。不要机械照做，把整个学习资料仓库变成一个模块；回到本练习main.go所在的独立目录初始化。这个提示仍说明模块没找到，不是要求改写源码。
+
+**为什么go run main.go可能成功，F5却失败？** 标准库单文件有时能按明确文件名运行，它只使用列出的文件，不替你建立go.mod。go run .与本教程F5配置面向当前项目/包，需要找到所属模块；多文件项目用单文件运行还可能漏掉辅助代码。所以不能拿一次go run main.go成功当作“项目已经初始化”。修复项目结构后继续使用go run .，不建议用GO111MODULE=off关闭模块机制来绕过错误；那会把真正缺少的步骤藏起来，也不适合后面的依赖管理。
+
+## 编译与启动：按当前终端选择写法
+
+先完成上面的go.mod与go run .验收。构建和启动按下面选择，**不要把不同终端的启动命令混用**：
 
 | 终端 | 先编译 | 再启动 | 查看文件 |
 | --- | --- | --- | --- |
@@ -32,7 +150,7 @@ go vet ./...
 
 cmd 中输入 `./hello.exe` 可能报“`.` 不是内部或外部命令”。这首先是终端写法问题，不需要重装 Go；确认编译成功、目录有 hello.exe，再输入上表的 cmd 命令。想固定使用 PowerShell、用菜单运行或 F5 逐行调试，到 [安装 VS Code 的插件与配置教程](../../../index.html#/setup?topic=editor)，按第8–13节配置；里面有真实截图、完整 JSON 和独立练习下载。
 
-`go fmt` 整理缩进，成功时可能显示被修改文件名。`go run .` 编译当前包并运行临时程序。`go build` 生成独立程序，编译成功通常不打印消息；旧程序不会随源文件自动更新。`go test` 运行测试；本例没有测试时会显示 `[no test files]`，这不是失败。`go vet` 做静态检查，未发现问题时通常安静结束，也不等于全面正确。
+`go run .`编译当前包并运行临时程序；`go build`生成独立程序，成功通常不打印消息。源码改过后必须重建，旧程序不会随文件保存自动更新。
 
 ## 完整程序：main.go
 
@@ -68,7 +186,7 @@ func main() {
 
 ## 常见问题与自查
 
-- `go.mod file not found`：先确认终端目录，再判断这个独立练习是否尚未初始化；不要在错误目录为了消除报错随手建模块。
+- `go.mod file not found`：回到上面的“F5报go.mod file not found”恢复章节，核对目录/文件→缺模块才init→go run .成功→再F5；不要在错误目录随手建模块。
 - `declared and not used` 或 `imported and not used`：变量/导入没有被使用，删除无用代码或实际使用它，Go 将此视为编译错误。
 - `undefined: fmt`：检查是否导入 `fmt`，以及拼写大小写；`Println` 与 `println` 不是同一个符号。
 - `package ... is not a main package`：检查此演示是否是库包；库通过测试或其他程序调用，不必每个包都能独立运行。

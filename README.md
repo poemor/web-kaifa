@@ -109,6 +109,7 @@ node scripts/test_site_assets.cjs
 node scripts/test_knowledge_guides.cjs
 node scripts/test_followup.cjs
 node scripts/test_vscode_starter.cjs
+node scripts/test_go_start_path.cjs
 ```
 
 浏览器集成检查位于 `scripts/test_site.cjs`，需要 Playwright 和本机 Edge，测试前先启动上述服务器。它覆盖课程入口、代码预览、完成规则、AI 上下文、记录备份和移动端布局；不要求学习者运行这些开发检查。

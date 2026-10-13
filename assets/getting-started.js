@@ -13,6 +13,10 @@
   ];
   const draft = Object.fromEntries(fields.map(([id])=>[id,'']));
   let api, output='';
+  const sections = {
+    go: { module: /^3\./, run: /^4\./, build: /^6\./, 'missing-module': /F5 报 go\.mod file not found/ },
+    editor: { tools: /^8\./, module: /^9\./, terminal: /^10\./, tasks: /^11\./, debug: /^12\./ }
+  };
   const template = '我正在做：\n环境（系统、工具版本、终端、目录）：\n预期结果：\n实际结果与完整报错：\n相关代码与文件名：\n已经试过的方法与结果：\n\n请先检查缺少的证据，再给一个能验证的原因。一次只指导一步，说明在哪里操作、预期看到什么；先给线索，不重写整个项目。';
   function worksheet() {
     return `<section class="setup-worksheet" aria-labelledby="question-workshop"><h2 id="question-workshop">我的问题整理器</h2><p>先把问题写清楚。只生成可复制文字，不调用模型；刷新前请自行复制保存。</p><button type="button" class="button" data-setup-template>复制空白模板</button><form id="setup-question-form" novalidate>${fields.map(([id,label,hint,max])=>`<div class="field"><label for="setup-${id}">${label}${['goal','actual'].includes(id)?'（必填）':''}</label><textarea id="setup-${id}" data-setup-field="${id}" maxlength="${max}" rows="${id==='code'?5:3}" placeholder="${hint}" ${['goal','actual'].includes(id)?'aria-required="true" ':''}aria-describedby="setup-question-status">${escape(draft[id])}</textarea></div>`).join('')}<button class="button primary" type="submit">生成我的提问</button><p id="setup-question-status" role="status">目标与实际结果必填；缺少的信息会标记为待补充。</p></form><section id="setup-question-result" ${output?'':'hidden'}><h3>整理好的提问 · 非 AI 回答</h3><p>复制后，在你使用的 AI 对话输入框中粘贴并自行发送。</p><button class="button" data-setup-copy>复制我的提问</button><pre id="setup-question-output" tabindex="0">${escape(output)}</pre></section></section>`;
@@ -23,6 +27,7 @@
     const headings=[...fragment.content.querySelectorAll('h2')];
     const toc=headings.map((heading,i)=>{
       heading.id=`setup-${selected.id}-step-${i}`;heading.tabIndex=-1;
+      for (const [name, pattern] of Object.entries(sections[selected.id] || {})) if (pattern.test(heading.textContent)) heading.dataset.setupSection=name;
       return `<button type="button" data-setup-jump="${heading.id}">${escape(heading.textContent)}</button>`;
     }).join('');
     fragment.content.querySelectorAll('pre').forEach((pre,i)=>{
@@ -45,6 +50,12 @@
     target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
     target.scrollIntoView({block:'start',behavior:'instant'});
   }
+  function focusRequested(params) {
+    const topic=guides.find(x=>x.id===params.get('topic'))?.id||'editor',step=params.get('step');
+    if (!Object.hasOwn(sections[topic] || {}, step)) return;
+    const target=document.querySelector(`.setup-article [data-setup-section="${step}"]`);
+    if (target) focusStep(target.id);
+  }
   function markup(params) {
     const selected=guides.find(x=>x.id===params.get('topic'))||guides[0];
     return `<header class="page-heading"><span class="workbook-eyebrow">开始写代码之前 / 起步教程</span><h1>${escape(selected.title)}</h1><p>${escape(selected.summary)}</p></header><p class="setup-route-hint">先安装编辑器 → Web / Go 任选一条运行首个程序 → 遇到问题学会提问。手机可阅读，安装与运行请用电脑。</p><nav class="setup-nav" aria-label="起步教程">${guides.map(x=>`<a href="#/setup?topic=${x.id}" ${x.id===selected.id?'aria-current="page"':''}>${escape(x.title)}</a>`).join('')}</nav>${guideContent(selected)}${selected.id==='ask'?worksheet():''}<nav class="button-row setup-next" aria-label="接着学习">${selected.id==='editor'?'<a class="button primary" href="#/setup?topic=web">配置 Web 环境 →</a><a class="button" href="#/setup?topic=go">配置 Go 环境 →</a>':selected.id==='ask'?'<a class="button" href="#/setup?topic=web">回到 Web 环境 →</a><a class="button" href="#/setup?topic=go">回到 Go 环境 →</a><a class="button" href="#/ai-method">怎样用 AI 开发 →</a>':`<a class="button primary" href="#/lesson/${selected.id}-01">进入${selected.id==='web'?' Web':' Go'} 第 1 课 →</a>`}${selected.id!=='ask'?'<a class="button" href="#/setup?topic=ask">遇到问题，学会问 AI →</a>':''}</nav>`;
@@ -52,7 +63,9 @@
   function search(query) { return query?guides.filter(x=>(x.title+' '+x.summary+' '+x.markdown).toLowerCase().includes(query.toLowerCase())):[]; }
   function searchMarkup(query) {
     const items=search(query);
-    return items.length?`<section class="lab-search-section"><h2>起步教程 · ${items.length}</h2>${items.map(x=>`<article class="setup-search-result"><h3><a href="#/setup?topic=${x.id}">${escape(x.title)} →</a></h3><p>${escape(x.summary)}</p></article>`).join('')}</section>`:'';
+    const missingModule = /go\.mod.*file not found|cannot find main module/i.test(query);
+    const directStep = guide => missingModule && guide.id==='go' ? 'missing-module' : /go\.mod/i.test(query) && ['go','editor'].includes(guide.id) ? 'module' : /dlv/i.test(query) && guide.id==='editor' ? 'tools' : /f5/i.test(query) && guide.id==='editor' ? 'debug' : '';
+    return items.length?`<section class="lab-search-section"><h2>起步教程 · ${items.length}</h2>${items.map(x=>`<article class="setup-search-result"><h3><a href="#/setup?topic=${x.id}${directStep(x)?'&amp;step='+directStep(x):''}">${escape(x.title)}${directStep(x)?' · 直达对应步骤':''} →</a></h3><p>${escape(x.summary)}</p></article>`).join('')}</section>`:'';
   }
   document.addEventListener('input',e=>{
     const id=e.target.dataset.setupField;if(!Object.hasOwn(draft,id))return;
@@ -79,5 +92,5 @@
     if(button.hasAttribute('data-setup-template'))api.copy(template,button);
     if(button.hasAttribute('data-setup-copy')&&output)api.copy(output,button);
   });
-  window.GettingStarted={configure(value){api=value;},markup,search,searchMarkup};
+  window.GettingStarted={configure(value){api=value;},markup,search,searchMarkup,focusRequested};
 })();

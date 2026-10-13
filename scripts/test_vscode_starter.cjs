@@ -13,6 +13,21 @@ for(const name of ['settings','tasks','launch','extensions']){
   assert.deepEqual(configs[name],JSON.parse(fs.readFileSync(path.join(root,'docs/tutorials/configs/go',name+'.json'),'utf8')));
 }
 const tasks=configs.tasks.tasks,replace=value=>String(value).replaceAll('${workspaceFolder}',folder);
+// Reproduce the reported failure from a folder containing only main.go.
+const bare=path.join(temporary,'only main go');fs.mkdirSync(bare);
+fs.copyFileSync(path.join(folder,'main.go'),path.join(bare,'main.go'));
+const isolatedEnv={...process.env,GOWORK:'off',GO111MODULE:'on'};
+const missing=spawnSync(goExecutable,['build','-gcflags','all=-N -l','.'],{cwd:bare,env:isolatedEnv,encoding:'utf8'});
+assert.notEqual(missing.status,0,'F5-style project build must fail without a module');
+assert.match(missing.stderr,/go\.mod file not found|cannot find main module/);
+assert.equal(execFileSync(goExecutable,['run','main.go'],{cwd:bare,env:isolatedEnv,encoding:'utf8'}).trim(),'你好，Go\n编译后的程序也能独立运行','single-file success does not prove project setup');
+const tutorial=fs.readFileSync(path.join(root,'docs/tutorials/go-environment.md'),'utf8');
+const recovery=tutorial.match(/```sh\r?\n(go mod init example\.com\/learn\/hello)\r?\n```/);assert(recovery,'recovery must provide one copyable initialization command');
+execFileSync(goExecutable,recovery[1].split(' ').slice(1),{cwd:bare,env:isolatedEnv,stdio:'pipe'});
+assert.equal(fs.readFileSync(path.join(bare,'main.go'),'utf8'),fs.readFileSync(path.join(folder,'main.go'),'utf8'),'initialization keeps saved source');
+assert.equal(path.resolve(execFileSync(goExecutable,['env','GOMOD'],{cwd:bare,env:isolatedEnv,encoding:'utf8'}).trim()),path.join(bare,'go.mod'));
+assert.equal(execFileSync(goExecutable,['run','.'],{cwd:bare,env:isolatedEnv,encoding:'utf8'}).trim(),'你好，Go\n编译后的程序也能独立运行');
+execFileSync(goExecutable,['build','-o',path.join(bare,process.platform==='win32'?'debug-check.exe':'debug-check'),'-gcflags','all=-N -l','.'],{cwd:bare,env:isolatedEnv,stdio:'pipe'});
 const runTask=label=>{
   const task=tasks.find(item=>item.label===label);assert(task,'documented task exists: '+label);
   if(task.dependsOn)runTask(task.dependsOn);
@@ -39,4 +54,4 @@ fs.writeFileSync(file,source.replace('greeting(name)','missingGreeting(name)'));
 let failed=false;
 try {runTask('Go: 编译并运行');} catch(error) {failed=true;assert(String(error.stderr).includes('undefined: missingGreeting'),'the build error must abort the dependency chain');}
 assert(failed,'bad source must fail even when a previous binary exists');
-console.log('PASS: downloaded four JSON configurations, process tasks, paths with spaces, shell-specific executable startup, saved edits/rebuild and build failure dependency boundary.');
+console.log('PASS: missing-module failure → documented initialization → project run/debug build, source preserved; downloaded configs/tasks, paths with spaces, shell-specific startup, edits/rebuild and build failure boundary.');

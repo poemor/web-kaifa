@@ -177,7 +177,19 @@ GOBIN 有值时工具放那里；为空时通常是 GOPATH 下的 bin。不要�
 
 最稳妥的跟做方式：**[下载完整 Go 起步包](../../assets/downloads/vscode-go-starter.zip)** → 全部解压缩 → VS Code“文件 → 打开文件夹” → 选择解压后的 **`vscode-first-program`**。它已有源码、模块和四个配置，不需要再初始化。这个独立例子不会覆盖你已写的程序。
 
-想手工建立则新建一个空的 `vscode-first-program` 文件夹，用 VS Code直接打开它。新建 `main.go`，贴入下面完整内容并保存；在这个文件夹的终端执行一次 `go mod init example.com/learn/vscode-first-program`。**已有 go.mod 的项目跳过初始化**。在资源管理器中右键最上方项目名 → 新建文件夹，命名 **`.vscode`**（开头的点要保留），再在它下面新建第10–12节的四个 JSON 文件。
+手工跟做分成三个步骤，**不要在只有 main.go 的时候直接按 F5**。项目文件夹已经存在时保留原代码，不必重复新建。
+
+**第一步：创建并打开独立目录。** 新建 `vscode-first-program`，VS Code“文件 → 打开文件夹”选择它。资源管理器右键最上方项目名 → 在集成终端中打开。cmd 输入 `cd`/`dir`，PowerShell 输入 `Get-Location`/`Get-ChildItem`，Mac/Linux 输入 `pwd`/`ls`，确认终端位置。
+
+**第二步：建立 Go 模块。** 先在终端执行 `go env GOMOD`：已有模块路径就沿用，并打开对应模块根目录；没有模块且这是你要独立创建的项目，才执行下面一条。下载起步包的人已有 go.mod，直接跳过。
+
+```sh
+go mod init example.com/learn/vscode-first-program
+```
+
+预期显示 `go: creating new go.mod: module example.com/learn/vscode-first-program`，文件区新增 go.mod；再次 `go env GOMOD` 应指向它。初始化只在新项目做一次，**不在整个教材资料根目录执行**。go.mod 定义项目模块，`.vscode` 定义编辑器行为，两个文件承担不同职责，装插件或新建 .vscode 不会代替模块初始化。
+
+**第三步：保存源码并先验证运行。** 新建 main.go，把下面完整内容粘贴并保存。在同一个终端执行 `go run .`，看到两行正确问候后，才建立后面的四个编辑器配置。已有第1课源码可以直接保留运行，不要求为了配置而覆盖它。
 
 ```go
 package main
@@ -196,7 +208,14 @@ func main() {
 }
 ```
 
-最后目录必须是：
+先核对 `go run .` 的预期结果：
+
+```output
+你好，Go
+编译后的程序也能独立运行
+```
+
+此时项目只有 main.go 和 go.mod 就可以运行。运行成功，再完成后面的四个配置后，最终目录应是：
 
 ```text
 vscode-first-program/       ← VS Code 打开的文件夹
@@ -212,6 +231,8 @@ vscode-first-program/       ← VS Code 打开的文件夹
 这里 `${workspaceFolder}` 是 VS Code 的变量，会被替换为**当前打开的文件夹路径**，不是让你新建同名文件夹。如果打开的是整套学习资料，配置放在 `exercises/go/.../.vscode`，任务可能找不到；本教程直接打开独立 Go 项目，避免这个层级问题。文件名不能写成 `tasks.json.txt`；每个文件只贴它自己的一个完整 JSON，不贴 Markdown 的三反引号。
 
 VS Code 有“用户设置”和“工作区设置”。本教程的 `.vscode/settings.json` 只作用于这个项目；不要为了一个练习去覆盖所有项目的用户设置。已有配置先保留或备份，合并键值，不把两个 `{ ... }` 并排贴在同一个文件；JSON 的引号用英文双引号，逗号放在相邻项之间。
+
+运行验证成功后，资源管理器右键项目名 → 新建文件夹，命名 **`.vscode`**（保留开头的点），再在它下面新建第10–12节的四个 JSON；把每份完整配置放进对应文件并保存。**还在报 go.mod file not found？** [直接查看缺模块修复步骤](../../index.html#/setup?topic=go&step=missing-module)，完成模块与运行检查，再回来继续配置。
 
 ## 10. settings.json：选终端与保存格式
 
@@ -333,6 +354,8 @@ VS Code 有“用户设置”和“工作区设置”。本教程的 `.vscode/se
 
 ## 12. launch.json：F5 调试，停下来观察变量
 
+**按 F5 前确认三项**：这个独立项目有生效的 go.mod；同目录 `go run .` 已成功；Go 扩展和 dlv 已可用。前两项没完成时，先回第9节准备项目。F5 报模块找不到时，处理的是项目准备；再次安装 dlv 不能创建 go.mod。
+
 打开 `.vscode/launch.json`，完整粘贴并保存：
 
 ```json
@@ -362,6 +385,21 @@ VS Code 有“用户设置”和“工作区设置”。本教程的 `.vscode/se
 ```
 
 `type: go` 选择 Go 扩展的调试器；`request: launch` 表示启动新的调试程序；`mode: debug` 由调试器构建当前源码；`program` 与 `cwd` 都使用当前独立项目。调试不是继续启动你昨天编译的 hello.exe，也不需要先点击“编译”才 F5。[Go 扩展官方调试说明](https://github.com/golang/vscode-go/blob/master/docs/debugging.md)
+
+### A. 保留 Go 第1课的源码，直接调试 greeting
+
+如果你的 main 函数里是 `fmt.Println(greeting("Go"))`，跟这组步骤；不需要为了调试覆盖自己的源码。先保存，左侧“运行和调试”选 **Go: 调试当前项目**。
+
+1. 在你文件里实际的 `fmt.Println(greeting("Go"))` 这一行按 F9，行号旁应出现红色断点点；不要去找这份源码没有的 `fmt.Println(message)`。
+2. F5 启动，应在该语句执行前暂停。此时 main 还没有 name/message 这两个局部变量，Variables 没有它们是正常的。
+3. 按 F11 进入 greeting，查看调用栈是否为 `main.greeting`，Locals 的参数 **name** 应为 **Go**。name 是 greeting 的参数，不是 main 的局部变量；修改源码里调用的名字后，对应实际值也会变化。
+4. 用 F10 观察返回语句，或 Shift+F11 返回调用者，再 F5 继续。底部 **Debug Console** 应显示你源码里的两行文字；运行结束后不会一直停在断点上。
+
+如果你已经改过这个调用，断点应设在自己的实际语句上，观察自己传入的参数。想跟下面的 name/message 演示，可回 [第9节的独立示例](../../index.html#/setup?topic=editor&step=module)，在新的练习目录使用它，保留原作品。
+
+### B. 使用第9节的变量示例，观察 name 和 message
+
+下面六步对应第9节完整源码中的 `name := "Go"`、`message := greeting(name)` 和 `fmt.Println(message)`。先核对文件确实包含这些语句，再照做；两份程序的输出相同，不代表变量和断点位置相同。
 
 1. 按 `Ctrl+S` 保存 `main.go`，确定第8节 dlv 安装成功。左侧点击 **Run and Debug（运行和调试，带小虫的三角图标）**，顶部下拉选择 **Go: 调试当前项目**。
 2. 在 `fmt.Println(message)` 这一行点行号左侧空白区域，或把光标放该行按 **F9**；应该出现红色断点点。笔记本功能键需 Fn 时按 Fn+F9，也可用 Run 菜单的 Toggle Breakpoint（切换断点）。

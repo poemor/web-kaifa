@@ -228,8 +228,9 @@
     const index = course.lessons.findIndex(item => item.id === id);
     const code = state.drafts[id] ?? lesson.starterCode;
     const canPreview = lesson.track === 'web' && ['html', 'css', 'javascript'].includes(lesson.language);
+    const firstGoRun = id === 'go-01' ? `<section class="go-first-run" aria-labelledby="go-first-run-title"><h2 id="go-first-run-title">第一次运行，先按这四步做</h2><p>粘贴 <code>main.go</code> 后，还要建立 Go 模块。先在终端跑成功，再配置 F5 调试。</p><ol><li><strong>打开自己的 Go 项目文件夹</strong><span>右键这个文件夹 → 在集成终端中打开。确认终端目录与 <code>main.go</code> 的目录相同。</span></li><li><strong>先确认项目所属模块</strong><span>先用 <code>go env GOMOD</code> 查看模块路径；确认独立项目没有所属模块，再执行下方初始化。已有模块直接沿用。</span></li><li><strong>保存，然后运行 go run .</strong><span>原示例输出“你好，Go”和“编译后的程序也能独立运行”；改过代码就对照自己的预期。有错误先处理，不继续按 F5。</span></li><li><strong>再安装调试工具、配置 F5</strong><span><code>dlv</code> 安装成功、工作区指向正确项目后，设置断点并调试。</span></li></ol><div class="go-init-command"><p>确认当前是自己的独立练习目录、还没有所属模块时，只执行一次：</p><pre id="go-first-init-command"><code>go mod init example.com/learn/go-tools</code></pre><button class="button small" data-knowledge-copy="go-first-init-command">复制模块初始化命令</button></div><div class="button-row"><a class="button primary" href="#/setup?topic=go&amp;step=module">从创建文件夹到运行，逐步跟做 →</a><a class="button" href="#/setup?topic=editor&amp;step=module">运行成功后，配置 VS Code →</a><a href="#/setup?topic=go&amp;step=missing-module">遇到 go.mod file not found？直接修复 →</a></div></section>` : '';
     main.innerHTML = `<header class="lesson-header"><h1>${escape(lesson.title)}</h1><div class="lesson-meta"><span>${lesson.track === 'web' ? 'Web 开发' : 'Go 后端'} · 第 ${lesson.day} 课</span><span>约 ${lesson.minutes} 分钟，可分几次做</span><span>${isDone(id) ? '✓ 已完成' : '待练习'}</span></div><p>${escape(lesson.summary)}</p><ul class="concept-list">${lesson.concepts.map(item => `<li>${escape(item)}</li>`).join('')}</ul></header>
-      ${id === 'go-02' && state.audience === 'new' ? '<div class="callout"><strong>没有 C++ 基础也可以做。</strong><p>不用先学另一门语言。直接练习：输入几个分数，用 Go 的循环求总和，用 if 判断是否及格，再试空输入和非法分数。教材中的 C++ 对照可以先跳过。</p></div>' : ''}
+      ${firstGoRun}${id === 'go-02' && state.audience === 'new' ? '<div class="callout"><strong>没有 C++ 基础也可以做。</strong><p>不用先学另一门语言。直接练习：输入几个分数，用 Go 的循环求总和，用 if 判断是否及格，再试空输入和非法分数。教材中的 C++ 对照可以先跳过。</p></div>' : ''}
       <div class="lesson-grid"><div class="lesson-main"><section class="task-box"><h2>这一课，动手做什么</h2><p>${escape(lesson.task)}</p></section>
       ${window.LearningLab.lessonMarkup(lesson)}
       <section><h2>先理解，再试一试</h2><p>先读讲义中的一个知识点，再修改示例，看结果是否和你预计的一样。</p><details><summary>打开这一课的完整讲义</summary>${id === 'go-02' && state.audience !== 'new' ? '<p class="small hint">原教材含 C++ 对照，仅供学过该语言者参考。写过 Python、Java 或其他语言也可以用熟悉的小题对照；直接阅读上方详细 Go 讲解即可开始。</p>' : ''}<div class="details-body markdown" id="lesson-source">${markdown(lesson.sourceMarkdown)}</div></details><details><summary>卡住了，先看一个提示</summary><div class="details-body hint">${escape(lesson.hint)}</div></details></section>
@@ -440,6 +441,7 @@
     main.focus({ preventScroll: true });
     updateSidebar();
     window.Workbench.routeChanged(routeKey, routeKey === 'lesson' && knownLesson(parts[1]) ? effectiveLesson(parts[1]) : null);
+    if (routeKey === 'setup') window.GettingStarted.focusRequested(params);
   }
   document.querySelector('.skip-link').addEventListener('click', event => {
     event.preventDefault();
