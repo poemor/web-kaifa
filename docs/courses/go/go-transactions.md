@@ -80,10 +80,37 @@ db_test.go中创建独立schema、执行迁移，用事务插两次相同usernam
 
 ### 参考答案
 
-回滚不等于删除之前已提交的其他记录；它撤销当前未提交事务的修改。只看到第二项报错，未查询第一项是否保留，还没有验收到原子性。
+第二项失败后应查询第一项确实没有新增，才有回滚证据；合法两项提交后才都存在。id序列可能跳号，不能用编号连续判断事务成败。
 
 ## 独立变式
 
 用两个已有临时记录的id，将solved同时改true；让其中一个违反自己定义的约束，证明另一项也未改变。先写操作前后的查询结果，再考虑实现。
 
 参考：[Go执行事务](https://go.dev/doc/database/execute-transactions)、[PostgreSQL事务](https://www.postgresql.org/docs/current/tutorial-transactions.html)。
+
+## 原子性之外还有隔离和提交失败
+
+BeginTx开始事务后，用tx执行全部相关读写，失败即回滚；成功最后Commit。Commit本身也能失败，只有它成功才可向调用方确认提交。defer Rollback可覆盖提前返回，提交后再Rollback不会把已提交事务撤回。
+
+并发请求下，先读余额再写入可能需要适当隔离或行锁防止丢失更新。事务不是“加上Begin就自动解决所有并发问题”；要定义不变量、锁定顺序、超时与可重试错误，并让重试操作具备正确的幂等设计。
+
+### 参考答案：独立实现与验收
+
+独立任务用专用表加一条能被主动触发的约束，例如规定locked行不能设为solved：
+
+```sql
+CREATE TABLE lesson_tx (
+  id BIGINT PRIMARY KEY,
+  locked BOOLEAN NOT NULL,
+  solved BOOLEAN NOT NULL DEFAULT FALSE,
+  CHECK (NOT locked OR NOT solved)
+);
+INSERT INTO lesson_tx (id, locked) VALUES (1, FALSE), (2, TRUE);
+BEGIN;
+UPDATE lesson_tx SET solved=TRUE WHERE id=1;
+UPDATE lesson_tx SET solved=TRUE WHERE id=2;
+ROLLBACK;
+SELECT id, solved FROM lesson_tx ORDER BY id;
+```
+
+第二项违反CHECK后，事务进入失败状态；明确ROLLBACK，再查询两行仍false。将第二行locked改false后重复BEGIN/两次UPDATE/COMMIT，两行才都true。迁入Go时第二个ExecContext失败就return，已登记的tx.Rollback撤销第一项；确认Commit错误也被处理。此例应在专用真实PostgreSQL中执行，不把源码阅读当实测。

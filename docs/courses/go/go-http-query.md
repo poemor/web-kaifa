@@ -92,6 +92,61 @@ go run .
 
 ### 参考答案
 
-100符合新的范围，101虽能转换仍应400。缺失和1.5都不能按本例转为整数。扩大范围时也要重新考虑求和溢出与接口约定。
+把校验条件和提示中的上限一起改100。100可接受，101解析成功但超范围，缺失与小数则在Atoi阶段失败；输入范围也限制了求和上限。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
+)
+
+func add(w http.ResponseWriter, r *http.Request) {
+	// 查询参数来源是请求 URL，不是服务器终端输入。
+	aText := r.URL.Query().Get("a")
+	bText := r.URL.Query().Get("b")
+	a, errA := strconv.Atoi(aText)
+	b, errB := strconv.Atoi(bText)
+	// 缺失、非整数或超出接口范围都走错误分支，且不写成功结果。
+	if errA != nil || errB != nil || a < 0 || a > 100 || b < 0 || b > 100 {
+		http.Error(w, "a and b must be integers from 0 to 100", http.StatusBadRequest)
+		return
+	}
+	// Fprint 写响应正文；最后 main 再把记录器中的正文打印到终端。
+	if _, err := fmt.Fprint(w, a+b); err != nil {
+		fmt.Println("写响应失败：", err)
+	}
+}
+
+func main() {
+    mux := http.NewServeMux()
+    mux.HandleFunc("GET /add", add)
+    for _, target := range []string{"/add?a=100&b=0", "/add?a=101&b=0", "/add?b=0", "/add?a=1.5&b=0"} {
+        rec := httptest.NewRecorder()
+        mux.ServeHTTP(rec, httptest.NewRequest("GET", target, nil))
+        fmt.Println(target, rec.Code)
+    }
+}
+```
+
+预期结果：
+
+```output
+/add?a=100&b=0 200
+/add?a=101&b=0 400
+/add?b=0 400
+/add?a=1.5&b=0 400
+```
 
 参考：[Go strconv.Atoi](https://pkg.go.dev/strconv#Atoi)、[Go http.Error](https://pkg.go.dev/net/http#Error)。
+
+## 缺失、空值、重复与编码
+
+Query().Get只给一个字符串，缺失和显式空值都会得到空文字，重复a参数也只取其中一个。严格合同可先查看values["a"]及其数量，再解析一次；不要让攻击者与服务端代理对“取第一还是取最后”有不同解释。
+
+URL参数可能百分号编码，查询中的+通常表示空格；拼URL时用url.Values.Encode，而不是手工把用户文字接到&后面。解析数字成功后仍要校验范围，错误响应后立即return，不能继续写成功正文。

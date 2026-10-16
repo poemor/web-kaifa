@@ -110,10 +110,71 @@ go run . serve
 
 ### 参考答案
 
-未知路径是 404。POST `/health` 与已登记的 GET 不匹配，是 405。新增规则后要重新启动真实服务，运行中的程序不会因为编辑文件自动更新。
+GET /missing得到404，POST /health得到405；这两种都证明请求经过路由匹配，而不是证明health函数处理了它们。新增hello后，模拟预期200 Hello；真实模式需重新启动并访问/hello。
 
 ## 本节验收
 
 解释登记路由与调用函数的不同，说清 r 和 w 的方向，展示一次模拟结果和一次浏览器的真实响应，再通过停服务复现连接错误。
 
 参考：[Go ServeMux](https://pkg.go.dev/net/http#ServeMux)、[Go Handler](https://pkg.go.dev/net/http#Handler)、[httptest 记录器](https://pkg.go.dev/net/http/httptest#ResponseRecorder)。
+
+## 路由匹配、Handler状态与服务生命周期
+
+Go1.22起ServeMux支持方法与路径模式，GET模式也匹配HEAD。请求到达时，服务为这次请求提供ResponseWriter和*Request；不是登记路由那一刻就执行函数。标准库会为并发请求调度处理，因此共享map等必须自行同步。
+
+真实服务要处理启动错误，例如地址已占用，不应打印“启动成功”后忽略ListenAndServe的返回。程序重启才加载新源码；开发自动重载属于额外工具。默认ListenAndServe便利，但生产服务还应设置头部、读写、空闲超时，见后续退出课。
+
+### 参考答案：独立实现
+
+保留原serve参数模式，同时增加独立hello函数与GET /hello路由。默认go run .验证记录器结果；go run . serve才真正监听，浏览器访问后按Ctrl+C停止。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"os"
+)
+
+// health 的两个参数由 HTTP 服务或测试代码提供，不由浏览器直接调用 Go 函数。
+func health(w http.ResponseWriter, r *http.Request) {
+	// Fprint 把文字写给 w；Println 才是直接输出到本程序的终端。
+	if _, err := fmt.Fprint(w, "ok"); err != nil {
+		fmt.Println("写响应失败：", err)
+	}
+}
+
+func hello(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "Hello") }
+
+func main() {
+	mux := http.NewServeMux()
+	// 传函数名 health，不写 health(...)：现在登记，收到匹配请求才执行。
+	mux.HandleFunc("GET /health", health)
+    mux.HandleFunc("GET /hello", hello)
+
+	// 只有主动传入 serve 参数时才开启本机端口，默认模式只做模拟演示。
+	if len(os.Args) > 1 && os.Args[1] == "serve" {
+		fmt.Println("打开 http://127.0.0.1:8080/health，按 Ctrl+C 停止")
+		if err := http.ListenAndServe("127.0.0.1:8080", mux); err != nil {
+			fmt.Println("监听结束：", err)
+		}
+		return
+	}
+
+	// 以下不访问网络：构造测试请求，用记录器接住处理函数写出的响应。
+	req := httptest.NewRequest("GET", "/hello", nil)
+	rec := httptest.NewRecorder()
+	mux.ServeHTTP(rec, req)
+	fmt.Println(rec.Code, rec.Body.String())
+}
+```
+
+预期：
+
+```output
+200 Hello
+```

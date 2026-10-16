@@ -103,10 +103,32 @@ SQL文字里的单引号用两个单引号表示；Go参数里的标题不需要
 
 ### 参考答案
 
-连接成功、SQL成功、HTTP成功是三层不同证据。完整工程创建活动后重启API，再GET应读到原记录。`go test -v ./...`里数据库测试SKIP只表示未配测试库，不算数据库通过。演示新增行与API的events表不是同一表，不要混用字段。
+连接、SQL写入、API往返分别验证；数据库测试SKIP只说明未配置测试库。演示表与API的events表不同，重启持久化验收要针对同一真实API记录。
 
 ## 独立变式
 
 给演示增加按新id查询title的QueryRowContext与Scan，检查标题精确一致。再用绑定参数保存包含中文和单引号的普通标题，证明它们仍是数据。
 
 参考：[Go数据库连接](https://go.dev/doc/database/open-handle)、[Go查询单行](https://go.dev/doc/database/querying)、[pgx标准接口](https://pkg.go.dev/github.com/jackc/pgx/v5/stdlib)。
+
+## 连接池不是一条永久连接
+
+sql.DB管理连接池，Open通常先准备配置，PingContext才验证一次连接。限制最大连接数，数据库总容量要考虑应用实例数；查询需传context，Rows遍历结束检查Err并及时Close。
+
+QueryRowContext的查询错误通常延迟到Scan返回；无记录是sql.ErrNoRows，不是一个成功的空标题。绑定参数按驱动规则写$1等，不能用fmt.Sprintf拼用户值。事务内全部操作都应走tx，别混回db绕开事务。
+
+### 参考答案：独立实现与验收
+
+在本节database-demo.go成功INSERT并取得id后、main返回前加入下列片段。db、ctx、id使用原演示已有变量，增加fmt导入仅在原文件尚未有它时：
+
+```go
+var gotTitle string
+err = db.QueryRowContext(ctx, "SELECT title FROM practice_problems WHERE id=$1", id).Scan(&gotTitle)
+if err != nil {
+    fmt.Println("按id读取失败：", err)
+    return
+}
+fmt.Println(gotTitle)
+```
+
+practice_problems与本节INSERT目标一致，不改成API的events。将绑定输入设为 `中文 O'Reilly`，应精确读回这段文字，单引号不改变SQL结构。无匹配行时Scan返回sql.ErrNoRows，应按失败/不存在合同处理。连接串和真实数据不进入提交。

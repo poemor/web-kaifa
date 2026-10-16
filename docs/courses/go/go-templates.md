@@ -174,10 +174,55 @@ go test -v ./...
 
 ### 参考答案
 
-改分钟后显示45。主标题动作改错时显示分钟，标题测试FAIL。模板缺失时启动报错、不接请求；还原文件和动作后测试应通过。
+分钟改45后重启才显示45；把h1动作换成.Minutes会显示数字，原标题测试应失败；page.html缺失则ParseFiles报错，服务不应开始监听。
 
 ## 独立变式与边界
 
 增加导出的 `Topic string` 字段，在模板新增“学习主题”段落，给它传包含尖括号的文字并补响应断言。当前练习仅显示数据，没有数据库、登录、记录保存和线上部署；查询参数不是可信业务数据。
 
 参考：[Go模板教程](https://go.dev/doc/articles/wiki/)、[html/template安全模型](https://pkg.go.dev/html/template#hdr-Security_Model)。
+
+## 模板动作、上下文转义与信任边界
+
+html/template按HTML上下文转义数据，不应为了让输入看起来像HTML就把它转成template.HTML。点号表示当前数据，if控制分支，range遍历集合，with会改变点的当前对象；定义与复用模板有助于保持页头页脚一致。
+
+解析模板和执行模板是两个错误时机。启动时检查文件能及时暴露路径/语法错误，执行时先写入缓冲能避免半页成功内容。模板不提供用户权限或数据库校验，只负责把已经选定的数据放进HTML。
+
+### 参考答案：独立实现与验收
+
+在本节完整工程副本里做三处同步修改，未列出的代码保留原样：
+
+```go
+// main.go：PageData新增字段，Execute时提供它。
+type PageData struct {
+    Title string
+    Minutes int
+    Topic string
+}
+// 用下面字面量替换原Execute调用中的PageData值：
+// PageData{Title: title, Minutes: 30, Topic: "<Go & Web>"}
+```
+
+page.html在原分钟段落后新增：
+
+```html
+<p>学习主题：{{.Topic}}</p>
+```
+
+main_test.go新增测试，沿用已存在的testing、httptest、strings导入：
+
+```go
+func TestTopicEscaped(t *testing.T) {
+    handler, err := newHandler()
+    if err != nil { t.Fatal(err) }
+    rec := httptest.NewRecorder()
+    handler.ServeHTTP(rec, httptest.NewRequest("GET", "/", nil))
+    if rec.Code != 200 { t.Fatalf("status=%d", rec.Code) }
+    body := rec.Body.String()
+    if !strings.Contains(body, "&lt;Go &amp; Web&gt;") || strings.Contains(body, "<Go & Web>") {
+        t.Fatalf("topic not escaped: %s", body)
+    }
+}
+```
+
+go test ./...应通过，浏览器显示尖括号原文而非新标签。这里测试的是服务器生成的响应，不能把客户端任意脚本注入也称为已被验证。

@@ -962,5 +962,236 @@
       "同步日志",
       "账单 23"
     ]
+  },
+  {
+    "chapter": "web-modules",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "main.js": "import { totalCost } from \"./utils/cost.js\";\ndocument.querySelector(\"#total\").textContent = String(totalCost(3, 7));",
+      "utils/cost.js": "export function totalCost(quantity, price) {\n  return quantity * price;\n}"
+    },
+    "text": {
+      "#total": "21"
+    }
+  },
+  {
+    "chapter": "web-storage",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {
+      "#topic": "Go",
+      "#minutes": "25"
+    },
+    "clicks": [
+      "#save"
+    ],
+    "text": {
+      "#status": "已保存"
+    },
+    "reload": true,
+    "values": {
+      "#topic": "Go",
+      "#minutes": "25"
+    },
+    "afterReloadText": {
+      "#status": "已读取保存的偏好"
+    }
+  },
+  {
+    "chapter": "web-storage",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {},
+    "clicks": [],
+    "text": {
+      "#status": "读取失败，原记录保留"
+    },
+    "reload": false,
+    "values": {},
+    "afterReloadText": {},
+    "storageSeed": {
+      "own-reading-preferences": "bad json"
+    },
+    "storagePreserved": {
+      "own-reading-preferences": "bad json"
+    }
+  },
+  {
+    "chapter": "web-fetch",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "book.json": "{\"name\":\"算法手记\",\"pages\":120}"
+    },
+    "text": {
+      "#status": "算法手记 / 120页"
+    }
+  },
+  {
+    "chapter": "web-fetch",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "book.json": "null"
+    },
+    "text": {
+      "#status": "读取失败：书籍字段不合格"
+    }
+  },
+  {
+    "chapter": "web-request-states",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "books.json": "[{\"name\":\"算法笔记\",\"pages\":120},{\"name\":\"Go笔记\",\"pages\":80}]"
+    },
+    "text": {
+      "#status": "共2本"
+    },
+    "count": {
+      "li": 2
+    }
+  },
+  {
+    "chapter": "web-request-states",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "books.json": "[]"
+    },
+    "text": {
+      "#status": "没有书籍"
+    },
+    "count": {
+      "li": 0
+    }
+  },
+  {
+    "chapter": "web-cancel-request",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "support": {
+      "a.json": "{\"name\":\"甲书单\"}",
+      "b.json": "{\"name\":\"乙书单\"}",
+      "c.json": "{\"name\":\"丙书单\"}"
+    },
+    "clicks": [
+      "[data-name=\"a\"]",
+      "[data-name=\"b\"]",
+      "[data-name=\"c\"]"
+    ],
+    "settleMs": 750,
+    "text": {
+      "#status": "c：丙书单"
+    }
+  },
+  {
+    "chapter": "web-cancel-request",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "support": {
+      "b.json": "{\"name\":\"乙书单\"}",
+      "c.json": "{\"name\":\"丙书单\"}"
+    },
+    "clicks": [
+      "[data-name=\"a\"]",
+      "[data-name=\"b\"]",
+      "[data-name=\"c\"]"
+    ],
+    "settleMs": 750,
+    "text": {
+      "#status": "c：丙书单"
+    }
+  },
+  {
+    "chapter": "web-rendering",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "menu.json": "{\"dish\":\"番茄鸡蛋面\"}"
+    },
+    "text": {
+      "#notice": "本周三中午开放。",
+      "#menu": "番茄鸡蛋面"
+    }
+  },
+  {
+    "chapter": "go-http-message",
+    "answer": 0,
+    "language": "go",
+    "output": "/add 10 20"
+  },
+  {
+    "chapter": "go-http-handler",
+    "answer": 1,
+    "language": "go",
+    "output": "200 Hello"
+  },
+  {
+    "chapter": "go-http-query",
+    "answer": 0,
+    "language": "go",
+    "output": "/add?a=100&b=0 200\n/add?a=101&b=0 400\n/add?b=0 400\n/add?a=1.5&b=0 400"
+  },
+  {
+    "chapter": "go-http-json",
+    "answer": 0,
+    "language": "go",
+    "output": "200 9\n201 9\n204 0"
+  },
+  {
+    "chapter": "go-json-boundary",
+    "answer": 0,
+    "language": "go",
+    "output": "额外JSON"
+  },
+  {
+    "chapter": "go-http-testing",
+    "answer": 1,
+    "language": "go-test",
+    "files": [
+      "main_test.go"
+    ],
+    "support": {
+      "main.go": "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"net/http/httptest\"\n\t\"strconv\"\n)\n\nfunc add(w http.ResponseWriter, r *http.Request) {\n\t// 查询参数来源是请求 URL，不是服务器终端输入。\n\taText := r.URL.Query().Get(\"a\")\n\tbText := r.URL.Query().Get(\"b\")\n\ta, errA := strconv.Atoi(aText)\n\tb, errB := strconv.Atoi(bText)\n\t// 缺失、非整数或超出接口范围都走错误分支，且不写成功结果。\n\tif errA != nil || errB != nil || a < 0 || a > 10000 || b < 0 || b > 10000 {\n\t\thttp.Error(w, \"a and b must be integers from 0 to 10000\", http.StatusBadRequest)\n\t\treturn\n\t}\n\t// Fprint 写响应正文；最后 main 再把记录器中的正文打印到终端。\n\tif _, err := fmt.Fprint(w, a+b); err != nil {\n\t\tfmt.Println(\"写响应失败：\", err)\n\t}\n}\n\nfunc main() {\n\tmux := http.NewServeMux()\n\tmux.HandleFunc(\"GET /add\", add)\n\trec := httptest.NewRecorder()\n\treq := httptest.NewRequest(\"GET\", \"/add?a=10&b=20\", nil)\n\tmux.ServeHTTP(rec, req)\n\tfmt.Println(rec.Code, rec.Body.String())\n}\n"
+    },
+    "output": null,
+    "mutation": {
+      "file": "main.go",
+      "from": "a > 10000",
+      "to": "false"
+    }
+  },
+  {
+    "chapter": "go-repository",
+    "answer": 1,
+    "language": "go",
+    "output": "读取失败"
+  },
+  {
+    "chapter": "go-config",
+    "answer": 0,
+    "language": "go",
+    "output": "8080",
+    "unsetEnv": [
+      "BOOK_PORT"
+    ]
+  },
+  {
+    "chapter": "go-pagination",
+    "answer": 1,
+    "language": "go",
+    "output": "1 [1 2 3 4 5]\n2 [6 7 8 9 10]\n3 [11 12]\n4 []"
   }
 ]

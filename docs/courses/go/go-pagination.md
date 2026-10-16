@@ -71,10 +71,49 @@ QueryContext返回多行结果，调用者检查err，成功后defer rows.Close�
 
 ### 参考答案
 
-默认参数只用于没有提供且合同允许的情况；明确错误值不能偷偷覆盖。工程followup-08/09的列表接口直接接受limit/offset，不是自动接受page；前端使用页码时应按合同转换。
+page=1得到offset0；0页、0条、limit101与过大page拒绝。接口直接接受limit/offset时，不会自动识别page，前端需按合同转换。
 
 ## 独立变式
 
 用1到12的整数切片，每页5项，实现前三页与第四页空结果。先写预期分段，再处理最后页的上界，避免直接切片越界；再将同样概念应用到SQL。
 
 参考：[PostgreSQL LIMIT与OFFSET](https://www.postgresql.org/docs/current/queries-limit.html)。
+
+## 偏移分页与游标分页的取舍
+
+先稳定排序，再分页，且给page/limit/offset合理上限，避免溢出和深分页扫描。并发插入删除可能让按offset的页产生重复或跳项；数据变动频繁时可基于唯一排序键使用游标，但游标需要与排序合同一致。
+
+筛选条件必须先作用于全集，再分页；先切出一页再筛选会漏掉后续符合项。总数是否返回、空页是200空数组还是错误，都应写入接口约定，不能由某次切片越界决定。
+
+### 参考答案：独立实现
+
+起点超出或等于长度时直接输出空结果，不进行非法取片；末页终点缩到长度12。此处只处理固定合法页1到4，真实输入还需前面的范围检查。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	values := []int{1,2,3,4,5,6,7,8,9,10,11,12}
+	limit := 5
+	for page := 1; page <= 4; page++ {
+	    start := (page-1)*limit
+	    if start >= len(values) { fmt.Println(page, []int{}); continue }
+	    end := start + limit
+	    if end > len(values) { end = len(values) }
+	    fmt.Println(page, values[start:end])
+	}
+}
+```
+
+预期：
+
+```output
+1 [1 2 3 4 5]
+2 [6 7 8 9 10]
+3 [11 12]
+4 []
+```

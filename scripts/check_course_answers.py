@@ -43,10 +43,13 @@ def main():
                 file.parent.mkdir(parents=True, exist_ok=True)
                 file.write_text(content + ("\n" if filename.endswith(".go") else ""))
             command = ["test", "-count=1", "./..."] if check["language"] == "go-test" else ["run", "."]
+            environment = os.environ.copy()
+            for name in check.get("unsetEnv", []):
+                environment.pop(name, None)
             result = subprocess.run(
                 [os.environ.get("GO_TOOLCHAIN_EXE", "go"), *command],
                 cwd=directory, input=check.get("input", ""), capture_output=True,
-                text=True, timeout=60,
+                text=True, timeout=60, env=environment,
             )
             assert result.returncode == 0, (check, result.stderr)
             if check["output"] is not None:

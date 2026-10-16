@@ -62,10 +62,36 @@ SELECT id, title FROM practice_problems WHERE id = 123;
 
 ### 参考答案
 
-违反约束的单条修改失败，不会把旧标题变成空白；不存在目标是正常可处理的结果，需要Go层决定映射成404或别的约定。修改多条关联数据的原子性将在事务课学习。
+CHECK失败后重新SELECT旧标题应仍保留；不存在id时UPDATE 0，由Go层按接口合同处理。不要为制造不存在目标删除别人的记录。
 
 ## 独立变式
 
 插入三条不同临时标题，记录id；按id降序取前两条，只将其中一条设为完成，最后查询确认其他两条未变。写下每条命令的目标与实际受影响行数。
 
 参考：[PostgreSQL查询](https://www.postgresql.org/docs/current/tutorial-select.html)、[修改](https://www.postgresql.org/docs/current/tutorial-update.html)、[删除](https://www.postgresql.org/docs/current/tutorial-delete.html)。
+
+## 参数、受影响行数与稳定结果
+
+修改与删除必须有明确WHERE条件，先SELECT相同条件核对目标。0行受影响不一定是SQL语法错误，但业务上可能应返回404；不能只看Exec的err为nil就宣布修改成功。
+
+ORDER BY要能唯一确定次序，例如created_at相同再按id；LIMIT没有稳定排序不能保证每次同一页。参数绑定保护的是值，表名/列名/排序方向等结构不能用普通值占位符代替，需要允许列表选择。
+
+### 参考答案：独立实现与验收
+
+以下使用本节的psql客户端，`\gset`把RETURNING结果保存为变量；在专用测试库运行，不修改原业务表：
+
+```sql
+CREATE TABLE lesson_crud (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title TEXT NOT NULL CHECK (length(btrim(title)) > 0),
+    solved BOOLEAN NOT NULL DEFAULT FALSE
+);
+INSERT INTO lesson_crud (title) VALUES ('甲') RETURNING id AS a_id \gset
+INSERT INTO lesson_crud (title) VALUES ('乙') RETURNING id AS b_id \gset
+INSERT INTO lesson_crud (title) VALUES ('丙') RETURNING id AS c_id \gset
+SELECT id, title, solved FROM lesson_crud ORDER BY id DESC LIMIT 2;
+UPDATE lesson_crud SET solved = TRUE WHERE id = :'b_id'::bigint RETURNING id, title, solved;
+SELECT id, title, solved FROM lesson_crud ORDER BY id;
+```
+
+预期只乙变true，甲丙仍false；降序前两项是丙、乙，UPDATE返回恰好一行。每次使用数据库实际返回的id，而不是假定1、2、3。其他SQL客户端不支持psql元命令时，先记下RETURNING结果再用客户端的参数机制绑定。
