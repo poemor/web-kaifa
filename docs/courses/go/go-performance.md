@@ -66,10 +66,33 @@ go tool pprof -top cpu.out
 
 ### 参考答案
 
-测量方法、输入规模和环境要可比较。完整请求慢时需要另外检查真实请求链与数据库，不能把微基准的改善数字直接当网页提速。
+输入、环境和边界要一致。若改变了分词或并列排序结果，必须先修正确性，不因基准更快而保留错误。
 
 ## 独立变式
 
 添加较大固定输入的BenchmarkCountLarge，与原小输入分开报告。写下是否包含输入构造时间，确保前后版本使用相同测量边界，再解释差异。
 
 参考：[Go诊断文档](https://go.dev/doc/diagnostics)、[testing基准](https://pkg.go.dev/testing#hdr-Benchmarks)。
+
+## CPU、内存、锁等待回答不同问题
+
+CPU样本指示执行消耗，heap样本指示相应内存指标，mutex/block剖析观察等待；一份CPU报告不能直接说明SQL为何慢。先固定输入和测量边界，再选工具，避免把测试夹具构造或网络抖动算成算法收益。
+
+微基准数字还受Go版本、硬件、并发和缓存影响。多次测量比较分布，正确性先通过，再解释ns/op、B/op与allocs/op；端到端改善还需同条件真实请求验证，不用单次更小数字夸大收益。
+
+### 参考答案：独立实现与验收
+
+在已有benchmark_test.go中增加strings导入，并新增：
+
+```go
+func BenchmarkCountLarge(b *testing.B) {
+    text := strings.Repeat("Go go Web 数据库 ", 1000)
+    b.ReportAllocs()
+    b.ResetTimer() // 构造固定输入不计入本次Count测量。
+    for i := 0; i < b.N; i++ {
+        benchmarkResult = Count(text)
+    }
+}
+```
+
+先go test ./...，再go test -run='^$' -bench='Count' -benchmem -count=5。小/大输入分开报告；输入构造在ResetTimer前，每轮只测Count。记录实际五次结果，不在答案中捏造一个固定的加速百分比。

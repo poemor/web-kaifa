@@ -55,3 +55,39 @@ Git 是在本机保存文件版本的工具；GitHub 是可保存远程仓库的
 独立新增第二个说明文件，同时修改原HTML。先只选择HTML准备提交；暂存后再改HTML一行，不马上重新add。提交前自行预测工作区、暂存区各含哪版，再分两次记录HTML与说明文件。
 
 自查：status能显示仍未暂存的新修改与第二文件；diff --cached只包含已选的HTML版本，不能夹入说明文件。第一次提交后新一行仍待处理，第二次选择性提交时说明文件才进入历史；log能解释两次目的，提交不等于上传或发布。
+
+## 本地版本、远程备份和分支
+
+commit保存的是暂存快照，push才把可达提交送到远程，发布还需要部署步骤。每次提交前看status、diff与diff --cached，确认改动范围。频繁、小而完整的提交便于定位问题，但不能只提交源文件而漏掉项目要求同步的生成数据。
+
+fetch取回远程历史而不修改当前文件，pull还会整合。多人修改前先确认分支与未提交状态，不用强制推送覆盖别人的提交。修复已推送的错误优先用新提交留下证据，历史重写仅在明确需要且协作方知情时处理。
+
+### 参考答案：独立实现与验收
+
+在已初始化的独立练习仓库，先把HTML改成版本A并保存，新增notes.txt。然后：
+
+```sh
+git status
+git add index.html
+git diff --cached
+```
+
+此时再把HTML多改一行成版本B并保存，先不add：
+
+```sh
+git diff
+git diff --cached
+git commit -m "page: record version A"
+git status
+```
+
+普通diff显示A→B的未暂存差异，cached显示原版→A；第一次提交记录A，notes.txt仍未跟踪，HTML的B仍待处理。第二次明确选择：
+
+```sh
+git add index.html notes.txt
+git diff --cached
+git commit -m "page: record version B and notes"
+git log --oneline -3
+```
+
+第二次才同时记录B与说明文件。两次commit都仍是本地历史，推送前需确认自己的远程地址。

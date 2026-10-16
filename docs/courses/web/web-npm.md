@@ -65,3 +65,29 @@ package.json 说明直接依赖与脚本，package-lock.json 记录解析出的�
 在followup-03新副本中，不看本页命令序列，自己从package.json选工具达成：预览产物显示版本A；源码改成版本B后dev显示B而未重建的preview仍A；重新生成产物后preview才显示B。另用已学const不能重新赋值制造检查失败。
 
 自查：记录8803开发地址与8903预览地址、源码/产物各显示哪版、实际使用脚本。失败检查应阻止该build流程继续生成新产物，恢复源码后通过。只看测试运行通过/失败数量即可，测试源码到后面的TypeScript和测试章节再读。
+
+## 锁定安装与依赖脚本
+
+npm ci按锁文件重建依赖，清单不一致应先修清单/锁，而不是删锁“碰碰运气”。npm install用于有意变更依赖，并把相应锁文件一起提交。安装过程可能执行包的生命周期脚本，维护项目时先了解依赖来源和必要构建步骤。
+
+dev读取源码并提供开发能力，build生成静态发布产物，preview预览该产物；三者服务的内容和地址要分别确认。前端环境变量若被打包到浏览器，就不是秘密存储；变量名写得像密钥也不会让它自动隐身。
+
+### 参考答案：独立实现与验收
+
+在followup-03独立副本，把页面可见标题写为“版本A”。已有依赖时不用重复ci；首次先npm ci，再：
+
+```sh
+npm run build
+npm run preview
+```
+
+8903应显示A。另开终端npm run dev，在src/main.ts把可见标题改B，8803显示B、未重建的8903仍A。停掉preview后npm run build再npm run preview，8903才显示B。
+
+在main.ts末尾临时加入两行故意错误：
+
+```typescript
+const invalidReassign = 1;
+invalidReassign = 2;
+```
+
+npm run typecheck应失败，npm run build也应在tsc阶段停止。旧dist仍可能存在，不能因preview还能显示A就说坏源码构建成功。删去错误、重建再验收。Windows PowerShell按原说明使用npm.cmd。

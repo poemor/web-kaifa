@@ -189,3 +189,145 @@ load 的 message 参数是已经确认的创建说明，普通读取传空文字
 增加独立location输入及对应label，按合同创建后自动重新读服务器列表，显示title与location。自己确定两个字段怎样检查：标题不能仅空白，地点可空但类型仍是文字。重复读与创建交叉操作不能累计旧列表。
 
 自查：有效创建只有真实201后确认，随后GET包含两字段；只空白标题不应创建，服务器拒绝时保留输入。读取不存在的id应404，停服务时显示失败而非已保存。初始慢读+连续重读、创建后新读先于旧读完成时，行数仍等于最新响应且不重复，创建确认不被旧读取覆盖。
+
+## 创建已成功但刷新失败，不应重复创建
+
+写请求确认与列表读取是两次操作。POST收到201且字段符合合同，创建已发生；随后的GET失败只说明界面未能重新核对，不能向用户暗示“没创建，再点一次”。保留确认信息，允许重读，减少重复写入。
+
+后端状态是事实来源，前端做体验校验仍需处理服务端拒绝。网络断开时写请求可能出现结果不确定，真实业务应设计幂等键或查询核对；不能把所有fetch错误都当服务器绝对没有执行。
+
+### 参考答案：独立实现与验收
+
+在本节已运行的Go内存API副本，完整替换web/index.html和web/app.js；服务端不改。先保存两文件，重新访问同源页面：
+
+web/index.html：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>自己的活动 API</title>
+</head>
+<body>
+  <h1>活动 API 联调小例子</h1>
+  <p>本机内存教学服务，没有账号；重启会丢失新增记录。</p>
+  <form id="editor">
+    <label for="title">虚构活动标题</label>
+    <input id="title" name="title" required>
+    <label for="location">地点（可空）</label>
+    <input id="location" name="location">
+    <button id="create" type="submit">向服务器创建</button>
+  </form>
+  <button id="refresh" type="button">重新读取服务器列表</button>
+  <p id="status" role="status">尚未读取</p>
+  <ul id="list"></ul>
+  <!-- 元素已经存在，脚本才能按 ID 找到它们。 -->
+  <script src="app.js"></script>
+</body>
+</html>
+```
+
+web/app.js：
+
+```javascript
+const form = document.querySelector("#editor");
+const input = document.querySelector("#title");
+const locationInput = document.querySelector("#location");
+const create = document.querySelector("#create");
+const refresh = document.querySelector("#refresh");
+const status = document.querySelector("#status");
+const list = document.querySelector("#list");
+
+// 所有会争用界面的操作共用版本；创建也能使先前读取过期。
+let latest = 0;
+let creating = false;
+
+async function load(message) {
+  // 创建进行时先完成写操作，避免读状态抢掉创建状态。
+  if (creating) return;
+  latest += 1;
+  const request = latest;
+  status.textContent = message ? message + "，正在重新读取服务器" : "正在读取服务器";
+  list.replaceChildren();
+  try {
+    const response = await fetch("/api/events");
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    const items = await response.json();
+    if (!Array.isArray(items) || items.some(item => item === null || typeof item !== "object" || typeof item.id !== "number" || typeof item.title !== "string" || typeof item.location !== "string")) {
+      throw new Error("列表字段错误");
+    }
+    // 当前结果才可提交列表；旧成功不能追加或覆盖新结果。
+    if (request !== latest) return;
+    list.replaceChildren();
+    for (const item of items) {
+      const li = document.createElement("li");
+      li.textContent = item.id + "：" + item.title + " / " + item.location;
+      list.append(li);
+    }
+    const summary = "服务器返回 " + items.length + " 条活动";
+    status.textContent = message ? message + "；" + summary : summary;
+  } catch (error) {
+    // 旧失败同样不能修改最新操作的状态。
+    if (request !== latest) return;
+    status.textContent = message
+      ? message + "；列表刷新失败：" + error.message + "，请重新读取核对，不要重复创建"
+      : "读取失败：" + error.message;
+  }
+}
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (creating) return;
+  // 包括输入失败在内的新操作，都不能再被先前的读取覆盖。
+  latest += 1;
+  const operation = latest;
+  const title = input.value.trim();
+  const location = locationInput.value.trim();
+  if (title === "") {
+    status.textContent = "标题不能只有空格";
+    return;
+  }
+  creating = true;
+  create.disabled = true;
+  refresh.disabled = true;
+  input.disabled = true;
+  locationInput.disabled = true;
+  status.textContent = "正在创建，尚未成功";
+  let createdId = null;
+  try {
+    const response = await fetch("/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: title, location: location })
+    });
+    const saved = await response.json();
+    if (response.status !== 201) {
+      throw new Error("HTTP " + response.status + "：" + JSON.stringify(saved));
+    }
+    if (saved === null || typeof saved !== "object" || typeof saved.id !== "number" || typeof saved.title !== "string" || typeof saved.location !== "string") {
+      throw new Error("创建响应字段错误");
+    }
+    if (operation !== latest) return;
+    createdId = saved.id;
+    status.textContent = "已创建 #" + createdId + "，将读取列表核对";
+    form.reset();
+  } catch (error) {
+    if (operation === latest) status.textContent = "创建失败：" + error.message;
+  } finally {
+    creating = false;
+    create.disabled = false;
+    refresh.disabled = false;
+    input.disabled = false;
+    locationInput.disabled = false;
+  }
+  // 创建确认与随后真实 GET 保持一条链，刷新失败不误报创建未发生。
+  if (createdId !== null && operation === latest) await load("已创建 #" + createdId);
+});
+
+refresh.addEventListener("click", () => load(""));
+load("");
+```
+
+虚构标题与地点成功后，POST201确认再GET，列表应同时显示两个字段；地点可空，标题只空白则不提交。服务端400时保留输入；停服务时显示失败。为验收版本保护，控制旧GET晚于创建后的新GET返回，最终列表只对应新响应、无重复，状态保留创建确认。未运行这些交叉场景时不能只据一次成功创建就称全部竞态通过。

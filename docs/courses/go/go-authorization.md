@@ -62,10 +62,30 @@ go test -v -run TestSessionsOwnershipCSRFAndRoles ./...
 
 ### 参考答案
 
-列表隐藏不是所有权限的证据；对象操作和角色操作分别验证。身份已确认也不能由Body指定其他用户。
+隐藏列表不是对象授权证据。B取消A的报名必须被拒绝，删掉归属条件时测试应失败；客户端带其他memberId不应改写服务端认定的身份。
 
 ## 独立变式
 
 设计“读取单条报名”接口：先写未登录、自己、他人、不存在四种预期，再用服务端用户id约束查询并补测试。先明确合同，不把规划称已实现。
 
 参考：[OWASP授权](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html)。
+
+## 身份、角色与对象归属要分开
+
+身份确认“你是谁”，角色决定能否执行某类操作，对象归属决定能否访问这一条记录。请求Body提供的userId不能代替服务端会话身份。列表过滤正确，也不证明详情、更新、删除都正确；每个对象入口都要约束用户。
+
+为避免泄露记录是否存在，合同可以让“他人记录”和“不存在”都返回404，但应内部区分真实数据库失败。SQL查询同时使用对象id与当前用户id，比分别查存在再在不可靠分支里比较更容易保持约束。
+
+### 参考答案：独立实现与验收
+
+读取单条报名的合同先定为：未登录401，自己的记录200，别人的记录404，不存在404。当前SecureStore没有GetRegistration，必须新增接口并同步内存与SQL实现，不能只加路由壳。
+
+SQL实现的核心查询使用两个绑定条件：
+
+```sql
+SELECT id, event_id, member_id
+FROM registrations
+WHERE id=$1 AND member_id=$2;
+```
+
+第二个参数来自已认证user.ID，不能来自Body或URL的memberId。Scan无行映射ErrMissing，其他数据库错误继续返回；内存版在同一锁内查id并比较MemberID，不符合则ErrMissing。Handler先认证、解析正id，再调用该方法。测试建立A的一条记录，分别用未登录、A、B、不存在id请求，断言401/200/404/404；A的响应还要核对MemberID。新接口只有实现和这组测试都完成，才能算变式实现。

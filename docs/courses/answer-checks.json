@@ -1193,5 +1193,62 @@
     "answer": 1,
     "language": "go",
     "output": "1 [1 2 3 4 5]\n2 [6 7 8 9 10]\n3 [11 12]\n4 []"
+  },
+  {
+    "chapter": "go-goroutines",
+    "answer": 1,
+    "language": "go",
+    "output": null,
+    "contains": [
+      "任务甲 3",
+      "任务乙 12"
+    ]
+  },
+  {
+    "chapter": "go-mutex",
+    "answer": 1,
+    "language": "go",
+    "output": "100"
+  },
+  {
+    "chapter": "go-channels",
+    "answer": 1,
+    "language": "go",
+    "output": "9"
+  },
+  {
+    "chapter": "go-context",
+    "answer": 1,
+    "language": "go",
+    "output": "true\nWeb true"
+  },
+  {
+    "chapter": "go-type-assertion",
+    "answer": 1,
+    "language": "go",
+    "output": "\"Go\" true\n\"\" false\n\"\" false\n\"\" false"
+  },
+  {
+    "chapter": "go-generics",
+    "answer": 1,
+    "language": "go",
+    "output": "2 true\nWeb true\n0 false"
+  },
+  {
+    "chapter": "web-frameworks",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "clicks": [
+      "#spend",
+      "#spend",
+      "#spend",
+      "#spend"
+    ],
+    "text": {
+      "#spent": "20",
+      "#remaining": "-5",
+      "#over": "已超支"
+    }
   }
 ]

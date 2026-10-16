@@ -68,3 +68,35 @@ defineProps 是 Vue 在 script setup 中处理的编译器宏，不需要在这�
 ## 配套验证边界
 
 当前原项目完整的路由、请求生命周期和流程测试以 React 为主。Vue 原入口有实际基础输入/列表参考，计数替换是本节独立实验；已有 tsc 命令没有执行 vue-tsc 的完整 SFC 类型检查，不能把它通过当成 Vue 全面类型验收。应运行 npm.cmd run build 确认 Vue 插件编译，再在 /vue.html 实际验证显示和操作；完整 Vue 扩展需独立完成同样失败流程。参考：[Vue 单文件组件](https://vuejs.org/guide/scaling-up/sfc.html)、[Vue Props](https://vuejs.org/guide/components/props.html)。
+
+## 派生值、事件与生命周期
+
+ref用容器保存响应式值，reactive用于响应式对象，computed适合从已有状态计算派生值；watch用于需要对变化执行副作用的场景，不把所有派生显示都写成互相更新的watch。
+
+父组件拥有状态，子组件只读Props并通过事件表达操作；不要把父传输入当作可随意改的本地字段。请求清理还需生命周期和watch清理逻辑，基础计数成功不证明异步退出已正确。
+
+### 参考答案：独立实现与验收
+
+保留本节已给出的src/CountLabel.vue，只完整替换src/VueSearch.vue：
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import CountLabel from "./CountLabel.vue";
+const count = ref(0);
+function add() { count.value += 1; }
+function reset() { count.value = 0; }
+</script>
+
+<template>
+  <main>
+    <h1>Vue计数与重置</h1>
+    <CountLabel :count="count" />
+    <button type="button" @click="add">练习一次</button>
+    <button type="button" @click="reset">重置</button>
+  </main>
+</template>
+
+```
+
+npm run build后dev打开/vue.html，增加两次为2，重置为0，刷新为0。脚本写count.value，模板会自动解包；删掉:count的冒号会把文字而非数字传给子组件。现有tsc不等于完整vue-tsc检查，浏览器与SFC构建仍要分别验收。

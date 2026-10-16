@@ -70,10 +70,66 @@ race是竞态检测器，执行时检测未同步数据访问。去锁版本可�
 
 ### 参考答案
 
-最终读取在Wait之后，不与工作任务写入并发；若读发生在任务仍运行时，也应加同一锁。Mutex不替任务取消，也不替事务保护跨数据库写入。
+等待完成后主函数最终读不与任务写入重叠；若任务还在运行，读取也须持同一锁。锁不负责取消任务，也不代替数据库事务。
 
 ## 独立变式
 
 写一个结构体保存mu和count，以指针方法Add与Value提供访问；让两个并发任务各增加50次，Wait之后应为100。解释为什么不把Mutex结构体按值拷贝给每项任务。
 
 参考：[sync.Mutex](https://pkg.go.dev/sync#Mutex)、[Go竞态检测](https://go.dev/doc/articles/race_detector)。
+
+## 锁保护不变量，读取也要遵守
+
+互斥锁只在所有访问方遵守同一把锁时有效。读写复合状态要在同一个临界区内保持一致；RLock也不是允许同时写入。锁应由拥有数据的类型封装，防止调用者绕过保护直接改字段。
+
+Mutex首次使用后不能复制；含锁结构体用指针传递、指针接收者方法，避免每个副本拿不同锁却访问同一数据。竞争检测器只检查被实际执行的路径，锁死与业务顺序错误仍需专门测试。
+
+### 参考答案：独立实现
+
+两任务都使用同一个*Counter；Add与Value内部持同一锁，结构体不被复制。可在本机支持竞争检测的环境用go run -race .再核对，不把最终恰好100当无竞争的充分证据。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+type Counter struct {
+    mu sync.Mutex
+    count int
+}
+func (c *Counter) Add(delta int) {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    c.count += delta
+}
+func (c *Counter) Value() int {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    return c.count
+}
+
+func main() {
+	counter := &Counter{}
+	var wg sync.WaitGroup
+	wg.Add(2)
+	for task := 0; task < 2; task++ {
+	    go func() {
+	        defer wg.Done()
+	        for i := 0; i < 50; i++ { counter.Add(1) }
+	    }()
+	}
+	wg.Wait()
+	fmt.Println(counter.Value())
+}
+```
+
+预期：
+
+```output
+100
+```

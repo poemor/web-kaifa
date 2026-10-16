@@ -87,10 +87,57 @@ defer cancel()
 
 ### 参考答案
 
-取消信号、观察信号、return或依赖停止，三个环节缺一不可。WithTimeout也不是保证所有任意代码在5秒内终止。
+取消者发送信号，工作观察并返回，调用者再处理错误。仅创建Context却不传给实际操作，不会给任意代码自动施加时间上限。
 
 ## 独立变式
 
 编写接收ctx的查找函数，每项检查取消。使用提前取消与未取消两种输入，分别检查错误和实际查找结果，不使用Sleep判断完成。
 
 参考：[Go context](https://pkg.go.dev/context)、[select语句](https://go.dev/ref/spec#Select_statements)。
+
+## 期限传递与 select 的规则
+
+Context传取消、期限和请求范围的少量信息，不作为任意配置容器。通常作为函数第一个参数ctx，派生WithCancel/WithTimeout后确保cancel释放关联资源。超时只发信号，真正I/O要用QueryContext、NewRequestWithContext等支持它的接口。
+
+select多个分支都就绪时不保证优先选取消分支；需要开始前已取消就立即拒绝时，先检查ctx.Err。给带default的循环写清每轮可推进工作，避免忙等占满CPU。取消后还需等待任务返回，不能直接假定所有资源已经释放。
+
+### 参考答案：独立实现
+
+提前取消时入口检查即返回错误；未取消时逐项检查并找到Web。入口检查也覆盖空集合的已取消情况，不靠Sleep测时序。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import (
+    "context"
+    "errors"
+    "fmt"
+)
+
+func find(ctx context.Context, values []string, target string) (string, error) {
+    if err := ctx.Err(); err != nil { return "", err }
+    for _, value := range values {
+        if err := ctx.Err(); err != nil { return "", err }
+        if value == target { return value, nil }
+    }
+    return "", errors.New("未找到")
+}
+
+func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err := find(ctx, []string{"Go", "Web"}, "Web")
+	fmt.Println(err != nil)
+	value, err := find(context.Background(), []string{"Go", "Web"}, "Web")
+	fmt.Println(value, err == nil)
+}
+```
+
+预期：
+
+```output
+true
+Web true
+```

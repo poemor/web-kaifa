@@ -50,7 +50,7 @@ security_test.go里的测试用同一虚构密码算两次hash，要求结果不
 
 ### 参考答案
 
-同密码不同盐得到不同存储文字是正常的，验证要使用保存的盐与参数。不能用比较两条新随机哈希是否相等来登录。
+同密码不同盐得到不同存储文字，验证使用已保存盐与参数。两次新哈希不等不能推出密码不同；格式错误应返回false，不应panic或无上限分配。
 
 ## 独立变式与限制
 
@@ -61,3 +61,27 @@ security_test.go里的测试用同一虚构密码算两次hash，要求结果不
 为“错误存储格式/正确候选/错误候选”补测试，记录预期bool。真实密码、Cookie、Token、DSN与哈希不进入Git或AI问题。账户恢复、邮箱验证、多因素验证、参数升级与真实容量均属完整产品工作，本演示不宣称具备。
 
 参考：[OWASP密码存储](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)、[Go Argon2](https://pkg.go.dev/golang.org/x/crypto/argon2)。
+
+## 成本、随机盐与验证入口
+
+密码哈希需要专用、有成本且可调参数的算法，普通SHA摘要不等价。每条记录使用密码学随机盐，保存算法标识与参数，验证时按保存信息计算并比较；不能每次生成新随机哈希再比较字符串。
+
+验证入口同时要限速、限制并发、限制输入和存储格式长度，防止昂贵计算被无限放大。统一对外登录失败提示有助于避免泄露账户存在性，内部仍需可诊断日志；不能记录明文密码或完整凭据。参数升级需成功验证旧格式后再重算保存，不能无依据批量改写哈希。
+
+### 参考答案：独立实现与验收
+
+在followup-10的security_test.go加入独立测试，复用已有testing、strings导入：
+
+```go
+func TestPasswordCandidatesAndMalformed(t *testing.T) {
+    encoded, err := hashPassword("Test-only-password-123")
+    if err != nil { t.Fatal(err) }
+    if !verifyPassword(encoded, "Test-only-password-123") { t.Fatal("正确候选被拒绝") }
+    if verifyPassword(encoded, "wrong-password") { t.Fatal("错误候选被接受") }
+    for _, invalid := range []string{"", "$bad$", strings.Repeat("x", 129)} {
+        if verifyPassword(invalid, "Test-only-password-123") { t.Fatal("非法存储格式被接受") }
+    }
+}
+```
+
+运行go test -run TestPasswordCandidatesAndMalformed -count=1。预期正确候选true、错误候选false、三种坏格式false。它测试密码函数，不等于登录会话、真实数据库或生产容量已通过。

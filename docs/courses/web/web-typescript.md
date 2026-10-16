@@ -69,3 +69,35 @@ macOS/Linux 使用 npm。浏览器打开 http://127.0.0.1:8803/，页面与 Cons
 自行描述商品对象：name文字、price数字、quantity数字。写一个返回数字总价的函数，并在真实入口调用及页面显示；另外生成含名称和总价的文字。先写正常对象、错quantity类型与错返回类型的预期。
 
 自查：单价7、数量3得21；数量0得0；quantity为字符串应typecheck拒绝，函数返回文字却声明数字也应拒绝。修好再运行网页；价格−1仍是number并不自动符合业务，需要你明确的范围校验，不能称类型注解已验证外部数据。
+
+## unknown、可选字段与开发时检查
+
+来自JSON等外部边界先看作unknown，用实际判断缩小范围；any会跳过大部分检查，as只是告诉检查器相信某个类型，不执行校验。可选字段可能不存在，strictNullChecks下使用前需明确处理undefined/null。
+
+TypeScript常能推断局部类型，重要边界如函数参数、返回值、数据合同应写清。number包含NaN和Infinity，类型注解本身不限制正数、整数或范围，这些仍是运行时业务规则。
+
+### 参考答案：独立实现与验收
+
+在followup-03副本完整替换src/main.ts：
+
+```typescript
+type Product = { name: string; price: number; quantity: number };
+function totalCost(product: Product): number {
+  if (!Number.isFinite(product.price) || !Number.isFinite(product.quantity)
+      || product.price < 0 || !Number.isInteger(product.quantity) || product.quantity < 0) {
+    throw new Error("价格或数量不合格");
+  }
+  return product.price * product.quantity;
+}
+const product: Product = { name: "笔记本", price: 7, quantity: 3 };
+const total = totalCost(product);
+const text = `${product.name} / ${total}元`;
+const root = document.querySelector("#app");
+if (root === null) throw new Error("缺少app");
+root.textContent = text;
+console.log(text);
+export {};
+
+```
+
+typecheck后打开dev，页面和日志为“笔记本 / 21元”。数量改0得到0元；把quantity写成"3"或返回文字而声明number，typecheck拒绝。价格-1虽然类型为number，本实现仍在运行时拒绝；这是显式校验的效果，不能归功于类型注解。

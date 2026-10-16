@@ -56,10 +56,55 @@ panic是运行时无法按此路径继续的问题，不是普通校验返回值
 
 ### 参考答案
 
-同样看起来是7，string和int是不同类型。断言不是Parse，也不是JSON字段校验；类型匹配后还需要检查内容是否符合业务范围。
+整数7与字符串"7"是不同动态类型，后者不能断言成int。格式解析应使用strconv；类型正确后，标题是否空白仍需另查。
 
 ## 独立变式
 
 写 `asTitle(value any) (string, bool)`：只有value确实是string且TrimSpace后非空才成功。测试普通文字、空白、整数与nil，解释类型规则与内容规则各负责什么。
 
 参考：[Go类型断言](https://go.dev/ref/spec#Type_assertions)。
+
+## 断言、类型分支与 nil 接口
+
+`value.(T)`只检查接口内的动态类型是否符合T，不解析文字、不做数值转换；用双结果形式避免未知类型触发panic。多种可接受类型可用type switch，每个分支仍要做内容和范围校验。
+
+接口的零值nil与保存了nil指针的接口不同。比较接口==nil只能判断接口本身是否无动态类型，不能证明内部指针可安全解引用。优先让边界函数返回明确的值/错误合同，减少any在核心业务中传播。
+
+### 参考答案：独立实现
+
+双结果断言先验证类型，TrimSpace再验证非空内容。正常文字返回清理后的标题；空白、整数与nil走失败占位，不发生断言panic。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import (
+    "fmt"
+    "strings"
+)
+
+func asTitle(value any) (string, bool) {
+    text, ok := value.(string)
+    if !ok { return "", false }
+    text = strings.TrimSpace(text)
+    if text == "" { return "", false }
+    return text, true
+}
+
+func main() {
+	for _, value := range []any{" Go ", "   ", 7, nil} {
+	    title, ok := asTitle(value)
+	    fmt.Printf("%q %t\n", title, ok)
+	}
+}
+```
+
+预期：
+
+```output
+"Go" true
+"" false
+"" false
+"" false
+```

@@ -69,10 +69,47 @@ go test -v -run TestSessionsOwnershipCSRFAndRoles ./...
 
 ### 参考答案
 
-Cookie存在不保证会话有效；没过期还需会话未撤销、用户存在。当前单实例内存sessions/限速不共享，多实例部署需另外设计，不应把这里叫完整分布式身份服务。
+Cookie存在不代表会话有效；移除页面登录提示不撤销服务端会话。旧Cookie在正确注销后应401，过期也应401；缺写请求CSRF令牌按合同403。
 
 ## 独立变式
 
 新增一个受保护读取入口，只返回当前会话的用户名。测试未登录401、登录200、注销后401，响应不含hash字段；授权处理留到下一节。
 
 参考：[OWASP会话管理](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)、[MDN Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies)。
+
+## Cookie的属性与服务端撤销
+
+Cookie只是浏览器携带的凭证载体，服务端还要验证会话是否存在、未过期、未撤销、用户仍有效。HttpOnly限制脚本读取，Secure要求HTTPS传送，SameSite影响跨站发送；这些机制不能替代对象权限和所有CSRF防护。
+
+登录成功后更新会话标识，注销要使服务端记录失效并清理客户端Cookie。多实例必须共享会话或采用明确一致的策略，不能让每台内存map各自判断同一Token。期限测试使用可控制时钟，比等待真实十几分钟更可靠。
+
+### 参考答案：独立实现与验收
+
+在followup-10的Security.Handler、return之前增加只回用户名的入口：
+
+```go
+m.HandleFunc("GET /api/username", func(w http.ResponseWriter, r *http.Request) {
+    user, ok := s.authorized(w, r, false, false)
+    if !ok { return }
+    writeJSON(w, 200, map[string]string{"username": user.Username})
+})
+```
+
+security_test.go中可复用fixture、loginFixture和secureRequest：
+
+```go
+func TestUsernameSessionLifecycle(t *testing.T) {
+    _, handler := fixture(t)
+    if got := secureRequest(handler, "GET", "/api/username", "", nil, "").Code; got != 401 { t.Fatal(got) }
+    cookie, csrf := loginFixture(t, handler, "member_a")
+    response := secureRequest(handler, "GET", "/api/username", "", cookie, "")
+    if response.Code != 200 { t.Fatal(response.Code) }
+    var data map[string]any
+    if err := json.Unmarshal(response.Body.Bytes(), &data); err != nil { t.Fatal(err) }
+    if len(data) != 1 || data["username"] != "member_a" { t.Fatal(data) }
+    if got := secureRequest(handler, "POST", "/api/logout", "", cookie, csrf).Code; got != 204 { t.Fatal(got) }
+    if got := secureRequest(handler, "GET", "/api/username", "", cookie, "").Code; got != 401 { t.Fatal(got) }
+}
+```
+
+go test -run TestUsernameSessionLifecycle应通过。只输出一个username字段，len(data)==1也排除了hash等额外字段。此入口是独立变式，原工程已有/api/me，不应把它说成原来没有身份读取。

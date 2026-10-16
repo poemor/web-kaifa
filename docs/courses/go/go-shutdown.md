@@ -114,7 +114,7 @@ curl http://127.0.0.1:8080/slow
 
 ### 参考答案
 
-正常等待应有限期；超时应明确记录与处置。数据库方法要使用r.Context或派生ctx，创建一个不用的context不会让查询停下。
+调用Shutdown只是开始等待；main退出前还要确认等待完成，数据库在请求之后释放。若查询不用r.Context，创建了超时Context也不能让该查询自动停止。
 
 ## 独立变式
 
@@ -123,3 +123,40 @@ curl http://127.0.0.1:8080/slow
 增加一个后台任务，收到共享取消信号后清理并退出；主函数用WaitGroup等它结束，再释放资源。给任务设置明确的完成期限并记录故意不响应取消时的失败，不用Sleep猜全部完成。
 
 参考：[Go Server.Shutdown](https://pkg.go.dev/net/http#Server.Shutdown)、[signal.NotifyContext](https://pkg.go.dev/os/signal#NotifyContext)。
+
+## 停止监听并不等于任务全部结束
+
+Shutdown开始后ListenAndServe很快返回ErrServerClosed，main仍须等待Shutdown完成，再关闭数据库等资源。已取消的信号Context不能作为等待优雅退出的父Context，否则等待可能立即取消；要创建独立有期限的退出Context。
+
+后台任务不是HTTP Server自动管理的一部分，需要共享取消和明确等待。连接升级等特殊连接也有自己的关闭规则。超时后决定强制关闭还是报告未结束，日志保留真实结局，外部容器预算要大于内部预算。
+
+### 参考答案：独立实现与验收
+
+在主函数启动服务前新增后台任务，以下片段复用本节已有context、time、log导入，并增加sync：
+
+```go
+workerCtx, cancelWorker := context.WithCancel(context.Background())
+var workers sync.WaitGroup
+workers.Add(1)
+go func() {
+    defer workers.Done()
+    <-workerCtx.Done()
+    // 在这里执行有期限的本任务清理，而不是再启动无人等待的任务。
+    log.Println("后台任务已清理")
+}()
+```
+
+收到退出信号后先cancelWorker，执行原Shutdown，再等待后台任务（放在资源关闭之前）：
+
+```go
+done := make(chan struct{})
+go func() { workers.Wait(); close(done) }()
+select {
+case <-done:
+    log.Println("后台任务全部退出")
+case <-time.After(2 * time.Second):
+    log.Println("后台退出超时，未确认清理完成")
+}
+```
+
+正常应看到后台清理与全部退出；故意让任务不观察取消，只能得到超时，不能记录为正常完成。正式项目要按资源依赖安排取消、在途请求、后台清理和数据库关闭，不能原样把2秒当任何项目都适用的预算。
