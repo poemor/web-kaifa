@@ -92,3 +92,56 @@ pause 用 `new Promise(...)` 创建待定 Promise：构造器给回调一个 res
 独立写甲、乙、丙三个读取选择，开始后的模拟等待依次600、100、300毫秒，等待后才请求各自本地JSON。快速按甲→乙→丙，先列启动与完成顺序，再写最新选择保护；再把甲资源改为不存在。
 
 自查：约束操作发生在600毫秒内，最后始终属于最后选的丙，不属于最早启动但最后完成的甲。甲旧成功、甲旧404均不能改丙界面；若最后选的丙失败，则显示丙失败，乙成功不能覆盖。每个写界面的出口都要依据当前编号。
+
+## 取消与“只有最新结果可写”分别解决什么
+
+AbortController可请求中止fetch等支持取消的操作，但不能自动撤销已经完成的副作用，也不能中止任意用户代码。请求编号保护界面写入：成功、失败、finally里的加载标志都要检查是否仍属最新请求。
+
+如果等待发生在fetch之前，AbortController并不能自动取消那段延迟。保留编号判断能防止旧失败覆盖新成功，测试也应覆盖“旧失败晚到”和“最后一次本身失败”，不能只验证慢成功。
+
+### 参考答案：独立实现与验收
+
+在本地HTTP目录准备a.json、b.json、c.json，分别为 `{"name":"甲书单"}`、`{"name":"乙书单"}`、`{"name":"丙书单"}`。完整页面如下：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>选择最新书单</h1>
+<button data-name="a">甲</button><button data-name="b">乙</button><button data-name="c">丙</button>
+<p id="status" role="status">尚未读取</p>
+<script>
+let latest = 0;
+const status = document.querySelector("#status");
+const delays = { a: 600, b: 100, c: 300 };
+async function load(name) {
+  const current = ++latest;
+  status.textContent = `正在读取${name}`;
+  try {
+    await new Promise(resolve => setTimeout(resolve, delays[name]));
+    const response = await fetch(`./${name}.json`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const value = await response.json();
+    if (value === null || typeof value !== "object" || typeof value.name !== "string") throw new Error("字段不合格");
+    if (current !== latest) return;
+    status.textContent = `${name}：${value.name}`;
+  } catch (error) {
+    if (current !== latest) return;
+    status.textContent = `${name}失败：${error.message}`;
+  }
+}
+for (const button of document.querySelectorAll("button[data-name]")) {
+  button.addEventListener("click", () => load(button.dataset.name));
+}
+</script>
+</body>
+</html>
+
+```
+
+600毫秒内快速按甲→乙→丙，启动顺序a/b/c，通常完成b/c/a，最终必须是c：丙书单。把a.json改名后再试，旧404也不能改c；把c.json改名则最后为c失败，旧a成功不能覆盖它。编号在每次启动时递增，在成功与失败写DOM前都检查。

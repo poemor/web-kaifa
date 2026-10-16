@@ -98,3 +98,45 @@ JSON 的变化影响脚本填入的段落；`h1` 在初始 HTML 中，修改它�
 从空白制作一页：公告文字已经在初始HTML中，午餐菜单从另一个JSON请求后才显示。两者不能存成同一个写死正文。用Network与Elements标明哪些原文来自哪份响应，并解释把同需求换成Go模板时谁填数据。
 
 自查：禁用JS后公告仍在、菜单仍是未读取提示；缺JSON时公告不消失，动态区域明确失败。正常菜单能在JSON响应中找到，而初始HTML响应不含最终菜单文字。Go模板路径应由服务器先填HTML，不能说浏览器执行Go。
+
+## 源文档、当前DOM与索引
+
+查看网页源代码通常看到初始HTML响应，Elements看到脚本运行后的当前DOM。搜索引擎和辅助技术也各有处理阶段，不能仅凭一个浏览器能执行JS就认定所有入口都能看到最终内容。
+
+静态页在构建前或人工写好HTML，服务器模板在请求时填HTML，API方案由脚本请求数据再更新DOM；它们可混用。选择时考虑内容更新、首屏、缓存和交互需求，不把“动态”统一等同于某个前端框架。
+
+### 参考答案：独立实现与验收
+
+menu.json保存 `{"dish":"番茄鸡蛋面"}`，index.html如下，通过本地HTTP启动：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>食堂公告</h1>
+<p id="notice">本周三中午开放。</p>
+<p id="menu">菜单尚未读取</p>
+<script>
+const target = document.querySelector("#menu");
+async function loadMenu() {
+  try {
+    const response = await fetch("./menu.json");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const value = await response.json();
+    if (value === null || typeof value !== "object" || typeof value.dish !== "string") throw new Error("菜单字段错误");
+    target.textContent = value.dish;
+  } catch (error) { target.textContent = `菜单读取失败：${error.message}`; }
+}
+loadMenu();
+</script>
+</body>
+</html>
+
+```
+
+禁用JS重新打开，公告仍可读、菜单仍是未读取；正常时菜单文字来自menu.json响应。删除菜单文件后公告不消失，动态区域显示失败。Go模板方案则由服务器读取数据填入HTML再发送，浏览器不执行Go。

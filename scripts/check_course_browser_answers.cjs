@@ -10,14 +10,17 @@ function code(check){
  assert(block,JSON.stringify(check));
  const blocks=[...block.matchAll(/```html\n([\s\S]*?)\n```/g)];
  assert.equal(blocks.length,1,check.chapter+' must publish one complete HTML answer');
+ for(const content of Object.values(check.support||{}))assert(text.includes(content),check.chapter+' resource fixture must match published source');
  return blocks[0][1];
 }
 (async()=>{
  const pages=checks.map(code);
  const server=http.createServer((req,res)=>{
-  const match=req.url.match(/^\/(\d+)\/index\.html(?:\?|$)/);
-  if(!match||!pages[Number(match[1])]){res.writeHead(404);res.end('not found');return;}
-  res.setHeader('Content-Type','text/html; charset=utf-8');res.end(pages[Number(match[1])]);
+  const match=new URL(req.url,'http://local').pathname.match(/^\/(\d+)\/(.+)$/);
+  const index=Number(match?.[1]),name=match?.[2];
+  const content=name==='index.html'?pages[index]:checks[index]?.support?.[name];
+  if(content===undefined){res.writeHead(404);res.end('not found');return;}
+  res.setHeader('Content-Type',name.endsWith('.json')?'application/json':name.endsWith('.js')?'text/javascript':'text/html; charset=utf-8');res.end(content);
  });
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const browser=await chromium.launch(process.env.COURSE_BROWSER_EXECUTABLE?{executablePath:process.env.COURSE_BROWSER_EXECUTABLE,headless:true}:{channel:process.env.PLAYWRIGHT_CHANNEL||'msedge',headless:true});
@@ -26,9 +29,11 @@ function code(check){
   for(let index=0;index<checks.length;index++){
    const check=checks[index],page=await browser.newPage({viewport:{width:768,height:900}}),logs=[],errors=[];
    page.on('console',m=>{if(m.type()==='log')logs.push(m.text());});page.on('pageerror',e=>errors.push(e.message));
+   if(check.storageSeed)await page.addInitScript(seed=>{for(const [key,value] of Object.entries(seed))localStorage.setItem(key,value);},check.storageSeed);
    await page.goto(`http://127.0.0.1:${server.address().port}/${index}/index.html`);
    for(const [selector,value] of Object.entries(check.fills||{}))await page.locator(selector).fill(value);
    for(const selector of check.clicks||[])await page.locator(selector).click();
+   if(check.settleMs)await page.waitForTimeout(check.settleMs);
    if(check.title)assert.equal(await page.title(),check.title,check.chapter);
    for(const [selector,value] of Object.entries(check.text||{}))await page.locator(selector).filter({hasText:value}).waitFor();
    for(const [selector,value] of Object.entries(check.text||{}))assert.equal(await page.locator(selector).first().textContent(),value,check.chapter+' '+selector);
@@ -38,6 +43,10 @@ function code(check){
    for(const [selector,values] of Object.entries(check.box||{}))for(const [key,value] of Object.entries(values))assert.equal((await page.locator(selector).boundingBox())[key],value,check.chapter+' '+key);
    for(const [selector,id] of Object.entries(check.labels||{})){await page.locator(selector).click();assert.equal(await page.evaluate(()=>document.activeElement.id),id,check.chapter+' label');}
    for(const selector of check.invalidForms||[])assert.equal(await page.locator(selector).evaluate(el=>el.checkValidity()),false,check.chapter+' validation');
+   if(check.reload)await page.reload();
+   for(const [selector,value] of Object.entries(check.values||{}))assert.equal(await page.locator(selector).inputValue(),value,check.chapter+' saved value');
+   for(const [selector,value] of Object.entries(check.afterReloadText||{}))assert.equal(await page.locator(selector).textContent(),value,check.chapter+' reload');
+   for(const [key,value] of Object.entries(check.storagePreserved||{}))assert.equal(await page.evaluate(key=>localStorage.getItem(key),key),value,check.chapter+' preserve invalid input');
    for(const [selector,widths] of Object.entries(check.grid||{}))for(const [width,columns] of Object.entries(widths)){
     await page.setViewportSize({width:Number(width),height:900});assert.equal(await page.locator(selector).evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),columns,check.chapter+' columns '+width);
    }
