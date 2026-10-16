@@ -1,0 +1,68 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: 静态检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: 教材完整性
+        run: python3 scripts/check_materials.py
+      - name: 站点结构与课程数据
+        run: node scripts/check_site.cjs
+      - name: 设计变量同步
+        run: node scripts/sync_bridge_theme.cjs --check
+
+  bridge:
+    name: 桥接回归（纯 Node）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: 自动连接会话
+        run: node projects/web/ai-browser-bridge/test_auto_session.cjs
+      - name: 连接扫描
+        run: node projects/web/ai-browser-bridge/test_connection_scan.cjs
+      - name: SPA 导航与重连
+        run: node projects/web/ai-browser-bridge/test_navigation.cjs
+      - name: 扩展重载
+        run: node projects/web/ai-browser-bridge/test_reload.cjs
+      - name: 连接超时
+        run: node projects/web/ai-browser-bridge/test_timeout.cjs
+      - name: 官网会话恢复
+        run: node projects/web/ai-browser-bridge/test_official_recovery.cjs
+
+  go:
+    name: Go 练习
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - exercises/go/wordfreq
+          - exercises/go/http-basics
+    defaults:
+      run:
+        working-directory: ${{ matrix.module }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: ${{ matrix.module }}/go.mod
+          cache: false
+      - name: go test
+        run: go test ./...
+      - name: go vet
+        run: go vet ./...
