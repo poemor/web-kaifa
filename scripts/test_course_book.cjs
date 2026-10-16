@@ -106,8 +106,12 @@ for(const item of data.lessons){
    assert.deepEqual(sampleErrors,[],item.id+' browser errors');
    standalone.removeListener('console',onConsole);standalone.removeListener('pageerror',onError);report.browser.push(item.id);
   }
-  const filePage=await browser.newPage();await filePage.goto(pathToFileURL(path.join(root,'index.html')).href+'#/learn/go/go-program');await filePage.locator('.book-prose').waitFor();
-  assert((await filePage.locator('.book-prose').textContent()).includes('fmt.Println'));
+  if(process.env.COURSE_HTTP_ONLY==='1'){
+   report.skipped=['file:// offline opening (environment policy)'];
+  }else{
+   const filePage=await browser.newPage();await filePage.goto(pathToFileURL(path.join(root,'index.html')).href+'#/learn/go/go-program');await filePage.locator('.book-prose').waitFor();
+   assert((await filePage.locator('.book-prose').textContent()).includes('fmt.Println'));
+  }
   assert.deepEqual(errors,[]);
   fs.writeFileSync(path.join(qa,'results.json'),JSON.stringify(report,null,2));
   console.log(JSON.stringify({...report,go:report.go.length,browser:report.browser.length,node:report.node.length,environmentDependent:report.environmentDependent.length}));

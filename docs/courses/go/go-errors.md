@@ -2,10 +2,6 @@
 
 先检查错误，再使用函数返回的数据。
 
-## error 与失败返回是什么意思
-
-error表达操作为什么失败。常见函数返回(值,error)：error为nil表示没有报告错误，非nil时由调用者处理。输入无效是正常分支，不用panic表达普通校验失败。
-
 ## 数据结果与失败原因一起返回
 
 上一章的接口让我们按行为使用一个值。`error` 也是 Go 内置的接口，提供表示失败原因的文字；`errors.New("...")` 创建一个带说明的错误值。
@@ -13,6 +9,14 @@ error表达操作为什么失败。常见函数返回(值,error)：error为nil�
 **(值,error) 约定里，先判断 error，再决定是否使用值。** nil 表示没有报告错误；非 nil 表示失败。本例用 0 作为失败时的整数占位，不能因为看见 0 就当作合法答案，也不能把所有 0 都判成失败。
 
 本例同时需要 errors 与 fmt 两个标准库包，使用 `import (...)` 将多个引入写在一组中，每行一个包路径。`errors.New` 创建错误，`fmt.Println` 显示结果；括号只是把引入声明分组，不是调用函数。它们都随 Go 提供，不需要另行安装。
+
+## 添加上下文、保留原始原因与检查类别
+
+错误信息给人读，错误身份给程序判断。`fmt.Errorf("读取配置: %w", err)` 在外层补充动作，并用 %w 保留原错误链；`errors.Is(err, target)` 沿链检查特定原因。不要用字符串是否包含某句话判断错误类别，系统语言或上下文变化都会让它失效。
+
+需要附带结构化信息时，可以定义自己的错误类型并实现 `Error() string`，再用 errors.As 获取该类型。error 是接口，这和前面实现 Name 方法的思路一致；日常校验只需 errors.New 或 fmt.Errorf，不必给每句话都造一个新类型。
+
+panic 表示当前函数无法按正常路径继续，会触发调用栈展开；recover 只有在同一 goroutine 的延后函数中直接调用，才能恢复该 goroutine 的 panic。它适合在边界保护和记录意外，不应代替普通输入校验的 error；捕获后仍要向调用者提供真实失败结果。
 
 ## 先运行一个小例子
 
@@ -71,11 +75,43 @@ Divide(0,2) 返回“0、nil”，这次 0 是真实成功结果，main 会正�
 
 ### 参考答案
 
-分别输出4和0。后者是成功值，不能靠value==0判断失败。
+两次 error 都为 nil，所以0是第二次合法结果。把除数改为0会返回非 nil 错误，调用方必须停止使用该次值。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-检查err后决定返回或继续。不要发生错误后仍用无效数据，也不要简单吞掉全部错误。
+```go
+package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+func Divide(a, b int) (int, error) {
+    if b == 0 { return 0, errors.New("除数不能为零") }
+    return a / b, nil
+}
+
+func main() {
+	value, err := Divide(8, 2)
+	if err != nil { fmt.Println(err); return }
+	fmt.Println(value)
+	value, err = Divide(0, 2)
+	if err != nil { fmt.Println(err); return }
+	fmt.Println(value)
+}
+```
+
+预期结果：
+
+```output
+4
+0
+```
+
+## 只打印错误却继续运行，会发生什么
+
+在“返回数据和 error”的调用后，仅写 fmt.Println(err) 而不 return 或改走失败路径，后面的业务仍可能使用无效数据。先决定失败由谁处理：当前函数能处理就恢复或提示，不能处理就带上下文返回给上层；同一个错误不必层层重复打印。
 
 ## 验证失败分支也结束得正确
 
@@ -93,6 +129,35 @@ main依次用不同输入运行：3应显示9，0应显示合法结果0，-2应�
 
 ### 参考答案
 
-函数负责拒绝负数并返回原因，调用者先检查error再使用数据。合法0返回nil错误；负数返回非nil错误。保存三组实际输出，不能只演示负数分支。
+输入3得到9；把调用改为0得到合法0；改为-2只输出“输入不能为负”。失败占位0不会被继续打印，判断依据是 err。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+// 只处理本课的小整数，不承诺检测乘法溢出。
+func SquareNonNegative(n int) (int, error) {
+    if n < 0 { return 0, errors.New("输入不能为负") }
+    return n*n, nil
+}
+
+func main() {
+	value, err := SquareNonNegative(3)
+	if err != nil { fmt.Println(err); return }
+	fmt.Println(value)
+}
+```
+
+预期结果：
+
+```output
+9
+```
 
 参考：[Go 语言规范](https://go.dev/ref/spec)。

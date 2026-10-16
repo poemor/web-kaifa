@@ -120,4 +120,76 @@ main 接收 Count 的结果，range 逐条取 Entry，再用 %s 显示 Word、%d
 
 ### 参考答案
 
-Top2 先取 n=2，当 len(result)<n 时将 n 改为 len(result)，然后遍历 result[:n]。现有参考没有 TopN、标点清洗、中文分词或文件读取功能；变式完成后需记录自己的实际结果，不能将计划写成已实现。
+复用上面的 Count 数据处理规则，main 自行决定输出范围。每次 n 先设2，再缩至当前记录数；空结果取 [:0] 合法，不访问不存在项目。三词同次数时 a、b 在前，c 被 Top2 截掉。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
+
+// 一条排名记录同时保存词名和出现次数。
+type Entry struct {
+	Word  string
+	Count int
+}
+
+// Count 按空白拆词并统一大小写；标点仍是单词的一部分。
+func Count(text string) []Entry {
+	counts := make(map[string]int) // 先用键值表累加每个词的次数。
+	for _, word := range strings.Fields(text) {
+		counts[strings.ToLower(word)]++
+	}
+	// 长度 0 表示还没有记录，容量只预留空间；后面用 append 添加。
+	result := make([]Entry, 0, len(counts))
+	// map的两个结果是单词键和次数值；把一对键值转成一条排名记录。
+	for word, count := range counts {
+		result = append(result, Entry{Word: word, Count: count})
+	}
+	// 把比较函数交给排序工具：i、j 是两项下标，true 表示 i 应在前面。
+	sort.Slice(result, func(i, j int) bool {
+		if result[i].Count != result[j].Count {
+			return result[i].Count > result[j].Count // 次数多的排在前面。
+		}
+		return result[i].Word < result[j].Word // 并列时用词名决定顺序。
+	})
+	return result
+}
+
+func main() {
+    for _, text := range []string{" ", "a", "b a", "c b a"} {
+        result := Count(text)
+        n := 2
+        if len(result) < n { n = len(result) }
+        fmt.Printf("输入 %q\n", text)
+        for _, item := range result[:n] {
+            fmt.Printf("%s:%d\n", item.Word, item.Count)
+        }
+    }
+}
+```
+
+预期结果：
+
+```output
+输入 " "
+输入 "a"
+a:1
+输入 "b a"
+a:1
+b:1
+输入 "c b a"
+a:1
+b:1
+```
+
+## 把参数规则和分词规则分别验证
+
+命令行参数由终端先解释，再交给 os.Args。程序内的 Count 只应依赖收到的字符串，不应同时猜测引号、读取文件和修改全局状态。先对 Count 单独测空白、大小写、并列与标点，再测 main 的传参行为，失败时才知道该查哪层。
+
+词频内存用量随不同词数量增长；超大输入需要限制大小或流式处理。当前按字符串顺序比较词名，不做语言相关排序或 Unicode 规范化；这不是分词器，也不承诺把所有看起来相同的词形合并。

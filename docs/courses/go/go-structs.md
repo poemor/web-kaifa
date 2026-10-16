@@ -2,15 +2,17 @@
 
 把题目标题和完成状态放进同一个值。
 
-## 结构体与字段是什么意思
-
-结构体把有关联的不同类型数据放在一起。type声明类型，struct列出字段与类型，点号访问字段。先学数据表示，下一节给类型增加方法。
-
 ## 一条记录里的不同数据
 
 一个问题记录既有标题，又有完成状态。切片的一组元素要求同一类型，而结构体让这些有关联的不同类型字段放在同一个值里。**结构体类型是记录格式；结构体值才是一条实际记录。**
 
 `type Problem struct` 定义名为 Problem 的新类型。花括号内的每行是一个“字段名 + 字段类型”：Title 保存 string，Solved 保存 bool。`Problem{Title:"Two Sum"}` 创建一条值并按字段名填入数据；没有填入的字段使用自己的零值。
+
+## 组合、指针字段与命名类型
+
+建议用字段名字面量 `Problem{Title:"题目"}`；按位置写全部值依赖字段顺序，后续调整结构更容易误读。结构体也能嵌套其他结构体或切片，例如一份报告包含作者与多条记录，这叫组合，不要求继承。
+
+结构体赋值复制字段的值。string/bool/int 字段在本例可以独立修改；若字段本身是切片、map 或指针，复制后仍可能共享底层对象。`type UserID int` 声明新的命名类型，`type ID = int` 则是别名；前者能帮助区分业务含义，但并不会自动校验数值范围。
 
 ## 先运行一个小例子
 
@@ -62,11 +64,39 @@ Problem有Title字符串和Solved布尔字段。字面量只写Title，Solved使
 
 ### 参考答案
 
-两个独立结构体值各自保存字段，修改第一条不会自动改变第二条。
+两条值分别创建，改 p 的字段不写入 other。若用 other := p，本例普通字段复制后也能独立修改。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-type Problem是类型声明，p是一个实际值，两者不是同一个层次。
+```go
+package main
+
+import "fmt"
+
+type Problem struct {
+    Title string
+    Solved bool
+}
+
+func main() {
+	p := Problem{Title: "Two Sum"}
+	other := Problem{Title: "Valid Parentheses"}
+	p.Title = "新题目"
+	fmt.Println(p.Title)
+	fmt.Println(other.Title)
+}
+```
+
+预期结果：
+
+```output
+新题目
+Valid Parentheses
+```
+
+## 编码字段为空时先查大小写
+
+导出字段才供包外访问，例如 Title；小写 title 只在本包可见。后续 JSON 编码不处理小写字段，给它加 json 标签也不会使它自动导出。字段名是否导出与字段保存了什么值，是两件需要分别检查的事。
 
 ## 创建、复制并修改两条记录
 
@@ -84,6 +114,40 @@ type Problem是类型声明，p是一个实际值，两者不是同一个层次�
 
 ### 参考答案
 
-标题需要string，分钟需要int，完成需要bool；未提供的分钟和完成状态使用对应零值。两条值属于同一类型，却各自保存字段，更新第一条不会自动改第二条。
+字段类型按数据含义确定。未填字段取得零值，之后只更新 first 的分钟和完成状态，second 保持原数据。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+type StudyRecord struct {
+    Title string
+    Minutes int
+    Done bool
+}
+
+func main() {
+	first := StudyRecord{Title: "Go笔记"}
+	second := StudyRecord{Title: "Web练习", Minutes: 25, Done: true}
+	fmt.Println(first.Title, first.Minutes, first.Done)
+	fmt.Println(second.Title, second.Minutes, second.Done)
+	first.Minutes = 10
+	first.Done = true
+	fmt.Println(first.Title, first.Minutes, first.Done)
+	fmt.Println(second.Title, second.Minutes, second.Done)
+}
+```
+
+预期结果：
+
+```output
+Go笔记 0 false
+Web练习 25 true
+Go笔记 10 true
+Web练习 25 true
+```
 
 参考：[Go 语言规范](https://go.dev/ref/spec)。

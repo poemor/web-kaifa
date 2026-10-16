@@ -2,10 +2,6 @@
 
 为Problem增加MarkSolved，理解指针接收者。
 
-## 方法与接收者是什么意思
-
-方法是带接收者的函数。func(p *Problem) MarkSolved中的p是本次调用作用的对象。指针接收者让方法写入调用者的结构体字段。
-
 ## 方法告诉你“对哪条记录做什么”
 
 普通函数可以写成 Change(&value)，方法则可以写成 `p.MarkSolved()`。两者都会调用一段代码，方法另外在定义中指定**接收者**，也就是这次操作所针对的值。
@@ -13,6 +9,12 @@
 **想让方法修改原结构体，接收者需要能指向原值。** `func (p *Problem) MarkSolved()` 的接收者名是 p，类型是 *Problem。MarkSolved 后面的空括号表示没有额外参数；是否返回值，要看参数括号之后有没有返回类型。本例没有写返回类型，所以没有返回值。比如 `Solved() bool` 也没有额外参数，但会返回一个 bool。
 
 方法里的 p 与 main 中的 p 属于不同范围，碰巧同名；可以把方法内的接收者名改成 problem 并同步改内部访问，行为不会变化。
+
+## 方法集合：为什么可调用却不一定满足接口
+
+对可取地址的变量 p，`p.MarkSolved()` 可以自动取地址；但这不代表值类型 Problem 拥有所有 *Problem 的方法。Problem 的方法集合包含值接收者方法；*Problem 的方法集合还包含指针接收者方法。接口按方法集合判断，不会把任意值自动取地址以满足接口。
+
+值接收者适合只读取小值，指针接收者适合修改或避免复制大结构。包含互斥锁的结构体不要随意复制。方法只能定义在当前包所声明的适当接收者类型上，不能直接给别的包的现有类型补方法。
 
 ## 先运行一个小例子
 
@@ -66,11 +68,37 @@ main 先创建 Problem，Solved 默认 false；调用 `p.MarkSolved()` 时，这
 
 ### 参考答案
 
-值接收者输出false；指针接收者输出true。
+本答案故意采用值接收者，只修改副本，故仍是 false；改成 (p *Problem) 后，main 的变量会提供地址，输出 true。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-方法调用与字段访问都用点号，前者有括号，表示执行操作。
+```go
+package main
+
+import "fmt"
+
+type Problem struct {
+    Title string
+    Solved bool
+}
+func (p Problem) MarkSolved() { p.Solved = true }
+
+func main() {
+	p := Problem{Title: "Two Sum"}
+	p.MarkSolved()
+	fmt.Println(p.Solved)
+}
+```
+
+预期结果：
+
+```output
+false
+```
+
+## map 元素不能随意自动取地址
+
+后续把结构体放进 map 时，`records[id].SetTitle(...)` 可能因 map 元素不可取地址而无法调用指针方法。可先取值、修改再写回，或按设计保存结构体指针；选择前要想清共享和并发修改约定，不能靠加星号随机试到能编译。
 
 ## 对比值接收者与指针接收者
 
@@ -88,6 +116,40 @@ main 先创建 Problem，Solved 默认 false；调用 `p.MarkSolved()` 时，这
 
 ### 参考答案
 
-指针接收者让方法写入原记录，普通字符串参数提供本次的新标题。空参数括号与返回类型是不同位置；本方法有一个额外参数，不要求返回值。两条记录及空标题能检查是否误改状态或其他记录。
+接收者 p 指向被改的记录，title 是本次输入。只赋值 Title 就保留 Solved；空字符串在本题允许，%q 使它可见。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+type Problem struct {
+    Title string
+    Solved bool
+}
+func (p *Problem) SetTitle(title string) { p.Title = title }
+
+func main() {
+	first := Problem{Title: "原题"}
+	second := Problem{Title: "另一题", Solved: true}
+	first.SetTitle("新题")
+	fmt.Println(first.Title, first.Solved)
+	fmt.Println(second.Title, second.Solved)
+	first.SetTitle("")
+	fmt.Printf("%q %t\n", first.Title, first.Solved)
+	fmt.Println(second.Title, second.Solved)
+}
+```
+
+预期结果：
+
+```output
+新题 false
+另一题 true
+"" false
+另一题 true
+```
 
 参考：[Go 语言规范](https://go.dev/ref/spec)。

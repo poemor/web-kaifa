@@ -219,5 +219,235 @@
     "section": "输出不止 Println：格式、返回字符串与目标位置",
     "language": "go",
     "output": "开始练习 阿青\n分钟=030，小时=0.50，完成=false，进度=50%\n类型=string，文字=\"阿青 练习 30 分钟\""
+  },
+  {
+    "chapter": "go-arrays",
+    "answer": 1,
+    "language": "go",
+    "output": "14\n4 [11 12 13 24]\n[11 12 13 24]\n[99 12 13 24]"
+  },
+  {
+    "chapter": "go-arrays",
+    "answer": 0,
+    "language": "go",
+    "output": "95"
+  },
+  {
+    "chapter": "go-slices",
+    "answer": 1,
+    "language": "go",
+    "output": "[Go Web] 2 [Go Web]\n[Go Web SQL] 3 [Go Web]"
+  },
+  {
+    "chapter": "go-slices",
+    "answer": 0,
+    "language": "go",
+    "output": "[60 80 100 90]\n[60 80]"
+  },
+  {
+    "chapter": "go-slice-sharing",
+    "answer": 1,
+    "language": "go",
+    "output": "[9 7]\n[4 50]"
+  },
+  {
+    "chapter": "go-slice-sharing",
+    "answer": 0,
+    "language": "go",
+    "output": "[9 8] [9 8] [5 2]"
+  },
+  {
+    "chapter": "go-range",
+    "answer": 1,
+    "language": "go",
+    "output": "2"
+  },
+  {
+    "chapter": "go-range",
+    "answer": 0,
+    "language": "go",
+    "output": "0 80\n总分 80"
+  },
+  {
+    "chapter": "go-returns",
+    "answer": 1,
+    "language": "go",
+    "output": "0 false\n0 true\n9 true"
+  },
+  {
+    "chapter": "go-returns",
+    "answer": 0,
+    "language": "go",
+    "output": "0 true\n0 false"
+  },
+  {
+    "chapter": "go-maps",
+    "answer": 1,
+    "language": "go",
+    "output": "2 1 2\n0 false 2\n0 true 3\n0 false 2"
+  },
+  {
+    "chapter": "go-maps",
+    "answer": 0,
+    "language": "go",
+    "output": "0 true"
+  },
+  {
+    "chapter": "go-unicode",
+    "answer": 1,
+    "language": "go",
+    "output": "6 2\n中"
+  },
+  {
+    "chapter": "go-unicode",
+    "answer": 0,
+    "language": "go",
+    "output": "6 2\n0 中\n3 文"
+  },
+  {
+    "chapter": "go-pointers",
+    "answer": 1,
+    "language": "go",
+    "output": "3\n4"
+  },
+  {
+    "chapter": "go-pointers",
+    "answer": 0,
+    "language": "go",
+    "output": "3\n9"
+  },
+  {
+    "chapter": "go-structs",
+    "answer": 1,
+    "language": "go",
+    "output": "Go笔记 0 false\nWeb练习 25 true\nGo笔记 10 true\nWeb练习 25 true"
+  },
+  {
+    "chapter": "go-structs",
+    "answer": 0,
+    "language": "go",
+    "output": "新题目\nValid Parentheses"
+  },
+  {
+    "chapter": "go-methods",
+    "answer": 1,
+    "language": "go",
+    "output": "新题 false\n另一题 true\n\"\" false\n另一题 true"
+  },
+  {
+    "chapter": "go-methods",
+    "answer": 0,
+    "language": "go",
+    "output": "false"
+  },
+  {
+    "chapter": "go-interfaces",
+    "answer": 0,
+    "language": "go",
+    "output": "学习组"
+  },
+  {
+    "chapter": "go-errors",
+    "answer": 1,
+    "language": "go",
+    "output": "9"
+  },
+  {
+    "chapter": "go-errors",
+    "answer": 0,
+    "language": "go",
+    "output": "4\n0"
+  },
+  {
+    "chapter": "go-defer",
+    "answer": 1,
+    "language": "go",
+    "output": "开始\n继续 2\n结束\n登记值 1\n开始\n提前返回\n结束\n登记值 1"
+  },
+  {
+    "chapter": "go-defer",
+    "answer": 0,
+    "language": "go",
+    "output": "先执行\n第二个登记\n最后执行"
+  },
+  {
+    "chapter": "go-packages",
+    "answer": 0,
+    "language": "go",
+    "files": [
+      "calc/add.go",
+      "main.go"
+    ],
+    "module": "example.com/book/packages",
+    "output": "5\n6"
+  },
+  {
+    "chapter": "go-testing",
+    "answer": 0,
+    "language": "go-test",
+    "files": [
+      "main_test.go"
+    ],
+    "support": {
+      "main.go": "package main\nfunc Add(a,b int) int { return a+b }\n"
+    },
+    "output": null,
+    "mutation": {
+      "file": "main.go",
+      "from": "a+b",
+      "to": "a-b"
+    }
+  },
+  {
+    "chapter": "go-json",
+    "answer": 1,
+    "language": "go",
+    "output": "{\"title\":\"复习\",\"minutes\":20}\n复习 20"
+  },
+  {
+    "chapter": "go-json",
+    "answer": 0,
+    "language": "go",
+    "output": "{\"title\":\"Two Sum\",\"solved\":true}\n解码失败"
+  },
+  {
+    "chapter": "go-files",
+    "answer": 1,
+    "language": "go",
+    "output": "读取成功\n我记录了一个问题。",
+    "support": {
+      "notes.txt": "我记录了一个问题。"
+    }
+  },
+  {
+    "chapter": "go-files",
+    "answer": 1,
+    "language": "go",
+    "support": {
+      "notes.txt": ""
+    },
+    "output": "文件为空"
+  },
+  {
+    "chapter": "go-files",
+    "answer": 1,
+    "language": "go",
+    "output": null,
+    "contains": [
+      "读取失败",
+      "notes.txt"
+    ]
+  },
+  {
+    "chapter": "go-sort",
+    "answer": 1,
+    "language": "go",
+    "output": "lin 2\nwu 1"
+  },
+  {
+    "chapter": "go-project-wordfreq",
+    "answer": 0,
+    "language": "go",
+    "output": "输入 \" \"\n输入 \"a\"\na:1\n输入 \"b a\"\na:1\nb:1\n输入 \"c b a\"\na:1\nb:1"
   }
 ]

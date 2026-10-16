@@ -88,6 +88,39 @@ go run .
 
 ### 参考答案
 
-函数首字母大写、main 导入正确包、调用用 calc.Multiply，三个条件都满足才能从包外使用。第三方依赖留到需要时按项目 README 添加，go mod tidy 整理依赖，go.sum 记录下载内容校验；本例不需要外部依赖。
+在原 calc/add.go 中保留 Add，增加 Multiply。完整文件如下：
+
+```go
+package calc
+
+func Add(a, b int) int { return a + b }
+func Multiply(a, b int) int { return a * b }
+```
+
+main.go：
+
+```go
+package main
+
+import (
+    "fmt"
+    "example.com/book/packages/calc"
+)
+
+func main() {
+    fmt.Println(calc.Add(2, 3))
+    fmt.Println(calc.Multiply(2, 3))
+}
+```
+
+在 module 为 example.com/book/packages 的目录保存两个文件，运行 go run .，得到两行5、6。编译时先按 import 找包，再检查导出名字；把 Multiply 改小写会在包外调用处失败。只在 main 里写 Multiply 而不加 calc.，也不会自动引入这个名字。
 
 参考：[Go 官方模块教程](https://go.dev/doc/tutorial/create-module)。
+
+## 导入、初始化与依赖管理
+
+同目录普通源码属于同一个包；导入写包的路径，调用通常写该包声明的名字。名字冲突时可用别名，例如 `import stdjson "encoding/json"`；`_ "某包"` 只为初始化副作用导入，不提供可调用名字，常见于驱动注册。点导入会隐藏名字来源，入门项目避免使用。
+
+被导入包先初始化包级变量，再运行 init，最后才进入 main；init 不手动调用，也不带参数和结果。包之间不能循环导入；若 calc 又依赖 main，需要调整共同数据或依赖方向，不能靠改 import 别名解决。internal 目录还受父目录树的导入范围限制，不是“同仓库任何位置都能用”。
+
+第三方包按官方文档使用 `go get 包路径@版本`；`go mod tidy` 整理源码真实需要的依赖，go.sum 保存下载内容校验。提交 go.mod 与 go.sum，别提交模块缓存。GOPROXY 决定下载来源，GOPRIVATE 告诉工具哪些路径按私有模块处理；它们不是给任意私有仓库自动授予权限。

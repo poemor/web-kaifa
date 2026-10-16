@@ -24,7 +24,7 @@ def main():
     checks = json.loads((ROOT / "docs/courses/answer-checks.json").read_text())
     count = 0
     for check in checks:
-        if check["language"] != "go":
+        if check["language"] not in {"go", "go-test"}:
             continue  # Browser answers have their own DOM checks.
         if "section" in check:
             text = (ROOT / f"docs/courses/{check['chapter'].split('-')[0]}/{check['chapter']}.md").read_text()
@@ -32,13 +32,19 @@ def main():
         else:
             block = answer_blocks(check["chapter"])[check["answer"]]
         code = re.findall(r"```go\n(.*?)\n```", block, re.S)
-        assert len(code) == 1, check
+        names = check.get("files", ["main.go"])
+        assert len(code) == len(names), check
         with tempfile.TemporaryDirectory(prefix="course-answer-") as name:
             directory = Path(name)
-            (directory / "go.mod").write_text("module example.com/answer\n\ngo 1.22\n")
-            (directory / "main.go").write_text(code[0] + "\n")
+            (directory / "go.mod").write_text("module " + check.get("module", "example.com/answer") + "\n\ngo 1.22\n")
+            for filename, content in {**check.get("support", {}), **dict(zip(names, code))}.items():
+                file = directory / filename
+                assert file.resolve().is_relative_to(directory.resolve()), check
+                file.parent.mkdir(parents=True, exist_ok=True)
+                file.write_text(content + ("\n" if filename.endswith(".go") else ""))
+            command = ["test", "-count=1", "./..."] if check["language"] == "go-test" else ["run", "."]
             result = subprocess.run(
-                [os.environ.get("GO_TOOLCHAIN_EXE", "go"), "run", "."],
+                [os.environ.get("GO_TOOLCHAIN_EXE", "go"), *command],
                 cwd=directory, input=check.get("input", ""), capture_output=True,
                 text=True, timeout=60,
             )
@@ -47,6 +53,16 @@ def main():
                 assert result.stdout.strip() == check["output"].strip(), (
                     check, result.stdout, result.stderr
                 )
+            for expected in check.get("contains", []):
+                assert expected in result.stdout, (check, result.stdout)
+            if "mutation" in check:
+                mutation = check["mutation"]
+                file = directory / mutation["file"]
+                original = file.read_text()
+                assert mutation["from"] in original
+                file.write_text(original.replace(mutation["from"], mutation["to"]))
+                failure = subprocess.run([os.environ.get("GO_TOOLCHAIN_EXE", "go"), *command], cwd=directory, capture_output=True, timeout=60)
+                assert failure.returncode != 0, (check, "intentional bug did not fail")
         count += 1
     print(f"PASS: {count} Go answer/example runs match their published output.")
 

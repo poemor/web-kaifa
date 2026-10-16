@@ -2,10 +2,6 @@
 
 先把文字拆成单词，再建立确定的输出顺序。
 
-## 字符串处理与排序是什么意思
-
-strings.Fields按空白拆词，ToLower统一大小写。sort.Strings对字符串切片原地按字典顺序排序。map遍历顺序不固定，因此需要稳定展示时先取键并排序。
-
 ## 排序前先把数据转换成可排序的一组
 
 字符串处理在这里有两个动作：ToLower 把文字转换成小写，Fields 按连续空白分隔出单词，返回 []string。内部调用先求值，所以 `Fields(ToLower(...))` 先得到小写文字，再拆词；空白包括空格、换行和制表符。
@@ -13,6 +9,12 @@ strings.Fields按空白拆词，ToLower统一大小写。sort.Strings对字符�
 **map 适合按词计数，但 map 的遍历顺序不能代表排名。** 要确定展示顺序，先提取键到切片，再排序切片。`sort.Strings` 直接修改这个切片，不返回一份新的排好序的切片。
 
 这里“按字符串顺序”是 Go 对字符串的比较顺序，足以固定本例英文键；它不是中文拼音排序、自然语言词典排序或按出现次数排序。
+
+## 字符串工具与排序比较规则
+
+`strings.TrimSpace` 去掉两端空白，Fields 按空白切分且跳过空项，`strings.Split(text, ",")` 按指定分隔符切分并可能产生空项。Contains 判断包含，HasPrefix 判断前缀，ReplaceAll 返回替换后的新字符串；它们不会原地修改原字符串。
+
+sort.Strings 修改原切片。需要保留原顺序先复制；结构体切片用 sort.Slice 自定义 less(i,j)。比较相等项必须返回 false，不能用 <= 作为“小于”规则，否则破坏排序要求。稳定排序只保留同等项的原相对次序；如果原顺序来自无序 map，稳定排序也不会自动给并列项目一个固定业务顺序，仍要写次级比较。
 
 ## 先运行一个小例子
 
@@ -79,11 +81,22 @@ web 1
 
 ### 参考答案
 
-字典排序是键升序。排名比较先比较次数是否不同，再在相等时比较词名，必须处理并列才能稳定。
+次数降序、同次词名升序的比较函数是：
 
-## 本节容易混淆的地方
+```go
+sort.Slice(result, func(i, j int) bool {
+    if result[i].Count != result[j].Count {
+        return result[i].Count > result[j].Count
+    }
+    return result[i].Word < result[j].Word
+})
+```
 
-不要将map天然遍历顺序当作词频排名。空文本应得到零项而不是索引前三项。
+这是下节 Count 函数中的替换片段，result 的元素须含 Count 和 Word，不是可独立运行的 main.go。先比较次数，不同就得出顺序；相同才比较词名。用 `Go go web web a` 验收时，go:2、web:2、a:1；若按字典排序则 a 在最前，两条规则应有可区分的结果。
+
+## 只排了切片，为什么输出还乱
+
+检查最后的输出循环是不是仍然直接 range map。排序的是 keys，就要按 keys 的次序读取 counts[key]；不能排完一份切片又丢掉它。次数排序与名称排序也要用能区分的测试数据分别验证。
 
 ## 明确你到底在按什么排序
 
@@ -105,6 +118,34 @@ web 1
 
 ### 参考答案
 
-重复名称合并计数；不同名称的计数相同也由名称顺序决定。空切片产生空map和空键切片，输出循环不执行。把排序后的键用于查map值，就能同时保持数据对应和确定次序。
+从 map 取键时次序不定，先排序再按键查值。把 names 改为 [wu lin] 得到 lin 1、wu 1；改为空切片，没有任何记录输出。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+	names := []string{"lin", "wu", "lin"}
+	counts := map[string]int{}
+	for _, name := range names { counts[name]++ }
+	keys := []string{}
+	for key := range counts { keys = append(keys, key) }
+	sort.Strings(keys)
+	for _, name := range keys { fmt.Println(name, counts[name]) }
+}
+```
+
+预期结果：
+
+```output
+lin 2
+wu 1
+```
 
 参考：[Go 语言规范](https://go.dev/ref/spec)。
