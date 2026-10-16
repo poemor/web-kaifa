@@ -2,10 +2,6 @@
 
 处理长串换行和图片展示比例，定位撑宽原因。
 
-## 图片裁剪与长内容溢出是什么意思
-
-溢出来自内容尺寸大于可用空间。文本换行、布局允许收缩、图像限制尺寸是三种不同处理。object-fit:cover裁剪填充展示框，不是改变原图片文件。
-
 ## 分别检查文本和图像
 
 **先找到超出容器的内容，再选择换行、缩放或裁剪。** 长单词没有正常断点，`overflow-wrap:anywhere` 允许在必要位置断开；`width:100%` 随容器走，`max-width:400px` 限制上限。`min-width:0` 对需要收缩的 Flex/Grid 项尤其有用，避免默认最小内容尺寸把布局撑开。
@@ -17,6 +13,12 @@ scrollWidth 是 DOM 中描述内容所需横向宽度的属性，clientWidth 是
 图片部分使用前面学过的 img：如果只要等比例缩放，给它 `max-width:100%; height:auto`。如果想在固定展示框内填满，可以给 `width:100%; height:160px; object-fit:cover`；cover 保持比例并裁掉超出框的部分，contain 保持比例且完整显示，可能留下空白。这些只改变展示，不修改原图片文件。
 
 用前面的本地图像单独试 cover 与 contain，比较图像内容有没有被裁掉。不要把 `overflow-x:hidden` 作为第一步，它只把超出的内容藏起来，可能让文字或控件无法访问。
+
+## 溢出来源与图片裁切
+
+先找到真正超出容器的元素，再处理它的尺寸规则。普通长词可用 overflow-wrap:anywhere；Flex/Grid 子项还可能需要 min-width:0。表格和代码若不能合理折行，可让局部容器 overflow:auto，保留可读内容而不是把整页裁掉。
+
+图片 `max-width:100%; height:auto` 保留整体比例；固定展示框需要裁切时，用 width/height 或 aspect-ratio 确定框，再用 object-fit:cover。contain 保留整张图但可能留空，cover 填满框并裁掉部分，二者要按信息是否可裁掉选择。
 
 ## 先看一个完整例子
 
@@ -54,7 +56,30 @@ p { overflow-wrap: anywhere; }
 
 ### 参考答案
 
-长串可能造成横向溢出，恢复后应能在卡片内断行。
+在320px检查这条长串能在框内断行；取消 overflow-wrap 后观察真正的横向溢出，再恢复。不要通过 body 的 overflow-x:hidden 把未显示的文字藏掉。
+
+将下面完整页面保存为 `index.html`，打开后按说明验证。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+* { box-sizing: border-box; }
+.card { max-width: 280px; padding: 12px; border: 1px solid; }
+p { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<h1>长内容检查</h1>
+<div class="card"><p>averyveryveryveryveryveryveryveryveryveryveryverylongunbrokentoken</p></div>
+</body>
+</html>
+```
+
 
 ## 本节容易混淆的地方
 

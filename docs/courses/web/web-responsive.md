@@ -2,10 +2,6 @@
 
 先做单列，再在空间够时切换两列。
 
-## 媒体查询与移动优先是什么意思
-
-媒体查询按视口等条件启用一组CSS。移动优先是先写小屏默认布局，再用min-width增加宽屏能力；断点依据内容需要决定。
-
 ## 用窗口宽度触发一组规则
 
 视口是浏览器用于排版的可见区域；这里关心它有多少 CSS 像素宽。断点是你选择改变布局的阈值，例如 700px。**响应式布局是在空间变化时仍能阅读和操作，不只是把桌面页面缩小。**
@@ -15,6 +11,12 @@
 `meta viewport` 的 width=device-width 让手机使用设备的 CSS 视口宽度，initial-scale=1 指定初始缩放。它不会替你修复固定宽度的内容。
 
 先拖窄浏览器，再按 F12 打开设备工具栏（通常 Ctrl+Shift+M），手动输入 360、768、1440 的宽度。检查标题、卡片、键盘操作和横向滚动，并在 699/700/701px 核对断点。将断点改为 900px 后，768px 应回到单列。
+
+## 断点之外还要检查什么
+
+媒体查询按 CSS 视口宽度判断，不按设备品牌判断。min-width 条件包含等于阈值，max-width 也包含边界，组合规则时避免同一边界意外叠加。viewport 元信息保证手机按设备宽度布局。
+
+测试要覆盖窄屏、宽屏、断点前后与文字放大。响应式不仅是列数：导航能否换行、图片是否缩放、长地址是否溢出、焦点能否到达全部内容，都应分别验证。不要用固定高度裁掉放大后的正文。
 
 ## 先看一个完整例子
 
@@ -51,7 +53,7 @@ article { padding: 16px; background: #edf2f7; }
 
 ### 参考答案
 
-原版分别一列、两列、两列；900px版本的768px回到一列。
+原版在360px是一列，768与1440px两列。把断点改900px后，768px回到一列；同时测试899/900/901px，900应已经命中新规则。
 
 ## 本节容易混淆的地方
 
@@ -66,3 +68,31 @@ article { padding: 16px; background: #edf2f7; }
 独立写三张新课程卡，先让所有宽度都是可读单列，再选择一个你认为能放下两列的阈值。写下选择理由与阈值前、恰好阈值、阈值后的预期，之后才添加自己的媒体查询。
 
 自查：窄时三卡竖排，空间达到自己阈值后两列且第三卡进入下一行。测试阈值−1、阈值、阈值+1 和 320/768/1440px；放大文字仍能读完内容，不靠隐藏溢出遮住卡片。阈值依据内容空间，不能仅写“因为某个手机型号”。
+
+### 参考答案：独立变式
+
+选择640px是为了让扣除两侧32px和间距16px后，每列仍有约296px内容空间。639px单列，640/641px两列；第三卡自动进入第二行。这个数服务于本页内容，改文字与内边距后应重新验收。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; padding: 16px; }
+.courses { display: grid; gap: 16px; }
+article { min-width: 0; padding: 16px; border: 1px solid; overflow-wrap: anywhere; }
+@media (min-width: 640px) { .courses { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<h1>课程卡片</h1>
+<div class="courses"><article>HTML结构</article><article>CSS布局</article><article>JavaScript交互</article></div>
+</body>
+</html>
+```

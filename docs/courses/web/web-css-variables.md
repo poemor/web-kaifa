@@ -2,10 +2,6 @@
 
 用一个变量统一颜色，并让键盘焦点可见。
 
-## CSS 变量与交互状态是什么意思
-
-CSS自定义属性以--开头，var读取它。hover针对指针停留，focus-visible通常为键盘等需要明显焦点的操作显示反馈。改变视觉状态不等于改变业务功能。
-
 ## 共享颜色与看见焦点
 
 CSS 自定义属性是可以复用的值，名字以两个连字符开头，例如 `--brand`。`:root` 选择文档根元素，在这里集中声明可供后代读取的颜色；`var(--brand)` 读取该值。自定义属性仍参与继承和层叠，不是 JavaScript 变量。
@@ -15,6 +11,12 @@ CSS 自定义属性是可以复用的值，名字以两个连字符开头，例�
 `outline:3px solid var(--brand)` 给焦点画外框，`outline-offset:4px` 让框离边缘 4px。outline 通常不挤占元素原布局；移除默认焦点框之前，必须有清楚的替代反馈。`text-decoration-thickness` 改的是链接下划线的粗细。
 
 把鼠标移开，只用 Tab 找到“查看活动”、Enter 激活，再用 Shift+Tab 返回。键盘焦点和鼠标停留分别检查。调整 brand 后，文字和焦点框应一起变化。
+
+## 变量作用域、回退与交互状态
+
+自定义属性通常继承，声明在 :root 可供整页用，在子容器覆盖则只影响该子树。`var(--space, 16px)` 在变量缺失时提供回退；变量存在但内容不适合目标属性时，不一定会退回你想象的另一条声明，应看计算结果。
+
+:hover 是指针悬停，:focus-visible 是需要明显焦点反馈的聚焦状态，:active 是激活过程；触屏和键盘不保证经过 hover。disabled 应使用原生禁用机制并解释原因，不能仅把颜色调灰。outline 不占布局空间，移除它时必须提供足够清晰的替代反馈。
 
 ## 先看一个完整例子
 
@@ -53,7 +55,7 @@ a:focus-visible { outline: 3px solid var(--brand); outline-offset: 4px; }
 
 ### 参考答案
 
-颜色与焦点框一起改变，键盘操作仍有明显位置反馈。
+把 --brand 改为 #14532d 后，所有引用此变量的链接与焦点规则同步改变。用 Tab 聚焦，看到外框后 Enter 跳到真实目标，才验证了键盘路径。
 
 ## 本节容易混淆的地方
 
@@ -68,3 +70,33 @@ a:focus-visible { outline: 3px solid var(--brand); outline-offset: 4px; }
 从空白写一块说明和一个带真实目标的新链接。自己声明 --space，供说明块 padding 和链接周围的一项间距共同使用；另外写 hover 与 focus-visible 反馈。改变一次 --space，预测两处变化。
 
 自查：两处间距同步改变，颜色或内容不会被误当间距改写。移开鼠标只用 Tab/Enter 仍可看到焦点并完成跳转；hover 不是焦点替代。故意拼错一个 var 名时发现该值不能被正常读取，再恢复名字。
+
+### 参考答案：独立变式
+
+--space 同时控制 note 内边距和 action 上间距。改成24px后两处都增加8px；拼错名字且无回退时该值失效，不是颜色改变。焦点规则独立于 hover。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+:root { --space: 16px; }
+.note { padding: var(--space); border: 1px solid; }
+.action { display: inline-block; margin-top: var(--space); }
+a:hover { color: #14532d; }
+a:focus-visible { outline: 3px solid #164e80; outline-offset: 3px; }
+</style>
+</head>
+<body>
+<h1>共享间距练习</h1>
+<div class="note">先看说明，再访问练习。</div>
+<a class="action" href="#practice">去练习</a>
+<h2 id="practice">练习内容</h2>
+</body>
+</html>
+```

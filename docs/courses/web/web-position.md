@@ -2,10 +2,6 @@
 
 让角标相对卡片定位，保留正常内容流。
 
-## 定位参照与小角标是什么意思
-
-relative保留元素在文档流的位置，并可提供定位参照；absolute脱离普通流，相对包含块定位。本节只做角标，不用定位拼整页。
-
 ## 让角标找到自己的参照
 
 正常流中的元素会给后续内容留下位置。`position:relative` 仍保留原来位置；不写偏移时，看起来没有移动，但可作为子元素定位的参照。`position:absolute` 脱离正常流，其他内容不再为它留位置。
@@ -15,6 +11,12 @@ relative保留元素在文档流的位置，并可提供定位参照；absolute�
 这个参照选择是逐层向外找的，不是“永远相对父元素”。删掉卡片的 relative 后，若没有其他定位祖先，角标改用初始包含块作为参照，会跑到页面区域的角上。
 
 fixed 常把元素固定在视口中、sticky 在满足滚动和偏移条件时黏住；z-index 影响相应层叠上下文中的叠放顺序。本节不靠这些布局整页，先把一个角标的参照和空间占用讲清。
+
+## relative、absolute、fixed、sticky 的边界
+
+relative 保留原布局位置，再按偏移移动视觉盒；absolute 脱离正常流，通常参照最近建立对应包含块的祖先。fixed 常参照视口，但某些 transform 等属性可改变包含块；不要把这条简化规则当绝对。
+
+sticky 先在流中占位，滚动到指定 top 等阈值后表现为吸附，且受祖先滚动与边界约束。z-index 在各自层叠上下文内比较，某个局部数字再大也未必能盖过另一上下文。先用正常流布局正文，再给确有重叠需求的小元素定位。
 
 ## 先看一个完整例子
 
@@ -50,7 +52,7 @@ card的relative为badge提供参照。角标离卡片右上角8px，正文仍按
 
 ### 参考答案
 
-角标可能改为相对其他包含块定位，不再贴着卡片。
+移除 card 的 relative 后，absolute 角标会去找更外层的包含块，可能贴到页面而不是卡片。恢复后先确认其父卡片边框与偏移距离，再看 z-index；后者不能修复参照错误。
 
 ## 本节容易混淆的地方
 
@@ -65,3 +67,30 @@ fixed常相对视口，sticky需满足滚动和top等条件。z-index也受层�
 独立写两张不同内容的卡片；只给第二张放一个左下角的“限量”角标，距左边与下边各 12px，正文不能被遮挡。先写出角标相对谁、是否为后续内容留位置，再选择参照与留白。
 
 自查：角标始终属于第二张卡片，不跑到页面角落或第一张上；正文仍按流排列且可读。去掉第二张的参照后观察位置变化，再恢复；必须能解释 padding 为什么要容纳脱流角标，而不是靠数个空行。
+
+### 参考答案：独立变式
+
+第二张建立参照，左/下各12px；padding-bottom 预留角标空间，正文不靠空行避让。第一张没有角标。去掉 relative 后再恢复，能确认位置变化来自包含块。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+article { border: 1px solid; padding: 16px; margin-bottom: 16px; }
+.limited { position: relative; padding-bottom: 52px; }
+.badge { position: absolute; left: 12px; bottom: 12px; }
+</style>
+</head>
+<body>
+<h1>两张卡片</h1>
+<article><h2>普通课程</h2><p>正常内容。</p></article>
+<article class="limited"><h2>小组课</h2><p>只有第二张有自己的角标。</p><span class="badge">限量</span></article>
+</body>
+</html>
+```

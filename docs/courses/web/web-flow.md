@@ -2,10 +2,6 @@
 
 比较block、inline与inline-block的排列行为。
 
-## 正常文档流与 display是什么意思
-
-正常文档流按源码顺序排内容。块元素通常从新行开始；行内元素参与文字流。display可改变布局参与方式，但元素语义不会因此改变。
-
 ## 源码顺序如何变成屏幕排列
 
 **文档流让后面的内容接着前面的内容排；不用手算每个元素的屏幕坐标。** 普通水平书写时，块盒通常另起一行，普通行内盒随文字从左到右排，空间不足再换行。
@@ -20,6 +16,12 @@
 span 是通用行内容器，div 是通用块容器；给 span 设置 display:block 只是改变盒的排版，不会赋予它按钮的操作语义。本例两个 inline-block 的内容宽各 100px，再加两边 padding 与 border 各得到 118px。
 
 只改 display，一次测试一个值：inline-block 时并排，block 时两行，inline 时普通文字宽度跟内容走。浏览器默认 body 有少量外边距，这与 item 的 padding 是不同地方。
+
+## 隐藏、占位与流中的间距
+
+display:none 会让元素不参与布局，通常也不出现在辅助技术阅读树中；visibility:hidden 隐藏但仍留布局空间；opacity:0 只是透明，元素还可能占位并接收交互，不能把它当禁用操作。
+
+普通 inline 的 width/height 不按块盒规则工作；inline-block 作为行内整体排列，同时可设置尺寸。块元素的 width:auto 与 width:100% 也不总等价：在 content-box 下再加 padding，100% 可能超出容器。
 
 ## 先看一个完整例子
 
@@ -54,7 +56,7 @@ span 是通用行内容器，div 是通用块容器；给 span 设置 display:bl
 
 ### 参考答案
 
-block每项新行，inline的宽度不按同样方式控制普通文字行盒。
+改成 block 后每个标签另起块行；普通 span 用 inline 时80px的 width 不按行内块方式生效。去掉测量规则前先看 Computed，避免把内容长度差异当布局行为。
 
 ## 本节容易混淆的地方
 
@@ -69,3 +71,26 @@ block每项新行，inline的宽度不按同样方式控制普通文字行盒。
 在自己的一段操作说明中嵌入两个静态步骤标签，每个标签声明 80px 内容宽和自己的内边距。让它们先作为有尺寸的行内整体参与文字流，再自行改成块显示，预先描述文字与标签的位置变化。
 
 自查：行内块在空间够时参与同一行，窄窗口可整体换到下一行；块显示时标签各自起行。普通 inline 不按相同方式采用普通 span 的 width。标签只是说明文字，不会因外观像按钮就具备操作功能。
+
+### 参考答案：独立变式
+
+两个 span 先为可设尺寸的行内整体，空间不足时整体换行。把 display 改成 block 后各自另起一行，前后文字仍按正常流排列。它们是说明，不是按钮。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+.step { display: inline-block; width: 80px; padding: 4px; border: 1px solid; }
+</style>
+</head>
+<body>
+<p>操作顺序：<span class="step">阅读</span>，然后<span class="step">练习</span>，最后核对结果。</p>
+</body>
+</html>
+```
