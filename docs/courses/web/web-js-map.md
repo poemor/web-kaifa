@@ -2,10 +2,6 @@
 
 把每项转换成新的值，区分转换与筛选。
 
-## 数组 map 与数据转换是什么意思
-
-map为数组每项调用转换函数，返回一组转换后的结果。filter决定留不留，map决定变成什么。这两种方法可组合，但先分别理解。
-
 ## 每项产生一个对应的新值
 
 map 接收转换函数，对每项调用一次，把每次返回的值放进新数组。**filter 回答“保留吗”，map 回答“变成什么”。** 对本例的普通三项数组，map 返回三项，而 filter 可以返回更少项。
@@ -15,6 +11,12 @@ map 接收转换函数，对每项调用一次，把每次返回的值放进新�
 同一函数也可写为箭头函数 `price => price*2`，箭头左边是参数，右边的表达式自动作为返回值；如果写 `price => { price*2; }`，花括号表示函数体，此时必须明确 return，否则每项得到 undefined。后面 DOM 筛选将使用这种短写。
 
 原 prices 不会因本例的数值转换被改写。但“map 返回新数组”不表示回调永远没有副作用：若回调主动改共享对象，仍会改它。先让转换函数只计算结果，DOM 创建与追加使用明确的循环。
+
+## map、filter、find、some、every 与 reduce
+
+map逐项转换，结果长度通常与原数组一致；filter筛选，find只找首个符合项，some判断是否至少一项满足，every判断是否全部满足。reduce把多项累积成一个结果，先提供明确初值，尤其要考虑空数组。
+
+转换对象时也要问是否需要新对象。map返回新数组不等于里面对象都复制了；回调若返回原对象，后续改属性仍会共享。不要为了短而把读取、修改全局状态和DOM副作用全塞进一条链。
 
 ## 先看一个完整例子
 
@@ -60,7 +62,33 @@ console.log(JSON.stringify(doubled));
 
 ### 参考答案
 
-map得到三条文字，不负责删除不合格项。filter后map可以先选数据再变形。
+map负责把数字变文字，filter才删掉不符合项；先筛选再转换得到两项。原prices仍有三项。
+
+将下面完整页面保存为 `index.html`，打开后按说明验证。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+const prices = [10, 20, 30];
+const labels = prices.map(price => `价格：${price}`);
+console.log(JSON.stringify(labels));
+const selected = prices.filter(price => price >= 20).map(price => `价格：${price}`);
+console.log(JSON.stringify(selected));
+console.log(prices.length, labels.length, selected.length);
+</script>
+</body>
+</html>
+```
+
 
 ## 本节容易混淆的地方
 

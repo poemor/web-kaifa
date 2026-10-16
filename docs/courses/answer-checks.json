@@ -713,5 +713,254 @@
       }
     },
     "noOverflow": true
+  },
+  {
+    "chapter": "web-js-start",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "本次采购",
+      "15",
+      "请自行核对"
+    ]
+  },
+  {
+    "chapter": "web-js-variables",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "false",
+      "string number boolean",
+      "true",
+      "string number boolean"
+    ]
+  },
+  {
+    "chapter": "web-js-operators",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "28",
+      "NaN true",
+      "0 false",
+      "0 false"
+    ]
+  },
+  {
+    "chapter": "web-js-strings",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "李 小雨，你选择了 Web。",
+      "8 4"
+    ]
+  },
+  {
+    "chapter": "web-js-if",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "免运费"
+    ]
+  },
+  {
+    "chapter": "web-js-loops",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "4",
+      "3",
+      "2",
+      "1",
+      "轮数 4"
+    ]
+  },
+  {
+    "chapter": "web-js-functions",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "1",
+      "0",
+      "6",
+      "0",
+      "-6"
+    ]
+  },
+  {
+    "chapter": "web-js-scope",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "函数内余额",
+      "15 10 原始余额",
+      "15 原始余额"
+    ]
+  },
+  {
+    "chapter": "web-js-arrays",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "240",
+      "0"
+    ]
+  },
+  {
+    "chapter": "web-js-objects",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "8 3",
+      "苏州"
+    ]
+  },
+  {
+    "chapter": "web-json",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "string",
+      "true 2",
+      "Web布局 30"
+    ]
+  },
+  {
+    "chapter": "web-js-callbacks",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "[2,4]",
+      "[0,-2,1,2,3,4]",
+      "[]",
+      "[]"
+    ]
+  },
+  {
+    "chapter": "web-js-map",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "[\"价格：10\",\"价格：20\",\"价格：30\"]",
+      "[\"价格：20\",\"价格：30\"]",
+      "3 3 2"
+    ]
+  },
+  {
+    "chapter": "web-dom",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "text": {
+      "h1": "设备在线",
+      "#device-result": "已检查1台"
+    }
+  },
+  {
+    "chapter": "web-events",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "text": {
+      "#count": "0"
+    },
+    "clicks": [
+      "#like",
+      "#like",
+      "#undo",
+      "#undo",
+      "#undo"
+    ]
+  },
+  {
+    "chapter": "web-dom-list",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "count": {
+      "li": 3,
+      "img": 0
+    },
+    "text": {
+      "li:last-child": "<img src=x>"
+    }
+  },
+  {
+    "chapter": "web-ui-state",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {
+      "#query": "笔记"
+    },
+    "text": {
+      "#total": "2",
+      "li:first-child": "算法笔记 / 120页"
+    },
+    "count": {
+      "li": 2
+    }
+  },
+  {
+    "chapter": "web-ui-state",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {
+      "#query": "不存在"
+    },
+    "text": {
+      "#total": "0"
+    },
+    "count": {
+      "li": 0
+    }
+  },
+  {
+    "chapter": "web-js-errors",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "结果 6",
+      "本次检查结束",
+      "输入必须是有限非负数",
+      "本次检查结束"
+    ]
+  },
+  {
+    "chapter": "web-promise",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "开始",
+      "同步结束",
+      "订单无效",
+      "12"
+    ]
+  },
+  {
+    "chapter": "web-async",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "同步日志",
+      "账单 23"
+    ]
   }
 ]

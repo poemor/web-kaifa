@@ -53,7 +53,36 @@ JSON.parse失败后跳到catch，所以不会打印try里的第二句。之后�
 
 ### 参考答案
 
-合法输入走成功路径，catch不执行。不要把catch写成空内容，或在catch里把失败数据误标为已成功。
+3成功才打印6，-1跳到catch不打印成功值。处理结束后仍执行收尾日志；若删除catch，异常会终止当前脚本后面的正常路径。
+
+将下面完整页面保存为 `index.html`，打开后按说明验证。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+function doubleNonNegative(value) {
+  if (!Number.isFinite(value) || value < 0) throw new Error("输入必须是有限非负数");
+  return value * 2;
+}
+for (const value of [3, -1]) {
+  try { console.log("结果", doubleNonNegative(value)); }
+  catch (error) { console.log(error.message); }
+  console.log("本次检查结束");
+}
+</script>
+</body>
+</html>
+```
+
 
 ## 独立变式：失败不能伪装成计算成功
 
@@ -62,3 +91,9 @@ JSON.parse失败后跳到catch，所以不会打印try里的第二句。之后�
 从空脚本写一个计算两倍正数的函数：负数抛出你自己的错误信息，非负数正常返回结果。调用者分别测试 3 与 -1，成功才输出计算结果，失败输出 message，处理后还有一条“本次检查结束”日志。
 
 自查：3 得到6；-1 显示自定义失败，不输出成功结果或伪造0；两次处理后都到达结束日志。让错误不被捕获时会改变后续执行，恢复明确的 catch 后再解释失败出口。
+
+## try 的范围、错误对象与 finally
+
+throw可以抛出值，但通常抛Error以保留message与栈信息。catch只能接住相应执行范围内的失败；后续Promise拒绝需要await或链上的catch处理，外层同步try不会自动捕获任意未来回调。
+
+finally在正常和异常路径通常都会运行，适合恢复界面或清理资源。不要在finally里随意return，这会覆盖原来的结果或异常。向用户显示可理解的信息，排错日志保留足够上下文，而不是捕获后统一返回假成功值0。

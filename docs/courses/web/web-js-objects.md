@@ -2,10 +2,6 @@
 
 用对象表示活动，观察两个变量引用同一个对象。
 
-## 对象、属性与引用是什么意思
-
-对象用属性名组织有关联的值。点号读取属性，赋值修改属性。把对象赋给另一个变量不会自动建立独立副本；两个变量可能引用同一个对象。
-
 ## 一个对象表示一条有关联的数据
 
 `{ title:"编程交流", seats:10 }` 是对象字面量：花括号包住对象，属性名和值用冒号分开，各属性用逗号分开。`event.title` 按名字读取属性，`event.seats=8` 更新 seats 属性。
@@ -15,6 +11,12 @@
 要建立新的浅副本，写 `const copy={...event};`。这里三个点是展开语法，把 event 当前可枚举的自身属性放进一个新对象。只复制这一层：id/title/seats 等基本值可独立修改；如果某属性又是对象，里面的引用仍可能共享。
 
 点号后是固定属性名；如果名字来自变量，可以用 `event[key]`。读取不存在的属性得到 undefined；拼错 title 为 tilte 不会自动纠正。后面读网络数据时，既要检查 JSON 能否解析，也要检查实际属性名与类型。
+
+## 属性访问、解构与浅复制
+
+点访问适合固定名字，`object[key]`适合运行时决定的属性名。`const {title, seats=0} = event`可解构字段，默认值只在字段为undefined时生效。属性拼错返回undefined，业务形状应主动验证，不能只凭“是对象”就使用。
+
+对象展开只复制一层属性。若event包含address对象，`copy.address === event.address`仍可能为true。方法中的this取决于调用方式；把方法单独取出交给事件监听器时，不能想当然认为this仍指原对象。优先显式参数与可说明的数据流。
 
 ## 先看一个完整例子
 
@@ -62,7 +64,35 @@ event保存对象引用，same取得相同引用。修改same.seats后，event�
 
 ### 参考答案
 
-原seats仍8，副本可单独改变；嵌套对象仍需另行处理，浅副本不隔离全部深层值。
+普通数字属性在两份对象里独立，嵌套address却仍共享；最后一行说明浅复制并非递归复制。
+
+将下面完整页面保存为 `index.html`，打开后按说明验证。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+const event = { title: "读书会", seats: 8 };
+const copy = { ...event };
+copy.seats = 3;
+console.log(event.seats, copy.seats);
+const nested = { address: { city: "杭州" } };
+const shallow = { ...nested };
+shallow.address.city = "苏州";
+console.log(nested.address.city);
+</script>
+</body>
+</html>
+```
+
 
 ## 本节容易混淆的地方
 

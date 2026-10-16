@@ -54,7 +54,33 @@ text保存字符串，不能把text.title当对象字段读。parse得到item后
 
 ### 参考答案
 
-格式合法还不代表业务字段正确。seats换成文字仍是合法JSON，但应用可能不能接受。
+序列化结果为字符串，解析结果为数组；取第二项前此例有明确的两项输入。把minutes变成文字仍能解析，但不满足数字分钟的业务约定；缺少键引号则是语法错误，之后的错误处理课再包try/catch。
+
+将下面完整页面保存为 `index.html`，打开后按说明验证。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+const goals = [{ title: "Go基础", minutes: 20 }, { title: "Web布局", minutes: 30 }];
+const text = JSON.stringify(goals);
+console.log(typeof text);
+const restored = JSON.parse(text);
+console.log(Array.isArray(restored), restored.length);
+console.log(restored[1].title, restored[1].minutes);
+</script>
+</body>
+</html>
+```
+
 
 ## 独立变式：学习目标的文字往返
 
@@ -63,3 +89,9 @@ text保存字符串，不能把text.title当对象字段读。parse得到item后
 自己定义两条目标，每条有 title 字符串与 minutes 数字；序列化为 JSON 字符串，再解析并读取第二条目标。运行前写出序列化结果的类型、解析结果的结构及第二条字段预期。
 
 自查：序列化变量是 string，解析后是含两对象的数组，第二条 title/minutes 与输入一致。把 minutes 改成字符串仍可成为合法 JSON，但不符合数字时长需求；删键的双引号会 SyntaxError。格式与业务形状分两项核对。
+
+## JSON能表达什么，不能表达什么
+
+JSON只有对象、数组、字符串、数字、布尔、null，不能保存函数、undefined、循环引用或任意类的行为。JSON.stringify并不是所有对象的通用深拷贝工具，Date等类型也有自己的序列化规则。
+
+JSON.parse只确认格式可解析，不保证字段符合需求。null、数组和对象都是合法JSON，但可能不符合某个接口。数字字段若变成"20"，仍是合法JSON文字，却不是需要的number；处理不可信输入应检查类型、有限范围和必要字段。

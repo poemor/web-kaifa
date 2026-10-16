@@ -52,7 +52,39 @@ change修改的是自己的value，return得到9；外部count仍是3。把调�
 
 ### 参考答案
 
-参数作用域局限于函数。数字赋值复制值；对象变量的赋值复制引用，二者不能用同一句“都是副本”糊过去。
+函数返回15时，外层balance仍10；后面的显式赋值才改成15。函数内label与外层label是两个名字绑定。函数外读取next会ReferenceError；别把故意错误留在正常答案中。
+
+将下面完整页面保存为 `index.html`，打开后按说明验证。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+let balance = 10;
+const label = "原始余额";
+function subsidize(value) {
+  const label = "函数内余额";
+  const next = value + 5;
+  console.log(label);
+  return next;
+}
+const result = subsidize(balance);
+console.log(result, balance, label);
+balance = result;
+console.log(balance, label);
+</script>
+</body>
+</html>
+```
+
 
 ## 独立变式：返回结果后才改变外部值
 
@@ -61,3 +93,9 @@ change修改的是自己的value，return得到9；外部count仍是3。把调�
 独立写一个计算“补贴后余额”的函数：输入原余额 10，函数内部产生增加 5 后的新数值并返回。外面先只读取返回值，再明确把返回值接回原变量。另在函数内部用一个与外部文字变量同名的局部变量。
 
 自查：未接回时，新结果 15、外部余额仍 10；接回后余额才是 15。局部同名文字变化不应改外部文字。函数外读取仅在函数内部声明的名字应出现 ReferenceError，恢复后能说明每个名字在哪个范围有效。
+
+## 块作用域、闭包与“按值传递”
+
+let/const的作用域由代码块限定，var主要按函数范围，初学优先使用let/const。内层声明同名变量会遮住外层，改内层名字不改外层绑定；不要为避开报错随意把赋值改成新声明。
+
+内层函数能记住并访问外层变量，形成闭包；它记住的不是某个时刻必然冻结的值。JavaScript参数按值传递，原始数字副本的赋值不改调用者；对象参数复制的是对象引用这个值，因此改其属性可能在调用方可见，下一节对象课会实验。

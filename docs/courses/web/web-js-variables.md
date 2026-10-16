@@ -2,10 +2,6 @@
 
 保存数字、文字和布尔值，判断哪个变量可以重新赋值。
 
-## let、const 与数据类型是什么意思
-
-let声明可重新赋值的变量，const声明不能重新赋值的绑定。常见值有number、string、boolean、null和undefined。const对象内部字段能否改变是后续对象章节的内容。
-
 ## 先保存一个值，再改变它
 
 变量是一个可以用名字读取的值。`let minutes = 20;` 一次做三件事：用 let 声明名字 minutes，用等号把数字 20 存进去，用分号结束语句。之后的 `minutes = 30;` 是重新赋值，不再写 let。
@@ -21,6 +17,12 @@ let声明可重新赋值的变量，const声明不能重新赋值的绑定。常
 | null | `let selection = null;` | 作者明确表示目前没有选择 |
 
 typeof 是读取类型的运算符，例如 typeof name 返回文字 string。const 要在声明时给出值，并且不能换成另一个值；后续数组/对象章节会说明“不能重新赋值”和“内部内容不能变”是不同限制。
+
+## 绑定、原始值与可变对象
+
+const 禁止重新给同一个绑定赋值，不自动冻结对象内部属性；let 允许重新赋值。number 使用双精度浮点表示普通数字，整数大于 Number.MAX_SAFE_INTEGER 可能失去精度，必要时另学 bigint。typeof null 得到 object 是语言的历史行为，判断 null 应直接用 value === null。
+
+未赋值的 let 初值是 undefined，但在声明执行之前读取会触发 ReferenceError。局部变量用 let/const，不省略关键字意外创建全局状态。函数、对象和数组是后续章节的具体值，先分清“名字绑定”和“对象内部内容”。
 
 ## 先看一个完整例子
 
@@ -70,7 +72,7 @@ minutes先20再30。typeof返回值的类型名称。比较得到true。const na
 
 ### 参考答案
 
-比较为false；给const重新赋值会出现TypeError。
+minutes为0时 minutes > 0 为false；给 const name 重新赋值会抛 TypeError。恢复后再运行，不能拿错误之前的日志当作后续代码已执行。
 
 ## 本节容易混淆的地方
 
@@ -85,3 +87,35 @@ const不是“所有内容永远不可变”。undefined常来自没有提供值
 从空脚本设计计划时长、学习主题、是否达到 30 分钟三种值。初始时长 20，之后改为 35；分别输出更新前后的比较结果和三种值的类型。自己选哪些名字允许重新赋值并解释。
 
 自查：两个比较结果为 false、true，主题是 string，时长是 number，比较是 boolean。若把不可重新赋值的绑定再次赋值，应看到 TypeError；恢复后继续。名字与字符串内容分清，不重复声明来假装更新原变量。
+
+### 参考答案：独立变式
+
+主题绑定不变用const，时长和由它派生的布尔值更新用let。更新 minutes 不会自动重算之前保存的 reached，需要再次计算。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+let minutes = 20;
+const topic = "Go";
+let reached = minutes >= 30;
+console.log(reached);
+console.log(typeof topic, typeof minutes, typeof reached);
+minutes = 35;
+reached = minutes >= 30;
+console.log(reached);
+console.log(typeof topic, typeof minutes, typeof reached);
+</script>
+</body>
+</html>
+```
