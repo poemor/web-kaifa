@@ -10,11 +10,12 @@ CONFIG = ROOT / "docs/tutorials/configs/go"
 TARGET = ROOT / "assets/downloads/vscode-go-starter.zip"
 buffer = io.BytesIO()
 with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-    files = [(p, p.name) for p in sorted(EXAMPLE.iterdir()) if p.name in {"README.md", "main.go", "go.mod"}]
+    files = [(p, p.name) for p in sorted(EXAMPLE.iterdir(), key=lambda p: p.name.casefold()) if p.name in {"README.md", "main.go", "go.mod"}]
     files += [(p, ".vscode/" + p.name) for p in sorted(CONFIG.glob("*.json"))]
     for source, name in files:
         entry = zipfile.ZipInfo("vscode-first-program/" + name, (1980, 1, 1, 0, 0, 0))
         entry.compress_type = zipfile.ZIP_DEFLATED
+        entry.create_system = 3
         entry.external_attr = 0o100644 << 16
         archive.writestr(entry, source.read_text(encoding="utf-8-sig").replace("\r\n", "\n").encode())
 payload = buffer.getvalue()

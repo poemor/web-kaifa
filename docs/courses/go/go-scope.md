@@ -10,6 +10,25 @@
 
 先会 [函数的参数与返回值](../../../index.html#/learn/go/go-functions)。仍在已初始化的独立练习目录，把下列完整代码替换 main.go，保存后运行，不要在原文件后再追加一份 main。
 
+## 捕获外层变量的函数：先区分“值”与“名字”
+
+函数值如果在函数体内使用外层变量，就形成闭包。下面片段放在 main 内，按顺序执行：
+
+```go
+count := 0
+next := func() int {
+    count = count + 1
+    return count
+}
+fmt.Println(next()) // 1
+fmt.Println(next()) // 2
+fmt.Println(count)  // 2
+```
+
+匿名函数访问的是外层 count 这个变量，因此第二次调用延续第一次更新后的状态。它没有接收一个整数参数，和 Change(n int) 修改参数副本的例子不相同。暂时不要在并发任务里共享这个闭包，多个任务同时更新变量需要后续的同步知识。
+
+if 初始化、for 初始化和更内层花括号都能引入更小范围。排查“明明赋值了，外面却没变”时，检查内层是不是误用 `:=` 创建同名变量。
+
 ## 完整程序与运行
 
 ```go
@@ -72,6 +91,32 @@ Change 的 n 与 main 的 value 名字不同；即使都叫 value，它们也属
 
 ### 参考答案
 
-内层 value 的变化不影响外层；参数 n 的变化也不直接影响外层。外层变为 9 的原因是 main 执行了 `value = 返回值`，不是整数参数突然变成了共享变量。
+Double 取得 4 的副本并返回 8，main 的赋值才更新外层 value。对于原例 Change 的改写，同理写成 func Change(n int) int，最后 return n，并用 value = Change(value) 接回；只调用而不赋回，外层仍是 3。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+func Double(n int) int {
+    return n * 2
+}
+
+func main() {
+	value := 4
+	fmt.Println("调用前", value)
+	value = Double(value)
+	fmt.Println("调用后", value)
+}
+```
+
+预期结果：
+
+```output
+调用前 4
+调用后 8
+```
 
 参考：[Go 规范：声明与作用域](https://go.dev/ref/spec#Declarations_and_scope)。

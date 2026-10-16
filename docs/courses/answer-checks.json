@@ -1,0 +1,140 @@
+[
+  {
+    "chapter": "go-vscode",
+    "answer": 0,
+    "language": "go",
+    "output": "我保存了新代码"
+  },
+  {
+    "chapter": "go-program",
+    "answer": 1,
+    "language": "go",
+    "output": "学习计划开始\n今天写两句程序"
+  },
+  {
+    "chapter": "go-program",
+    "answer": 0,
+    "language": "go",
+    "output": "我开始学习 Go"
+  },
+  {
+    "chapter": "go-syntax",
+    "answer": 1,
+    "language": "go",
+    "output": "先阅读\n再练习"
+  },
+  {
+    "chapter": "go-syntax",
+    "answer": 0,
+    "language": "go",
+    "output": "第一行"
+  },
+  {
+    "chapter": "go-variables",
+    "answer": 1,
+    "language": "go",
+    "output": "10\n25"
+  },
+  {
+    "chapter": "go-variables",
+    "answer": 0,
+    "language": "go",
+    "output": "60\n75"
+  },
+  {
+    "chapter": "go-types",
+    "answer": 1,
+    "language": "go",
+    "output": "0 0.0 false \"\"\n2 1.5 true \"阿青\""
+  },
+  {
+    "chapter": "go-types",
+    "answer": 0,
+    "language": "go",
+    "output": "3 2.5 true \"小林\""
+  },
+  {
+    "chapter": "go-constants",
+    "answer": 1,
+    "language": "go",
+    "output": "30\n29"
+  },
+  {
+    "chapter": "go-constants",
+    "answer": 0,
+    "language": "go",
+    "output": "60\nfalse"
+  },
+  {
+    "chapter": "go-operators",
+    "answer": 1,
+    "language": "go",
+    "output": "4\n1\ntrue"
+  },
+  {
+    "chapter": "go-operators",
+    "answer": 0,
+    "language": "go",
+    "output": "2\n2\n3"
+  },
+  {
+    "chapter": "go-strings",
+    "answer": 1,
+    "language": "go",
+    "output": "阿青的学习记录\n今天练习 30 分钟"
+  },
+  {
+    "chapter": "go-strings",
+    "answer": 0,
+    "language": "go",
+    "output": "你好，阿青\n今天练习 30 分钟"
+  },
+  {
+    "chapter": "go-if",
+    "answer": 0,
+    "language": "go",
+    "output": "及格"
+  },
+  {
+    "chapter": "go-switch",
+    "answer": 0,
+    "language": "go",
+    "output": "未知星期"
+  },
+  {
+    "chapter": "go-for",
+    "answer": 1,
+    "language": "go",
+    "output": "12"
+  },
+  {
+    "chapter": "go-for",
+    "answer": 0,
+    "language": "go",
+    "output": "6"
+  },
+  {
+    "chapter": "go-functions",
+    "answer": 0,
+    "language": "go",
+    "output": "1\n0\n6\n0\n-6"
+  },
+  {
+    "chapter": "go-scope",
+    "answer": 0,
+    "language": "go",
+    "output": "调用前 4\n调用后 8"
+  },
+  {
+    "chapter": "go-recursion",
+    "answer": 0,
+    "language": "go",
+    "output": "6\n0"
+  },
+  {
+    "chapter": "go-project-minutes",
+    "answer": 0,
+    "language": "go",
+    "output": "3 天共练习 90 分钟\n已达到本次目标"
+  }
+]
