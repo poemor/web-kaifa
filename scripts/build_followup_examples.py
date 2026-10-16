@@ -29,7 +29,7 @@ def package(index):
         for current, folders, names in os.walk(directory, followlinks=False):
             folders[:] = sorted(name for name in folders if name not in EXCLUDED_DIRS and not (Path(current) / name).is_symlink())
             sources.extend(Path(current) / name for name in names)
-        for source in sorted(sources):
+        for source in sorted(sources, key=lambda p: p.as_posix().casefold()):
             name = source.relative_to(directory)
             if any(part in EXCLUDED_DIRS for part in name.parts):
                 continue

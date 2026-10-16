@@ -2,10 +2,6 @@
 
 预测数字相加和字符串拼接，明确转换用户输入。
 
-## 运算符与类型转换是什么意思
-
-+既能做数字加法也能连接字符串。===比较时不进行一般的类型转换。输入框取得的值是字符串，参加数值计算前要明确转换，并检查转换结果。
-
 ## 算术、比较与转换是三种操作
 
 数字可以使用 `+` 加、`-` 减、`*` 乘、`/` 除，`%` 得到余数。括号优先，例如 `(2+3)*4` 得到 20。`+` 遇到字符串时还会连接文字，所以 `"2"+3` 得到字符串 `"23"`，不会自动变成数字 5。
@@ -15,6 +11,12 @@
 `===` 是严格相等比较，同时看类型和对应值，本例 2 与 "2" 不相等；`!==` 是严格不等。`>`、`>=`、`<`、`<=` 比较数值大小，返回布尔值。NaN 与自身也不相等，所以不用 value===NaN 检查。
 
 本节还没有操作输入框，用字符串模拟输入。预测 `Number("")` 与 `Number(" ")` 都会得到 0，这正说明“可转换”不代表“用户真的填了 0”。下一组会用 trim 检查空白，再根据业务范围拒绝不合适的值。
+
+## 严格相等、短路与无效数值
+
++ 在一边是字符串时可能拼接，减乘除等又有各自转换规则，所以输入计算先明确 Number。=== 不做隐式类型转换，== 则会转换；起步优先使用严格比较。Number.isNaN 只检测 NaN，Number.isFinite 还可排除 Infinity 和 -Infinity；NaN 与任何值包括自己都不严格相等。
+
+&&、|| 会短路，并返回某个操作数，不保证结果一定是布尔。?? 仅在左值为 null/undefined 时采用右值，和把0或空文字也当作需要替换的 || 不同。三元表达式 `condition ? a : b` 适合短的值选择，复杂流程仍写清晰分支。
 
 ## 先看一个完整例子
 
@@ -65,11 +67,7 @@ true
 
 ### 参考答案
 
-这三者转换都可能得到0。业务应先检查去空格后的输入是否为空，再做转换。
-
-## 本节容易混淆的地方
-
-用==会引入额外转换规则，起步例子用===。NaN不等于自己，不用value===NaN检测。
+Number("")、Number("  ")、Number("0")都是0；转换成功不能证明用户输入了有意义的数字。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -80,3 +78,33 @@ true
 在空脚本用字符串 "12.5"、"2"、"3" 表示单价、数量、运费，自行明确转换后求总价；另为 "abc"、空字符串、一个空格输出转换结果及 isNaN 判断。先预测，禁止把文字直接相加当总价。
 
 自查：总价为数字 28；abc 得到 NaN 且检查为 true；空串和空格转换为 0，但这不能证明用户确实输入了零。到后面的字符串/条件章节再补空白与范围拒绝；本节只需解释转换和业务有效性不同。
+
+### 参考答案：独立变式
+
+先转换三项再计算，得到28。abc成为NaN，空文本与空格成为0却不能据此认定业务输入有效；后续先Trim再校验范围。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+const price = Number("12.5");
+const quantity = Number("2");
+const shipping = Number("3");
+console.log(price * quantity + shipping);
+console.log(Number("abc"), Number.isNaN(Number("abc")));
+console.log(Number(""), Number.isNaN(Number("")));
+console.log(Number(" "), Number.isNaN(Number(" ")));
+</script>
+</body>
+</html>
+```

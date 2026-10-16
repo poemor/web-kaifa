@@ -17,7 +17,10 @@ for name, directory in PROJECTS.items():
     if "--check" in sys.argv:
         with ZipFile(target) as archive:
             expected = {base.name + "/" + p.name: p.read_bytes() for p in files}
-            actual = {entry: archive.read(entry) for entry in archive.namelist()}
+            # These archives contain text sources only. A Windows-produced ZIP
+            # may use CRLF while Git's checkout is LF on Linux.
+            actual = {entry: archive.read(entry).replace(b"\r\n", b"\n") for entry in archive.namelist()}
+            expected = {entry: content.replace(b"\r\n", b"\n") for entry, content in expected.items()}
             assert actual == expected, f"stale course download: {name}"
     else:
         with ZipFile(target, "w", compression=ZIP_DEFLATED) as archive:

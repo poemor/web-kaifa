@@ -2,15 +2,17 @@
 
 用一个只要求Name方法的接口接受具体类型。
 
-## 接口与行为约定是什么意思
-
-接口列出行为要求。类型拥有接口要求的方法，就能作为接口使用，无需implements声明。先用一个方法的接口，避免一开始设计巨大接口。
-
 ## 先问“能做什么”，再看具体类型
 
 前面的方法挂在 Problem 上。现在想让多个类型都能提供一个名字，不必固定它们内部有哪些字段。**接口列出所需方法；具体类型拥有准确匹配的方法，就满足接口。**
 
 `Name() string` 表示方法叫 Name、没有参数、返回 string。Named 接口不规定 Title 或 NameText 字段，也不提供方法的具体实现；User 的 Name 方法才实际读取 NameText 并返回它。Go 不要求另外写 implements 关键字。
+
+## 小接口、接口组合与 nil
+
+接口可嵌入另一个接口以组合行为，但使用者只需要 Name 时，不必要求保存、删除等一大组方法。依赖越小，替换实现和写测试越容易。空接口 `any` 是 `interface{}` 的别名，可以保存不同类型的值；它没有凭空获得这些类型的字段，使用具体行为仍需后续的 [类型断言](go-type-assertion.md)。
+
+接口值可理解为“具体类型与具体值”一对信息。`var named Named` 两者都没有，等于 nil；若放入一个满足接口的 *User，即使该指针为 nil，接口也已有具体类型，接口本身未必等于 nil。调用是否安全取决于实际方法如何处理 nil，不要只靠接口 != nil 就断言内部目标有效。
 
 ## 先运行一个小例子
 
@@ -68,11 +70,34 @@ Named要求Name() string。User有这个方法，所以可赋给Named变量。�
 
 ### 参考答案
 
-Team拥有Name() string就可以使用。返回类型不同则不满足接口。
+Team 的方法签名准确满足 Named。字段名可以不同，调用方只依赖 Name() string；如果方法是指针接收者，应存入 &Team{...}。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-接口的nil与内部保存nil指针是不同情况；不要为了形式给每个结构体配一个接口。
+```go
+package main
+
+import "fmt"
+
+type Named interface { Name() string }
+type Team struct { Label string }
+func (t Team) Name() string { return t.Label }
+
+func main() {
+	var named Named = Team{Label: "学习组"}
+	fmt.Println(named.Name())
+}
+```
+
+预期结果：
+
+```output
+学习组
+```
+
+## 接口不匹配先逐项核对签名
+
+编译器报告 missing method 或 wrong type for method 时，核对名字、参数、返回值，再核对值/指针的方法集合。给类型增加同名字段不能替代同名方法，返回 int 也不能代替要求的 string。
 
 ## 用第二个类型验证行为约定
 

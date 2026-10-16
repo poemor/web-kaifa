@@ -2,10 +2,6 @@
 
 保存一个简单对象，刷新后读取，并处理坏JSON。
 
-## localStorage 与序列化是什么意思
-
-localStorage按字符串保存浏览器本地数据。对象需要JSON.stringify转换，读取后JSON.parse还原。它不是数据库或跨设备同步，存储也可能不可用。
-
 ## 一份浏览器存储如何读写
 
 localStorage 是浏览器提供的本地键值存储。键 key 是字符串名字，本例是 course-book-storage-demo；值 value 也只能以字符串形式保存。`getItem(key)` 读取值，没保存过时返回 null；`setItem(key,value)` 写入这一个键，不会上传到服务器。
@@ -15,6 +11,12 @@ localStorage 是浏览器提供的本地键值存储。键 key 是字符串名�
 保存路径：对象 → JSON.stringify → 字符串 → setItem。读取路径：getItem → 字符串或 null → JSON.parse → 检查 title 是字符串 → 显示。解析失败或形状错误时仅显示警告，原字符串仍留在存储中供排查，不自动覆盖。
 
 在该独立页面的 Console 输入 `localStorage.getItem("course-book-storage-demo")` 观察原文；备份后，用 setItem 只将这个键改成坏 JSON。刷新应显示读取失败；再次主动点保存才恢复演示值。不要执行 localStorage.clear，它会影响这个来源的其他记录。
+
+## 来源、异常与恢复策略
+
+localStorage按来源隔离，来源包括协议、主机和端口；localhost与127.0.0.1也不同。它是同步字符串存储，写满配额或浏览器策略限制时可能抛错。用户可以编辑它，因此不适合放密码、可靠权限或只能由服务器确认的事实。
+
+读失败时保留原字符串供备份与排错，不能在catch里立刻写默认值覆盖。需要迁移格式时增加明确版本，先验证再迁移，失败可回退；多标签页还要考虑storage事件与覆盖冲突，单页保存成功不证明跨端同步。
 
 ## 先看一个完整例子
 
@@ -76,10 +78,6 @@ document.querySelector("#save").addEventListener("click", () => {
 
 显示读取失败，原记录仍可检查；主动保存才写入新演示值。
 
-## 本节容易混淆的地方
-
-不要在localStorage保存密码或把它当可靠服务器身份。重要数据清空与导入应先备份并可撤销。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：保存自己的阅读偏好
@@ -89,3 +87,57 @@ document.querySelector("#save").addEventListener("click", () => {
 从空白创建专用练习，用 own-reading-preferences 这个新键保存 {topic:文字, minutes:数字}。用户主动点保存后才写入；刷新时读取并检查两个字段，缺键显示未保存，失败保留原字符串。不要写学习网站的键。
 
 自查：保存“Go”和25后刷新仍能读到两字段；尚未保存时不把 null 当JSON对象。坏JSON或minutes为文字时显示警告且原文未被自动覆盖；只有用户主动恢复或保存才改变记录，不使用 clear 清空来源中的其他键。
+
+### 参考答案：独立实现与验收
+
+在独立HTTP目录保存以下index.html。新页面只使用own-reading-preferences，不触碰学习网站进度。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>阅读偏好</h1>
+<label for="topic">主题</label><input id="topic">
+<label for="minutes">分钟</label><input id="minutes" type="number">
+<button id="save" type="button">保存</button><p id="status" role="status"></p>
+<script>
+const key = "own-reading-preferences";
+const topic = document.querySelector("#topic");
+const minutes = document.querySelector("#minutes");
+const status = document.querySelector("#status");
+function valid(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    && typeof value.topic === "string" && value.topic.trim() !== ""
+    && typeof value.minutes === "number" && Number.isFinite(value.minutes) && value.minutes >= 0;
+}
+try {
+  const raw = localStorage.getItem(key);
+  if (raw === null) { status.textContent = "尚未保存"; }
+  else {
+    const value = JSON.parse(raw);
+    if (!valid(value)) throw new Error("字段不合格");
+    topic.value = value.topic;
+    minutes.value = String(value.minutes);
+    status.textContent = "已读取保存的偏好";
+  }
+} catch (error) { status.textContent = "读取失败，原记录保留"; }
+document.querySelector("#save").addEventListener("click", () => {
+  const value = { topic: topic.value.trim(), minutes: Number(minutes.value) };
+  if (minutes.value.trim() === "" || !valid(value)) { status.textContent = "请检查主题和分钟"; return; }
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    status.textContent = "已保存";
+  } catch (error) { status.textContent = "保存失败，未确认成功"; }
+});
+</script>
+</body>
+</html>
+
+```
+
+保存Go与25，刷新应恢复两个输入。用开发者工具只把这个演示键改成坏JSON或把minutes改成文字，刷新应警告且原字符串保留；用户主动保存正确数据后才替换。禁止调用localStorage.clear，因为它会删掉同来源其他键。

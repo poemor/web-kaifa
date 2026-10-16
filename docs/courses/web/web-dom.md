@@ -2,10 +2,6 @@
 
 把HTML里的一个元素找出来，修改它的文字。
 
-## DOM 与读取页面元素是什么意思
-
-DOM是浏览器提供的文档对象树。document.querySelector使用CSS选择器取得一个元素；textContent读取或设置文字。语言基础中的值与函数仍然适用，现在只是操作对象换成页面元素。
-
 ## 从 HTML 源码到可操作的文档树
 
 浏览器读 HTML 后，在内存中建立元素之间的父子关系，叫 DOM（Document Object Model，文档对象模型）。JavaScript 通过浏览器提供的 document 对象访问这份树，不是直接修改磁盘文本。
@@ -15,6 +11,12 @@ DOM是浏览器提供的文档对象树。document.querySelector使用CSS选择�
 `heading.textContent="新标题"` 给对象的 textContent 属性赋值，浏览器就把元素内的文字更新到屏幕。script 放在 h1 之后，这个元素已被解析，才找得到它。若把脚本搬到元素之前，必须另行处理执行时机。
 
 打开后看 Elements，h1 里是新标题；再看磁盘文件或“查看网页源代码”，仍是旧标题。刷新会重新读源码再执行脚本。将选择器改为 #missing，null 没有可赋值的 textContent，控制台会报 TypeError。恢复后再继续下一节事件。
+
+## 选择单项、多项与等待文档
+
+querySelector只返回第一个匹配元素，找不到返回null；querySelectorAll返回一组匹配结果，没有项目时是空集合，不是null。脚本执行要晚于需要的元素存在，可放body末尾或用defer加载外部脚本。
+
+textContent把字符串作为文字，innerHTML则解析为标记。想显示用户输入的`<strong>内容</strong>`时，优先textContent保留原文，不要让输入改变结构。改DOM只改变当前文档，刷新重新读取源码，不会自动保存回index.html。
 
 ## 先看一个完整例子
 
@@ -50,11 +52,7 @@ script放在元素之后，因此执行时标题已存在。#title匹配id=title
 
 ### 参考答案
 
-找不到元素得到null，直接访问textContent会报错。恢复后能得到新标题。
-
-## 本节容易混淆的地方
-
-开发者工具里临时改DOM不会自动保存到源码。使用innerHTML处理不可信文字会把它当HTML解释，文字显示优先textContent。
+选择#missing返回null，访问它的textContent会抛TypeError；先判断是否存在，才能给出可理解的失败提示。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -65,3 +63,34 @@ script放在元素之后，因此执行时标题已存在。#title匹配id=title
 独立写一个 h1 与一段有不同 id 的 p，原文为“设备待检查”和“尚无结果”。脚本找到两者，分别改为“设备在线”和“已检查1台”。同时为找不到某个元素的情况决定怎样报告，不继续访问 null。
 
 自查：Elements 和屏幕有两段新文字，磁盘原文仍是旧文字。故意让一项选择器不匹配时能在 Console 找到自己的失败说明，且不会将 null 当元素赋值；恢复后两项都正确。只改其中一个对象不能算两项同步完成。
+
+### 参考答案：独立变式
+
+只在两个元素都存在时写入；把一项id临时改错应走失败日志且不访问null。磁盘HTML仍是原文字，刷新后脚本再次应用更新。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1 id="device-title">设备待检查</h1>
+<p id="device-result">尚无结果</p>
+<script>
+const title = document.querySelector("#device-title");
+const result = document.querySelector("#device-result");
+if (title === null || result === null) {
+  console.log("找不到设备信息元素");
+} else {
+  title.textContent = "设备在线";
+  result.textContent = "已检查1台";
+}
+</script>
+</body>
+</html>
+```

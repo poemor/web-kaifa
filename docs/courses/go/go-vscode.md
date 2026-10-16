@@ -88,7 +88,25 @@ go run .
 
 ### 参考答案
 
-修改并保存后应输出“我保存了新代码”。本节留下的证据是实际目录、两个文件、一次新文字输出；安装了插件、复制了代码都不能单独证明程序运行成功。
+`go run .` 读取磁盘上的 main.go。输出没变时，先核对保存状态与终端所在目录，而不是重新安装插件。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("我保存了新代码")
+}
+```
+
+预期结果：
+
+```output
+我保存了新代码
+```
 
 ## 合上步骤，独立准备第二份练习
 
@@ -100,6 +118,24 @@ go run .
 
 ### 参考答案
 
-证据要来自 hello-again：它的模块名称、实际文件位置和新句子应互相对应。未保存时工具读取磁盘旧源码；保存后新句子才会出现。若误在 hello 运行，先辨认当前位置，而不是复制另一个 go.mod 来掩盖目录错误。
+在文件管理器创建 hello-again 后，用 VS Code 打开它，并在该文件夹终端执行一次：
+
+```sh
+go mod init example.com/learn/hello-again
+```
+
+main.go 的完整内容：
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("第二份练习")
+}
+```
+
+执行 `go run .` 应显示“第二份练习”。接着只在编辑器把文字改成“新目录的新内容”，暂不保存，再运行仍显示“第二份练习”；保存后再次运行才显示新句子。若启用了自动保存，先临时关闭自动保存再做这个实验。最后检查 go.mod 第一行为 `module example.com/learn/hello-again`，原 hello 的文件应仍在原位置。
 
 参考：[Go 官方模块教程](https://go.dev/doc/tutorial/create-module)、[VS Code Go 文档](https://code.visualstudio.com/docs/languages/go)。

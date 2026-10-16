@@ -2,10 +2,6 @@
 
 让标签关联输入框，观察required的浏览器校验。
 
-## 表单控件与 label是什么意思
-
-label描述一个输入控件，for的值与控件id一致。required表示必须提供值。表单界面不等于后端保存功能，本节只观察浏览器原生输入校验。
-
 ## 输入、校验与提交分别是什么
 
 表单是让用户输入一组值的界面。`input` 是输入控件，`type="text"` 表示文字输入；`button type="submit"` 表示触发表单提交，`required` 要求先填一个值。
@@ -22,6 +18,14 @@ label描述一个输入控件，for的值与控件id一致。required表示必�
 HTTP 是浏览器与服务器约定请求和响应格式的一套规则，后面请求章节才完整展开。这个本地示例没有 HTTP 后端。通过后可能看到地址中出现 `?name=...#checked`，中文会被编码；这不是“报名成功”。密码等敏感资料不能放在地址中。
 
 先点空表单，观察浏览器阻止提交；再填“小林”，观察原生行为；最后用 Tab/Shift+Tab 移动焦点。若只是普通操作按钮，应写 `type="button"`，避免放进表单后意外提交。
+
+## name、输入类型与表单数据
+
+id 供标签和脚本定位，name 决定提交字段名，value 是当前提交值，placeholder 只是提示，不能代替可见 label。disabled 控件通常不参加提交；readonly 文本控件仍可提交。button 在 form 内默认可能提交，纯操作应显式写 type="button"。
+
+email、number、date 等 input 类型提供不同的输入与原生校验体验；number 的结果在 DOM 中读取时仍要按后续 JavaScript 规则转换。多行文字用 textarea，有限选项用 select/option；同 name 的 radio 表示单选，checkbox 适合多选或独立开关，未勾选时通常不提交该项。
+
+form 的 method="get" 把数据放进查询字符串，适合本课虚构数据；post 把数据放进请求体，但本身不加密。真实服务仍要用 HTTPS 和服务器端验证。浏览器校验可以被绕过，不能作为权限或安全边界。
 
 ## 先看一个完整例子
 
@@ -60,11 +64,7 @@ HTTP 是浏览器与服务器约定请求和响应格式的一套规则，后面
 
 ### 参考答案
 
-不匹配时关联失效，匹配后恢复。
-
-## 本节容易混淆的地方
-
-required不阻止全部空白文本，也不自动保存数据。只读原生属性，不把“校验通过”描述为“提交成功”。
+for 与 id 不匹配时，点击标签不再聚焦目标。恢复一致后分别点击两个标签，确认焦点到对应输入，不只用鼠标直接点输入框。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -75,3 +75,29 @@ required不阻止全部空白文本，也不自动保存数据。只读原生属
 新写一个收集“虚构称呼”和“想学的主题”的本地表单；两个输入都有各自唯一的 id、name 与标签，两项均必填。正文明确它只是校验练习，没有保存服务。
 
 自查：点击两个标签分别聚焦正确控件；任一项为空时不能通过原生校验，两项填写虚构值后当前地址的查询部分包含两个字段。Tab 顺序可达两个输入和按钮。两个 id 重复或 for 失配时要发现并恢复，不能称通过校验为“已报名”。
+
+### 参考答案：独立变式
+
+两个 label 关联各自 id，name 决定查询字段。空任一项时原生校验阻止提交；填虚构值后 GET 导航会出现 nickname 和 topic 查询参数，这仅证明浏览器提交了数据，不能据此说服务器已保存。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>学习意向校验练习</h1>
+<p>只使用虚构内容；没有保存或报名服务。</p>
+<form method="get">
+  <p><label for="nickname">虚构称呼</label><input id="nickname" name="nickname" required></p>
+  <p><label for="topic">想学的主题</label><input id="topic" name="topic" required></p>
+  <button type="submit">检查这份输入</button>
+</form>
+</body>
+</html>
+```

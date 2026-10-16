@@ -14,6 +14,12 @@
 | 每天 15 分钟、3 天 | 45 | 继续安排下一次练习 |
 | 每天 20 分钟、0 天 | 0 | 继续安排下一次练习 |
 
+## 在写代码之前决定边界
+
+0 天表示没有安排，总时长应该是 0；负天数在这个项目没有业务含义。先确认输入再计算，比算出负总时长后仅显示“未达标”更容易发现错误。本课只用小整数，避免整数乘法溢出；以后接收用户输入时还要限制最大值。
+
+把目标写成 `const targetMinutes = 90`，函数只计算总时长，main 再判断是否达到目标。这样改目标不必修改乘法，改输入也不用修改分支。判断用 >= 而非 >，因为恰好达到 90 也算达标。
+
 ## 打开目录并主动运行
 
 可 [下载源码 ZIP](../../../assets/downloads/go-study-minutes.zip)，解压后用 VS Code 打开 study-minutes 文件夹；仓库内的对应目录是 `exercises/go/study-minutes`。该目录已有自己的 go.mod，需要已安装 Go 1.22 及以上版本，无第三方包。
@@ -77,4 +83,40 @@ main 先准备 20 与 3，调用 TotalMinutes。参数 minutes、days 接收这�
 
 ### 参考答案
 
-原规则用 >=60，变式用 >=90。把目标命名为 const 可以让规则更清楚；变量保存输入，函数返回总数，main 输出并判断，不需要切片、JSON、服务器或网页联动。
+先校验，再计算，再输出并判断。30×3 恰好等于目标，故达标；改为 20×3 时第一行为 60 分钟、第二行为继续安排；days 为 0 时是 0 分钟、继续安排。若输入为负，main 提前 return，只打印错误，不继续输出总时长。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+func TotalMinutes(minutes, days int) int {
+    return minutes * days
+}
+
+func main() {
+	const targetMinutes = 90
+	minutes := 30
+	days := 3
+	if minutes < 0 || days < 0 {
+		fmt.Println("分钟数和天数不能为负")
+		return
+	}
+	total := TotalMinutes(minutes, days)
+	fmt.Printf("%d 天共练习 %d 分钟\n", days, total)
+	if total >= targetMinutes {
+		fmt.Println("已达到本次目标")
+	} else {
+		fmt.Println("继续安排下一次练习")
+	}
+}
+```
+
+预期结果：
+
+```output
+3 天共练习 90 分钟
+已达到本次目标
+```

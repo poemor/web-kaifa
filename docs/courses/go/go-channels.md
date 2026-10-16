@@ -66,10 +66,53 @@ value, ok := <-results // 若已空且关闭，int零值为0，ok为false。
 
 ### 参考答案
 
-缓冲提供暂存空间，不提供无限队列。等待关系决定能否继续，不能用“有channel所以安全”代替设计。
+容量1只允许暂存一项，第二次发送没有接收者仍会阻塞；缓冲不等于无限队列。按每一步的发送/接收/关闭关系判断能否推进。
 
 ## 独立变式
 
 启动一个生产者发送三项整数后关闭通道，main用带ok的接收循环累加，结果应为预先写出的总和。若改用range遍历通道，应解释它何时结束，并验证漏close会等不到结束。
 
 参考：[Go channel规范](https://go.dev/ref/spec#Channel_types)。
+
+## 阻塞、方向、关闭与 nil
+
+无缓冲发送需等待接收者，缓冲满时发送等待，缓冲空且未关闭时接收等待。关闭后仍能读完已有缓冲，之后接收得到零值与false；发送到已关闭通道会panic。通常由生产者在确认不再发送后关闭，接收者不要擅自close仍有人写的通道。
+
+chan<- T限制只能发送，<-chan T限制只能接收，用签名表达职责。nil通道的发送接收会永久等待，可在select中暂时禁用分支，但误初始化为nil也是卡住的常见原因。range通道会一直读到关闭且缓冲清空，不会因为生产者函数退出就自动结束。
+
+### 参考答案：独立实现
+
+生产者发送三项后关闭，main带ok接收，false才结束。也可改成for value := range values累加；它同样依赖close。若漏关，主程序会等下一项而无法正常结束，先在纸上指出等待环，不必故意让长期任务挂住。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import "fmt"
+
+func produce(out chan<- int) {
+    defer close(out)
+    out <- 2
+    out <- 3
+    out <- 4
+}
+
+func main() {
+	values := make(chan int)
+	go produce(values)
+	total := 0
+	for {
+	    value, ok := <-values
+	    if !ok { break }
+	    total += value
+	}
+	fmt.Println(total)
+}
+```
+
+预期：
+
+```output
+9
+```

@@ -2,10 +2,6 @@
 
 让一次请求的结果对应清晰界面状态。
 
-## 加载、成功、空结果与失败是什么意思
-
-界面状态要由真实操作决定。加载表示尚未取得结果；成功表示已经得到合法数据；空结果是成功但没有项目；失败表示无法提供正常数据。不要靠一条“请求已发送”提前显示成功。
-
 ## 状态要跟着真实结果走
 
 **请求已发出只表示加载中；取得合法结果后才叫成功。** 本例重新读取时先写加载中并清掉旧列表，避免失败之后还显示一份像刚刷新过的数据。成功但数组为空是空结果，不是断网或服务器错误。
@@ -15,6 +11,12 @@
 `条件 ? 真时的值 : 假时的值` 是三元条件表达式。events.length 不为 0 时选择成功计数，为 0 时选择没有活动；这里利用 0 被判断为假、正数为真。它只产生一个值，真正把文字写进页面的是 textContent 赋值。
 
 在独立目录保存 index.html 与 events.json，终端在该目录运行 `python -m http.server 8765`，访问 http://127.0.0.1:8765/，Ctrl+C 停止。Network 里临时选择慢速连接，再点重新读取，才能清楚看见加载过程。恢复正常速度后分别测试两项、[]、{}、[1] 和丢失文件，记录状态和 li 数量。重叠点击属于下一节的新问题。
+
+## 状态转换与旧列表的含义
+
+开始加载时要决定清空旧列表还是标注为旧数据，不能仍把旧列表称为最新结果。成功且空数组是有效的空状态，格式坏或HTTP失败是错误状态，两者的提示与下一步操作不同。
+
+本课顺序请求可检验加载、成功、空、失败；连续点击还会引入完成顺序问题。按钮禁用可限制操作，但不替代组件卸载或新请求启动时的旧结果保护，下一课专门验证时间边界。
 
 ## 先看一个完整例子
 
@@ -77,10 +79,6 @@ events.json完整内容：
 
 两项成功并有列表；空数组显示没有活动；对象被判为形状错误。
 
-## 本节容易混淆的地方
-
-显示空数组不等于加载失败，重试按钮也不能替代具体错误原因。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：书籍清单的四种状态
@@ -90,3 +88,54 @@ events.json完整内容：
 独立写一本地清单读取页，每本书有 name 文字和 pages 数字。先定义未操作/加载、正常、空数组、坏字段及HTTP失败的界面目标；数量与列表来源必须相同。每次等请求结束再进行下一次。
 
 自查：正常两书显示2行且数量2；空数组明确无书而非失败；坏字段/404显示失败且不留假最新列表；限速时能看到加载。此题不证明连续点击也正确，完成后去[重叠请求](#/learn/web/web-cancel-request)验证新的时间边界。
+
+### 参考答案：独立实现与验收
+
+本独立版启动后只读取一次，改books.json后刷新来逐项验收；没有把重复点击并发也算成已经支持。books.json先写：
+
+```json
+[{"name":"算法笔记","pages":120},{"name":"Go笔记","pages":80}]
+```
+
+index.html：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>书籍清单</h1>
+<p id="status" role="status"></p><ul id="books"></ul>
+<script>
+const status = document.querySelector("#status");
+const list = document.querySelector("#books");
+async function load() {
+  status.textContent = "正在加载";
+  list.replaceChildren();
+  try {
+    const response = await fetch("./books.json");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const books = await response.json();
+    if (!Array.isArray(books) || !books.every(book => book !== null && typeof book === "object"
+        && !Array.isArray(book) && typeof book.name === "string"
+        && typeof book.pages === "number" && Number.isFinite(book.pages) && book.pages >= 0)) throw new Error("书籍字段不合格");
+    for (const book of books) {
+      const item = document.createElement("li");
+      item.textContent = `${book.name} / ${book.pages}页`;
+      list.append(item);
+    }
+    status.textContent = books.length === 0 ? "没有书籍" : `共${books.length}本`;
+  } catch (error) { status.textContent = `读取失败：${error.message}`; }
+}
+load();
+</script>
+</body>
+</html>
+
+```
+
+正常显示2行及共2本；改成[]显示没有书籍，改成对象或坏字段显示失败且无假最新列表。Network限速时能看到正在加载。

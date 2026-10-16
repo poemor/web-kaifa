@@ -59,3 +59,33 @@ node --test filter.test.mjs
 只把 filter.mjs 的 includes 改成 startsWith（仅匹配开头），保持测试不变，重新运行。第一项必须失败，因为“编”在“周末编程”的中间；另外两项可以仍通过。恢复 includes 后三项应通过。**先证明测试能发现这个错误，再把通过当作证据。**
 
 独立添加“不修改原数组”和“边界空格被去掉”的测试，先写期望再实现。这里验证的是筛选函数，不能推断页面键盘、网络断开或服务器权限也正确；这些需要组件与流程测试。参考：[Node 测试运行器](https://nodejs.org/api/test.html)。
+
+## 单元、组件与流程测试各选有区分力的反例
+
+纯函数测试覆盖计算规则，组件测试覆盖交互与显示，浏览器流程测试覆盖真实加载与操作链。测试层次并不是越多越好，应由需要证明的行为决定。模拟网络成功不能替代真实HTTP合同，真实浏览器也不自动覆盖服务端权限。
+
+用例名称说明规则，断言比较独立预期。故意改错时选会改变目标行为的变异；某行改动仍被其他保护拒绝，不代表断言没有价值。恢复正确版本后再次通过，并记录实际执行的范围。
+
+### 参考答案：独立实现与验收
+
+在本节独立目录新建extra.test.mjs，原filter.mjs不变：
+
+```javascript
+import test from "node:test";
+import assert from "node:assert/strict";
+import { filterTitles } from "./filter.mjs";
+
+test("不修改原数组", () => {
+  const input = ["Go笔记", "Web布局"];
+  const snapshot = [...input];
+  const result = filterTitles(input, "笔记");
+  assert.deepEqual(result, ["Go笔记"]);
+  assert.deepEqual(input, snapshot);
+});
+test("关键词两端空白被去掉", () => {
+  assert.deepEqual(filterTitles(["周末编程", "读书"], "  编  "), ["周末编程"]);
+});
+
+```
+
+运行node --test filter.test.mjs extra.test.mjs，原3项加新2项都应通过。把filter中的trim去掉，空白关键词的新测试必须失败；恢复后通过。浅快照足以检查本题字符串数组未被改动，不据此宣称已验证任意深层对象都不变。

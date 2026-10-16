@@ -2,15 +2,30 @@
 
 用 const 表达固定规则，用变量表达会变化的数量。
 
-## 常量与变量的区别是什么意思
-
-常量使用 const 声明，在程序里不能被重新赋值。例如及格线是本练习固定规则；某次考试分数是变量。先用简单常量，枚举和 iota 留到需要时再查。
-
 ## 规则固定，数据可变
 
 **常量的值在这份程序中固定，变量的值允许被赋值更新。** `passScore` 表达本练习约定的及格线；`score` 表达某一次成绩。把及格线起一个名字，后面的比较就不必重复猜测数字 60 代表什么。
 
 这一节第一次用到 `>=`，读成“大于或等于”：`75 >= 60` 为 `true`，`59 >= 60` 为 `false`。它只产生一个判断结果，不修改成绩，也不输出“及格”文字；下一课学习全部常用运算符，条件课再根据结果选择动作。
+
+## 常量分组、类型与 iota
+
+常量表达式在编译时可确定，可包含数字、字符串、布尔值及适用的运算。`const total = 2 * 30` 合法；从终端读取的结果不能用 const 保存。无类型常量如 `const limit = 60` 在使用处按上下文确定适合的类型；`const limit int = 60` 则已有明确的 int 类型。
+
+下面的声明放在 main 里可直接试验：
+
+```go
+const (
+    Draft = iota // 第一行是 0。
+    Published    // 省略表达式时沿用上一行，iota 在下一行变成 1。
+    Archived     // 2。
+)
+fmt.Println(Draft, Published, Archived) // 0 1 2
+```
+
+iota 在每个 const 声明组从 0 开始，按组中常量声明行递增，不是运行时自增变量。同一行定义多个名字会取得同一行的 iota 值。它能给状态编号，但这些名字仍是普通常量，并不会自动拒绝输入 99；业务输入校验要另外写。
+
+更改持久化状态编号可能让旧数据库记录被误读。需要长期保存或对外传输的编号时，明确写出固定数值，比依赖插入行后会变化的序号更安全。
 
 ## 先运行一个小例子
 
@@ -58,11 +73,33 @@ passScore 固定为 60。score 是 75。`>=` 比较左边是否大于或等于�
 
 ### 参考答案
 
-59 时第二行是 false，60 时是 true，边界包含 60。
+59 < 60，所以第二行是 false；将 score 改成 60，第二行变为 true。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-不要尝试用 passScore = 70 修改常量。规则变了应修改声明并重新运行。
+```go
+package main
+
+import "fmt"
+
+func main() {
+	const passScore = 60
+	score := 59
+	fmt.Println(passScore)
+	fmt.Println(score >= passScore)
+}
+```
+
+预期结果：
+
+```output
+60
+false
+```
+
+## 哪些值不能声明成常量
+
+`const numbers = []int{1,2}` 不合法；切片将在后续学习，它的内容不能这样声明成常量。`const n = 输入函数()` 一般也不合法，因为常量不能依赖运行时的输入。需要运行中改变的配置用变量；固定的规则值才使用 const。
 
 ## 观察不能重新赋值的含义
 
@@ -80,6 +117,28 @@ passScore 固定为 60。score 是 75。`>=` 比较左边是否大于或等于�
 
 ### 参考答案
 
-固定目标用 const，本次计划用变量。编辑常量声明后重跑是在改程序规则；在程序运行逻辑里重新给常量赋值则被禁止。本题不需要尚未学习的控制流程。
+targetMinutes 表示固定规则，plannedMinutes 表示本次输入。把 plannedMinutes 的初值分别改为 30、31，第一行都保持 30。临时加 targetMinutes = 40 会编译失败；把声明本身改为 const targetMinutes = 40 后再运行，第一行才是 40。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	const targetMinutes = 30
+	plannedMinutes := 29
+	fmt.Println(targetMinutes)
+	fmt.Println(plannedMinutes)
+}
+```
+
+预期结果：
+
+```output
+30
+29
+```
 
 参考：[Go 语言规范](https://go.dev/ref/spec)。

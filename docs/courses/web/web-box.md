@@ -2,10 +2,6 @@
 
 手算内容、内边距与边框合成的实际宽度。
 
-## 盒模型与 box-sizing是什么意思
-
-元素的盒子由内容、padding、border组成，margin在盒子外。默认content-box的width只指定内容宽；border-box让width包含内边距与边框。
-
 ## 从里面往外数四层
 
 盒子从里面往外是：内容 content → 内边距 padding → 边框 border → 外边距 margin。内容是文字或图片；padding 是内容和边框之间的空隙；border 是包住它们的线；margin 隔开相邻盒子。
@@ -16,7 +12,15 @@
 
 按 F12，Elements 中选中 card，找 Computed 的盒模型图；分别查看内容、内边距和边框。先在纸上算，再测。这个固定宽度只是测量实验；在手机窗口中若连同页面边距超过可用空间，后面的响应式章节会处理。
 
+## margin 折叠、背景与全局设置
+
+内容、padding、border 决定盒子的边框外缘尺寸，margin 是外部间距；阴影不参与这份尺寸计算。普通垂直文档流中，相邻块元素的上下 margin 可能折叠，不保证简单相加；Flex/Grid 中的间距规则不同。
+
+常见全局设置 `*, *::before, *::after { box-sizing: border-box; }` 使宽度更直观，但不会自动修复超长内容。百分比宽度还受包含块影响，窄屏先确定父容器可用空间，再看 padding/border 是否算进声明宽度。
+
 ## 先看一个完整例子
+
+这里固定300px用于测量；320px窗口加上页面边距后可能溢出。测量结束用于实际布局时应设置适应容器的宽度或max-width。
 
 在自己的独立练习文件夹新建 index.html，保存下面完整内容，用浏览器打开。修改后先保存，再刷新。
 
@@ -49,11 +53,7 @@
 
 ### 参考答案
 
-content-box总宽362px；border-box仍总宽300px，内容238px。
-
-## 本节容易混淆的地方
-
-示例刻意固定300px用于测量，在320px手机且页面有边距时可能溢出。正式布局需给max-width或适应容器。
+原例 padding 为20px、1px边框时，content-box外宽342px；改 padding=30px 后外宽362px。border-box 声明300px时外宽仍300px，padding=30px后内容宽238px。要同时记下当前参数，不能把不同实验的数字混用。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -64,3 +64,29 @@ content-box总宽362px；border-box仍总宽300px，内容238px。
 独立写一个价格牌盒子，声明宽度 240px、四边 padding 12px、边框 2px。先分别预测 content-box 和 border-box 的内容宽、边框外缘宽度，再创建自己的 HTML/CSS 并测量；可以另给 margin，但必须区分其范围。
 
 自查：content-box 内容为 240px、外缘 268px；border-box 外缘 240px、内容 212px。外边距不计入上述两种外缘宽。Computed 盒模型图应与计算一致，不把阴影或 margin 当成内容。
+
+### 参考答案：独立变式
+
+第一张内容宽240、外缘宽240+24+4=268；第二张外缘240、内容240-24-4=212。margin 不包含在两个外缘数内。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+.price { width: 240px; padding: 12px; border: 2px solid; margin-bottom: 16px; }
+.content { box-sizing: content-box; }
+.border { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div class="price content">content-box</div>
+<div class="price border">border-box</div>
+</body>
+</html>
+```

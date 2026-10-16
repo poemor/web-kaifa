@@ -88,6 +88,29 @@ INSERT INTO practice_problems (title) VALUES (NULL);
 
 ### 参考答案
 
-NOT NULL只拒绝NULL，不自动拒绝空文字；想限制可选值或空白，需要另加CHECK。默认值只在省略时生效。
+默认值只在省略或显式DEFAULT时使用；NOT NULL拒绝NULL但允许空字符串，需CHECK限制可选值。
 
 参考：[PostgreSQL建表教程](https://www.postgresql.org/docs/current/tutorial-table.html)、[PostgreSQL约束](https://www.postgresql.org/docs/current/ddl-constraints.html)。
+
+## 主键、外键、唯一与迁移
+
+主键标识一行，NOT NULL拒绝空值，UNIQUE限制重复，CHECK约束单行规则，外键约束关联存在。约束应在数据库层保护，即使另一入口绕过网页校验也不能写入坏数据。
+
+修改已有结构用版本化迁移，先考虑已有行能否满足新约束、默认值如何回填、升级失败如何恢复。索引用来支持查询，不是每列都加越多越好；写入成本与实际查询计划需要一起测。
+
+### 参考答案：独立实现与验收
+
+在专用练习数据库中新建独立表，避免改动现有业务表：
+
+```sql
+CREATE TABLE lesson_difficulty (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title TEXT NOT NULL CHECK (length(btrim(title)) > 0),
+    difficulty TEXT NOT NULL DEFAULT 'basic'
+        CHECK (difficulty IN ('basic', 'intermediate', 'advanced'))
+);
+INSERT INTO lesson_difficulty (title) VALUES ('Go入门') RETURNING id, difficulty;
+INSERT INTO lesson_difficulty (title, difficulty) VALUES ('错误样例', '');
+```
+
+第一条省略difficulty，返回basic；第二条被CHECK拒绝。再试显式NULL应被NOT NULL拒绝。三种输入分别核对，不能把省略、空文字和NULL当一种情况。此处SQL需要真实PostgreSQL，本轮不把未运行的数据库实验记为通过。

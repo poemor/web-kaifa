@@ -2,10 +2,6 @@
 
 定义一个 Add 函数，区分定义、调用和返回。
 
-## 函数参数与返回值是什么意思
-
-函数给一组操作取名字，调用时提供参数，完成后可以返回结果。定义函数不会立刻运行函数体；只有调用才会执行。`func Add(a int, b int) int` 中，括号内是参数及类型，括号后面的 int 是返回值类型。
-
 ## 把输入、计算、结果分开
 
 **函数定义说明怎样计算，函数调用才真正执行一次计算。** `func Add(a int, b int) int` 可以拆成：func 声明函数、Add 是函数名、a 和 b 是参数、最后一个 int 是返回结果的类型。
@@ -13,6 +9,27 @@
 参数是在函数内部使用的名字；调用时写 `Add(2, 3)`，数字 2、3 是这次提供的值。每次调用都可以提供不同的值。同一行也可以把相同类型参数简写为 `a, b int`，本节先用展开形式看清类型。
 
 `return` 把结果交回调用位置，并结束这次函数调用。函数没有返回值时可不写最后的类型，也能单独写 `return` 结束；main 的打印则是另外一次函数调用。
+
+## 无返回值、可变参数与函数值
+
+同类型参数可以写成 `func Add(a, b int) int`。没有结果时不写返回类型，例如 `func Greet(name string)`，其内部可以打印，也可以单独写 return 提前结束。带 int 返回值的函数则要确保每条可能走到的正常路径都返回 int。
+
+可变参数将数量不固定的同类型值收进一个序列，写法是最后一个参数 `values ...int`。这段先认识语法，学完切片与 range 后再实际运行求和版：
+
+```go
+func Sum(values ...int) int {
+    total := 0
+    for _, value := range values {
+        total += value
+    }
+    return total
+}
+// 调用：Sum() 为 0，Sum(2, 3) 为 5。
+```
+
+函数本身也可以保存在变量里：main 内写 `calculate := Add`，再写 `fmt.Println(calculate(2, 3))`，仍得到 5。右边不带括号是取函数值，带括号是现在调用它。匿名函数没有声明名字，例如 `double := func(n int) int { return n * 2 }`；然后 `double(4)` 得到 8。
+
+**本课必做任务只用普通的双参数函数。** 多返回值在 [下一阶段](go-returns.md) 单独学习；闭包如何访问外层变量，在 [作用域课](go-scope.md) 继续实验。
 
 ## 先运行一个小例子
 
@@ -61,11 +78,45 @@ Add(2,3) 把 2 与 3 传入 a、b。函数计算 a+b，return 把 5 交回调用
 
 ### 参考答案
 
-两次 Add 得到 1 和 0。Multiply 的函数体应返回 a*b，而不是在函数里只打印。
+先确认 Multiply 输入两个 int，输出一个 int，再返回乘积。main 负责显示结果；函数定义在上方并不会让它自动运行。五行分别验收相加、零值、普通相乘、零乘数和负乘数。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-调用 Add 与打印结果是两个操作。函数的参数名只在函数内使用；return 后面的同一分支不会继续执行。
+```go
+package main
+
+import "fmt"
+
+func Add(a, b int) int {
+    return a + b
+}
+
+func Multiply(a, b int) int {
+    return a * b
+}
+
+func main() {
+	fmt.Println(Add(-2, 3))
+	fmt.Println(Add(0, 0))
+	fmt.Println(Multiply(2, 3))
+	fmt.Println(Multiply(0, 3))
+	fmt.Println(Multiply(-2, 3))
+}
+```
+
+预期结果：
+
+```output
+1
+0
+6
+0
+-6
+```
+
+## 为什么删掉 return 后编译失败
+
+把 `return a+b` 换成 `fmt.Println(a+b)`，函数可能显示数字，但声明仍承诺返回 int，编译器会报缺少返回值。应根据函数职责修复：计算函数恢复 return；只负责显示的函数则去掉结果类型，调用处也不再把它当作一个值使用。
 
 ## 亲手检验参数与返回值
 

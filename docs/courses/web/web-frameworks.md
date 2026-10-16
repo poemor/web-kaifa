@@ -103,3 +103,46 @@ TypeScript 在已有 JavaScript 上增加类型检查，不是替代 HTML 的页
 从空白做预算15元的面板，数据记录已消费金额；三个位置分别显示消费、余额与是否超支。按钮每次消费5元，另有重置。让三个结果由同一数据推导，再故意漏一个显示位置的更新，说明以后组件要接手什么责任。
 
 自查：初始消费0/余额15/未超支，三次消费为15/0/未超支，四次为20/−5/已超支，重置恢复三处。不得每个段落维护不同预算。发现漏更新后用同一渲染流程恢复，并据实际同步负担解释组件用途，而不是只报框架名字。
+
+## 组件解决组织问题，不改变浏览器基础
+
+组件把输入、状态、显示与事件边界组织到可复用单元，仍要理解DOM、HTTP与JavaScript。只读输入由父组件提供，变化数据由明确拥有者更新，派生余额不必另建一份可变状态。多处各存同一事实，会使框架里也发生不同步。
+
+框架选择还涉及路由、表单、构建与维护生态，不是每张静态页都必须组件化。先在原生页面遇到真实同步负担，再用同一个小目标比较框架如何减少手工更新。
+
+### 参考答案：独立实现与验收
+
+下面先用原生实现独立预算面板，完整index.html：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>预算15元</h1>
+<p>消费：<output id="spent"></output></p>
+<p>余额：<output id="remaining"></output></p>
+<p id="over"></p>
+<button id="spend" type="button">消费5元</button><button id="reset" type="button">重置</button>
+<script>
+const budget = 15;
+let spent = 0;
+function render() {
+  document.querySelector("#spent").textContent = String(spent);
+  document.querySelector("#remaining").textContent = String(budget - spent);
+  document.querySelector("#over").textContent = spent > budget ? "已超支" : "未超支";
+}
+document.querySelector("#spend").addEventListener("click", () => { spent += 5; render(); });
+document.querySelector("#reset").addEventListener("click", () => { spent = 0; render(); });
+render();
+</script>
+</body>
+</html>
+
+```
+
+四次消费后是20、-5、已超支，重置回0、15、未超支。若漏掉余额更新，消费变化但余额停留，说明同一状态的多个显示没有一起更新；恢复统一render后再比较组件的声明式显示。

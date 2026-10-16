@@ -123,10 +123,39 @@ Go
 
 ### 参考答案
 
-正常路径为 `/add`，a 和 b 分别是字符串 `"10"`、`"20"`。不合法的地址会进入错误分支。正常运行证明地址对象能被构造与读取，不能证明目标服务正在运行，也不能证明收到响应。
+查询值仍是字符串。改地址为http://[bad会在构造时失败；这份程序没有Do或服务监听，成功只证明请求对象可构造，不能证明端口有服务。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func main() {
+	req, err := http.NewRequest("GET", "http://127.0.0.1:8080/add?a=10&b=20", nil)
+	if err != nil { fmt.Println(err); return }
+	fmt.Println(req.URL.Path, req.URL.Query().Get("a"), req.URL.Query().Get("b"))
+}
+```
+
+预期结果：
+
+```output
+/add 10 20
+```
 
 ## 本节验收
 
 能用自己的话说明客户端、服务器、请求和响应，拆开上述 URL，区分方法与状态、头部与正文，并解释为什么 `NewRequest` 不需要服务器配合。
 
 参考：[MDN 的 HTTP 概览](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview)、[URL 的组成](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL)、[Go NewRequest](https://pkg.go.dev/net/http#NewRequest)。
+
+## 请求真正发出去还需要客户端
+
+NewRequest只组装方法、URL、头和可选正文，http.Client.Do才会尝试发送。真实客户端要设置超时、传入context、检查网络错误和状态码，并在取得响应后关闭Body；HTTP404通常不是Do返回的网络error。
+
+URL中的scheme决定协议，host可含端口，path选资源，query传参数，fragment是客户端片段通常不发送给服务器。HTTPS为传输提供加密与服务器身份验证，但不能替代业务权限检查。GET用于获取资源，POST通常用于提交，PUT/PATCH/DELETE各有合同；“方法名称正确”不代表服务器已经实现该操作。

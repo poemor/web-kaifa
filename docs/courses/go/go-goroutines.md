@@ -60,10 +60,48 @@ Sleep只等待某段时间，不知道任务是否完成。机器忙时任务可
 
 ### 参考答案
 
-Add数量与最终Done次数应匹配。调度不保证启动顺序等于完成顺序，用实际同步关系确定必须等待的地方。
+Add登记数和Done完成数必须一致；不Wait时main可能先退出，偶尔看到输出不能证明可靠。两项有完成保证，先后次序仍可变化。
 
 ## 独立变式
 
 用两个命名任务分别计算和打印不同值，Add在启动前累计2项，最后Wait。解释输出顺序可变化，但两项都必须完成；下一节再给共同计数加保护。
 
 参考：[Go go语句](https://go.dev/ref/spec#Go_statements)、[sync.WaitGroup](https://pkg.go.dev/sync#WaitGroup)。
+
+## 并发不保证并行，也不保证顺序
+
+go调用让任务可并发推进，调度器决定何时运行；输出次序不是同步机制。WaitGroup只等待完成，不保护共享数据；Add应在启动任务前登记，任务确保调用Done，即使提前返回也用defer覆盖。
+
+goroutine必须有结束条件，不能启动后就无人管理。闭包捕获变量、错误传递、取消和任务数量上限都需设计；大量无上限go调用可能耗尽资源，后续用channel或受控任务池限制并发。
+
+### 参考答案：独立实现
+
+应恰好出现“任务甲 3”和“任务乙 12”各一行，次序允许变化。两个命名任务各登记一次完成，main等待两项再返回；不用Sleep猜测。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+func taskA(wg *sync.WaitGroup) {
+    defer wg.Done()
+    fmt.Println("任务甲", 1+2)
+}
+func taskB(wg *sync.WaitGroup) {
+    defer wg.Done()
+    fmt.Println("任务乙", 3*4)
+}
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go taskA(&wg)
+	go taskB(&wg)
+	wg.Wait()
+}
+```

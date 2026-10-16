@@ -2,10 +2,6 @@
 
 只改变活动标题，区别h2、.event-title、#main-title。
 
-## 标签、类与 ID 选择器是什么意思
-
-标签选择器匹配同类元素，类选择器用点号匹配class，ID选择器用井号匹配id。一个class可以给多个元素复用，id在同一文档应唯一。
-
 ## 从 HTML 属性找到 CSS 匹配范围
 
 **类名写在 HTML 的 class 中，点号只写在 CSS 选择器中。** HTML 写 `class="event-title"`；CSS 写 `.event-title`。ID 同理：HTML 的 `id="main-title"` 对应 CSS 的 `#main-title`。
@@ -21,6 +17,12 @@
 同一元素可写 `class="event-title featured"`，两个类名用空格分开，每个类仍单独匹配。不要写成 `class=".event-title"`，那会把点号也当成类名的一部分。
 
 本例只有“本周活动”变成深绿色，“联系方式”保持默认。新增一条 `#main-title { color: blue; }` 时，主标题才会变蓝；只是给元素取了 id 不会自动产生样式。
+
+## 组合选择器与伪类
+
+`.notice.urgent` 匹配同时有两个类的同一元素，`.notice .urgent` 匹配 notice 内部的后代；中间一个空格就改变了关系。`main > p` 只选直接子段落，`h1 + p` 选紧邻的后一个兄弟段落；逗号将多条选择器并列。
+
+`input[required]` 按属性匹配，`:hover`、`:focus-visible` 按状态匹配，`::before` 生成伪元素内容。先让语义和文档结构正确，再选合适的关系，不用超长选择器绑死每一层容器。
 
 ## 先看一个完整例子
 
@@ -57,11 +59,7 @@
 
 ### 参考答案
 
-类加给两项时两项都绿；标签选择器会影响全部h2，包括没有class的。
-
-## 本节容易混淆的地方
-
-写.event-title与写event-title不同，后者选择同名标签而非class。不要给很多元素重复同一个id。
+`.event-title` 只匹配有该类的元素，`h2` 匹配全部 h2。把类加给第二项会扩大类规则的范围，修改选择器则是改变选择规则，两种实验应分开。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -72,3 +70,30 @@
 从空白写一个主标题和三条公告。要求前两条共享一份公告颜色，第三条不加入这份样式；主标题独有一种颜色。自行取 class/id 名称和匹配规则，不能逐个写三份重复规则。
 
 自查：共享类匹配两条，唯一 id 只匹配主标题，第三条保持没有加入共享规则的外观。给第三条临时加入共享类应同时改变它，移除后恢复；HTML 类值无点号，CSS 匹配写法有点号，id 不重复。
+
+### 参考答案：独立变式
+
+class 值写 notice，不带点；CSS 用 .notice 匹配两条公告。唯一 id 只给主标题。第三条加上 notice 后也会变绿，移除后恢复。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+<style>
+#bulletin-title { color: #164e80; }
+.notice { color: #14532d; }
+</style>
+</head>
+<body>
+<h1 id="bulletin-title">练习公告</h1>
+<p class="notice">先读教程。</p>
+<p class="notice">再写代码。</p>
+<p>本条不采用公告颜色。</p>
+</body>
+</html>
+```

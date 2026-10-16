@@ -2,10 +2,6 @@
 
 观察立即执行的日志与Promise回调的顺序。
 
-## Promise 的完成与失败是什么意思
-
-Promise表示一个将来完成或失败的操作。then登记成功处理，catch处理失败。即使Promise已经完成，then回调也不会打断当前同步语句，等当前调用栈结束后再执行。
-
 ## 已经完成的 Promise 也有稍后的回调
 
 Promise 是保存一次操作最终结果的对象，状态可能是 pending（待定）、fulfilled（成功）、rejected（失败）；一旦成功或失败，就不会再回到待定。**Promise 对象不是操作最后得到的数据本身。**
@@ -17,6 +13,12 @@ Promise 是保存一次操作最终结果的对象，状态可能是 pending（�
 本例开始日志先执行，then 回调进入稍后处理的队列，当前脚本继续打印结束；当前同步执行栈结束后才打印 5。“调用栈”就是当前正在逐层执行的函数路径，这里不要求先学线程或底层事件循环，只观察明确的先后顺序。
 
 失败实验要把整行改为 `Promise.reject(new Error("失败")).catch(error=>console.log(error.message));`，不是只把 resolve 名字换掉而不接错误。预期先“开始”“结束”，再“失败”。登记回调不会让前面的同步计算自动变成并行。
+
+## 状态只确定一次，返回值形成下一条链
+
+Promise有待定、完成、拒绝三种状态，一旦确定就不会改成另一种。构造函数传入的执行器立即运行，then/catch回调通过微任务安排在当前同步代码之后。then返回新的Promise，回调返回普通值会成为下一步完成值，抛错则成为下一步拒绝。
+
+需要等待多项时Promise.all要求全部成功，任一拒绝就拒绝；allSettled收集每项结局。它们不替你限制并发数量或取消已开始的任务。先清楚每个回调交出了什么，再决定用哪种组合。
 
 ## 先看一个完整例子
 
@@ -63,11 +65,7 @@ console.log("结束");
 
 ### 参考答案
 
-同步日志仍先发生，catch之后显示失败；没有catch会出现未处理拒绝。
-
-## 本节容易混淆的地方
-
-异步不等于所有代码并行执行，也不代表能忽略失败。
+同步日志先执行，拒绝由catch打印message；如果没有catch或await的处理，可能产生未处理拒绝提示，不能只看成功分支。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -78,3 +76,30 @@ console.log("结束");
 独立建立成功链：初始完成值 4，第一步转换为三倍，下一步打印转换后的值；链外另打印开始与同步结束。另建立失败链，错误消息为“订单无效”，由 catch 输出。先预测哪些是同步日志、哪些是回调。
 
 自查：同步日志先于回调；成功末步得到12，失败末步保留“订单无效”，不是把 Promise 对象当数字输出。第一步不返回转换值时后一步应得到 undefined；恢复后说明回调返回值如何交给下一步。
+
+### 参考答案：独立变式
+
+两条同步日志先出现。失败链的catch先于成功链的第二个then输出，因为成功链还要经过一次转换回调；第一步漏return时最后得到undefined。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+console.log("开始");
+Promise.resolve(4).then(value => value * 3).then(value => console.log(value));
+Promise.reject(new Error("订单无效")).catch(error => console.log(error.message));
+console.log("同步结束");
+</script>
+</body>
+</html>
+```

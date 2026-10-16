@@ -118,3 +118,31 @@ Effect 中读到的反应性输入应反映在依赖中；删除 url 可让检�
 独立加入“重试”操作：同一个URL不变时也重新请求，并保持挂载/卸载控制。你决定重试编号放在哪个状态、怎样传入请求面板、哪些值属于Effect依赖；不是把第一次请求结果永远留住。
 
 自查：普通同URL选择按钮不必新请求，明确重试必须产生新请求；正常/404/坏字段各有正确状态。限速时多次重试，旧成功和旧失败不能覆盖最后一次；卸载后不再显示请求面板，重新挂载按当前选择启动，不能把关闭标签页当React清理证据。
+
+## 重试是一个新的请求意图
+
+URL相同不代表操作意图相同。明确重试可用单调变化的编号表达，Effect依赖url与retry，每次设置都拥有自己的AbortController。清理后成功、失败都不应改状态；finally若写加载标志也要遵守同一规则。
+
+开发StrictMode可能额外做设置/清理检查，用成对的资源管理应对，不关闭检查掩盖重复副作用。POST等不可随意重复的写操作还需独立的提交与幂等设计，不能机械放进会重复设置的读取Effect。
+
+### 参考答案：独立实现与验收
+
+在本节完整src/App.tsx中同步改四处，其余请求校验和清理保留：
+
+```tsx
+// 1. Props增加请求意图编号。
+type RequestPanelProps = { url: string; retry: number };
+// 2. 在RequestPanel的useEffect末尾改为：
+// }, [props.url, props.retry]);
+// 3. 在App顶层，与url/shown的useState并列。
+const [retry, setRetry] = useState(0);
+```
+
+App返回的main中添加按钮，并替换原RequestPanel用法：
+
+```tsx
+<button type="button" onClick={() => setRetry(value => value + 1)}>重试</button>
+{shown ? <RequestPanel url={url} retry={retry} /> : <p>请求面板已卸载</p>}
+```
+
+注意替换原条件块，不追加第二个面板。URL不变时普通选择不必请求，重试编号变化则设置新Effect。Network限速后连续重试、切到404、卸载再挂载，最后只保留当前意图；每次清理abort本次控制器。请求已在点击前完成不能证明取消实验成功，应在途时再验收。

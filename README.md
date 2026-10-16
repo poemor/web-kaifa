@@ -4,6 +4,10 @@
 
 **在线阅读：[打开开发练习册](https://zhouwu97.github.io/web-kaifa/)。**
 
+教学补全的实际范围、分批检查与恢复点见 [2026-10-16 修订记录](docs/teaching-revision-20261016.md)。本 fork 的源码更新不表示上游在线站点已发布。
+
+本次补写覆盖125章：Go输入输出已移到入门，基础语法、Web语言与工程章节补充具体规则及题解；重复尾注已删减。新增答案可分别用 `python3 scripts/check_course_answers.py` 与 `node scripts/check_course_browser_answers.cjs` 复验，环境要求与未验证项见修订记录。
+
 **本机阅读**：下载或克隆仓库，双击 [index.html](index.html)。课程、提示模板和进度功能不需要安装依赖；官方资料入口需要联网。
 
 ## 网页里可以做什么
@@ -30,7 +34,7 @@
 
 ## 从这里开始
 
-准备好工具后，在网站“Go 后端”或“Web 开发”进入四层课程目录。Go先读程序结构、变量、类型、条件、循环与函数；Web先读文档结构、标签、文字、链接、CSS与盒模型。新手不用先配置F5或完整工程；函数、数据结构之后再做输入与文件，JavaScript之后再做DOM与请求。
+准备好工具后，在网站“Go 后端”或“Web 开发”进入四层课程目录。Go先读程序结构、变量、类型、条件、终端输入输出、循环与函数；Web先读文档结构、标签、文字、链接、CSS与盒模型。新手不用先配置F5或完整工程；输入先从短文本与数字开始，文件读写在数据结构和错误处理后展开，JavaScript之后再做DOM与请求。
 
 入门/初阶源码包：[学习时长计算器](assets/downloads/go-study-minutes.zip)、[学习名片页](assets/downloads/web-profile-card.zip)、[响应式活动页](assets/downloads/web-responsive-events.zip)。中级新增 [Go HTML 模板页面](assets/downloads/go-template-pages.zip)，可以启动服务观察服务器生成的 HTML。后续配套有词频工具、活动搜索、内存CRUD、持久化API、安全会话与部署恢复项目，各自README写明运行条件和限制。
 

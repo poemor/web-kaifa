@@ -64,10 +64,51 @@ Go true
 
 ### 参考答案
 
-取首项是对所有T都成立的操作，前提是非空。泛型没有绕过下标检查，也没代替输入范围检查。
+空整数切片返回0/false，空字符串切片返回空文字/false。泛型使合同一致，非空检查仍必须在取下标之前。
 
 ## 独立变式
 
 写Last泛型取尾项，对整数、字符串和空切片给出相同found约定。先写三个预期，再实现，不用any存结果。
 
 参考：[Go泛型教程](https://go.dev/doc/tutorial/generics)、[类型参数规范](https://go.dev/ref/spec#Type_parameter_declarations)。
+
+## 约束决定可做的操作
+
+T any可以保存任意类型的值，但不能据此对T使用+或<；需要相应约束。comparable允许==/!=并常用于map键，类型集合与~可描述允许的底层类型；自定义约束应说明它支持的操作，不为取一个元素设计过宽接口。
+
+泛型适合相同算法在多种类型上工作；接口适合按行为替换具体实现。泛型不消除空集合、数值范围或并发规则，也不会让any结果自动变安全。类型推断不足时可显式写Last[int](nil)。
+
+### 参考答案：独立实现
+
+zero按T取得零值，非空时返回同一个T而不装进any。字符串空输入同理得到""与false；不使用零值本身判断是否找到。
+
+下面是独立练习的完整main.go，在自己的模块目录保存并运行go run .。
+
+```go
+package main
+
+import "fmt"
+
+func Last[T any](values []T) (T, bool) {
+    var zero T
+    if len(values) == 0 { return zero, false }
+    return values[len(values)-1], true
+}
+
+func main() {
+	n, found := Last([]int{1, 2})
+	fmt.Println(n, found)
+	text, found := Last([]string{"Go", "Web"})
+	fmt.Println(text, found)
+	n, found = Last([]int{})
+	fmt.Println(n, found)
+}
+```
+
+预期：
+
+```output
+2 true
+Web true
+0 false
+```

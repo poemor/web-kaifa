@@ -78,10 +78,40 @@ init 创建本地记录，switch 创建练习分支，add 放入待提交区，c
 
 ### 参考答案
 
-如果故意改错还全绿，先查测试是否存在、命令是否实际执行、是不是测了另一份代码。绿色图标本身不能替代这些证据。
+故意错误仍全绿时先查测试入口、命令退出码与提交SHA。日志必须能定位预期失败的具体测试；还原后重新通过才证明该路径确实参与CI。
 
 ## 独立变式
 
 新增一个针对错误JSON的API测试，让它在本机与CI执行；故意删除decodeJSON相关检查，证明新测试会失败，再恢复。记录Go测试、真实数据库、浏览器和未执行项，区分每种证据。
 
 参考：[GitHub Actions基础](https://docs.github.com/en/actions/get-started/understand-github-actions)。
+
+## 一次检查必须能指向确切提交
+
+CI结果应对应当前提交SHA与锁定依赖，不把另一分支绿色结果当本次证据。缓存只加速，不应让测试跳过；数据库服务就绪、迁移和集成环境要分别检查。构建产物与测试报告保留版本信息便于追溯。
+
+远程流水线需要最小权限，日志不打印秘密。固定或审核外部Action与依赖版本，明确哪些检查是静态、单元、集成、浏览器或部署后验证；没有真实数据库的单元测试不能自动提升为持久化验收。
+
+### 参考答案：独立实现与验收
+
+在followup-11已有json_limits_test.go旁新建json_invalid_answer_test.go，复用security_test.go的fixture与secureRequest：
+
+```go
+package main
+
+import "testing"
+
+func TestInvalidJSONDoesNotCreate(t *testing.T) {
+    _, handler := fixture(t)
+    cookie, csrf := loginFixture(t, handler, "club_admin")
+    before := secureRequest(handler, "GET", "/api/events", "", cookie, "")
+    response := secureRequest(handler, "POST", "/api/events", `{"title":"broken",}`, cookie, csrf)
+    if response.Code != 400 { t.Fatalf("status=%d body=%s", response.Code, response.Body) }
+    after := secureRequest(handler, "GET", "/api/events", "", cookie, "")
+    if before.Code != 200 || after.Code != 200 || before.Body.String() != after.Body.String() {
+        t.Fatal("非法JSON改变了列表")
+    }
+}
+```
+
+运行go test -run TestInvalidJSONDoesNotCreate -count=1，再确认CI实际执行的go test ./...包含该文件。删除decodeJSON的首次解码错误检查可能仍被后续检查拒绝，不保证这一种变异一定让该测试失败；应制造“非法输入实际被接受”的确定故障，再确认测试失败。不要把只改了某行源码却没改变行为当作测试无效。

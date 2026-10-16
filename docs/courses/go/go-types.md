@@ -2,10 +2,6 @@
 
 区分 int、float64、bool、string，并观察未赋初值的结果。
 
-## 基本数据类型与零值是什么意思
-
-类型规定变量可以保存哪种数据及进行哪些操作。int 是整数，float64 是小数，bool 是 true/false，string 是文字。变量没有显式初值时得到对应零值：整数和小数为 0，布尔为 false，字符串为空字符串。
-
 ## 先根据数据含义选择类型
 
 **数据类型决定一个值能做哪些操作，零值则是未写初值时得到的确定起点。** 例如数量 3 用整数表示，价格 2.5 用小数表示，“是否准备好”用布尔表示，称呼用字符串表示。
@@ -18,6 +14,31 @@
 | `string` | `"小林"`、`"20"` | `""` | 文字 |
 
 `true` 和 `false` 不加引号；`"false"` 是文字。空字符串 `""` 与一个空格 `" "` 不相同。这里只观察四种常见类型，后面遇到切片、map、指针时会学习它们各自的零值。
+
+## 整数宽度、别名与显式转换
+
+| 类型 | 含义与典型场景 |
+| --- | --- |
+| `int8`、`int16`、`int32`、`int64` | 带符号整数，位数决定可表示范围 |
+| `uint8`、`uint16`、`uint32`、`uint64` | 非负整数，同样有上限；不能用来保存 -1 |
+| `int`、`uint` | 宽度由实现决定，通常是 32 或 64 位 |
+| `float32`、`float64` | 有限精度的浮点数；常规小数示例采用 float64 |
+| `byte`、`rune` | 分别是 uint8、int32 的别名；后续处理字节与 Unicode |
+| `complex64`、`complex128` | 复数，例如 `complex(1, 2)`；普通 Web 入门暂不用 |
+
+类型转换写成 `目标类型(值)`，它是你明确作出的操作。以下片段放 main 内：
+
+```go
+var minutes int = 3
+hours := float64(minutes) / 60
+fmt.Printf("%T %.2f\n", hours, hours) // float64 0.05
+positive, negative := 3.9, -3.9
+fmt.Println(int(positive), int(negative)) // 3 -3：浮点变量转整数向零截断。
+```
+
+`string(65)` 得到 Unicode 码点 65 对应的字符 A，不是数字文字“65”；数字显示用 fmt，后续解析用户输入用 strconv。字符串“3”不能靠 `int("3")` 解析。
+
+常量 `var small int8 = 128` 在编译时因超范围被拒绝；运行中把更大整数转换为更小整数类型却可能截掉高位，不保证报错。**转换前先确认范围，不把“可以编译”当作“值不会变化”。** `%T` 打印值的类型，排查类型不一致时很有用。
 
 ## 先运行一个小例子
 
@@ -71,11 +92,37 @@ go run .
 
 ### 参考答案
 
-得到 3 2.5 true "小林"。各值必须与变量类型一致。
+四次赋值分别匹配整数、小数、布尔和字符串类型，格式符与参数位置一一对应。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-数字 20 和字符串 "20" 是不同类型。不能把文字直接赋给 int。Go 不会替你把任意字符串自动变成数字。
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var count int
+	var price float64
+	var ready bool
+	var name string
+	count = 3
+	price = 2.5
+	ready = true
+	name = "小林"
+	fmt.Printf("%d %.1f %t %q\n", count, price, ready, name)
+}
+```
+
+预期结果：
+
+```output
+3 2.5 true "小林"
+```
+
+## 转换也会丢失信息
+
+`float64(total / count)` 先做整数除法，丢失的小数不能恢复；需要小数结果时用 `float64(total) / float64(count)`。浮点数的舍入则是另一问题：0.1 一类十进制值不一定能精确表示，不能把浮点类型直接当成精确金额容器。后端金额可按业务约定使用整数最小货币单位，并校验计算范围。
 
 ## 验证类型限制
 
@@ -98,6 +145,34 @@ go run .
 
 ### 参考答案
 
-数量需要整数，小时需要小数，归还状态需要布尔，称呼需要字符串。打印格式要与自己选择的类型及参数顺序匹配；文字“2”和整数2并不是同一类型。
+数量是整本数，小时允许小数，是否归还只有两种状态，称呼是文字。第一行观察零值，第二行观察赋值；临时写 books = "2" 会因类型不符编译失败，恢复为整数才能得到上述结果。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var books int
+	var hours float64
+	var returned bool
+	var borrower string
+	fmt.Printf("%d %.1f %t %q\n", books, hours, returned, borrower)
+	books = 2
+	hours = 1.5
+	returned = true
+	borrower = "阿青"
+	fmt.Printf("%d %.1f %t %q\n", books, hours, returned, borrower)
+}
+```
+
+预期结果：
+
+```output
+0 0.0 false ""
+2 1.5 true "阿青"
+```
 
 参考：[Go 语言规范](https://go.dev/ref/spec)。

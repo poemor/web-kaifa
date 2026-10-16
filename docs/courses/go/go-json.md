@@ -2,10 +2,6 @@
 
 将Go结构体变成JSON文字，再读取回来。
 
-## 结构体与 JSON 编解码是什么意思
-
-JSON是数据交换的文字格式，不是Go对象。encoding/json在Go值与JSON字节之间转换。导出的字段参与编码，字段标签指定JSON名称。
-
 ## JSON 先是一份可以交换的文字
 
 JSON 是一种数据格式：对象用花括号，键用双引号，键和值用冒号分隔，多个成员用逗号分隔。例如 `{"title":"Two Sum","solved":false}` 表达一个标题和一个状态。
@@ -15,6 +11,14 @@ JSON 是一种数据格式：对象用花括号，键用双引号，键和值用
 **Go 结构体是程序里的值，JSON 是表示数据的文字，两者需要编码或解码才能互相转换。** JSON 的文字和键要双引号，布尔 false 不加引号；不能使用注释或在最后一项后随意加逗号。
 
 Marshal 表示编码，Unmarshal 表示解码。`[]byte` 是字节切片，byte 是 `uint8` 的别名；uint8 是取值为 0–255 的整数类型，适合表示一个字节。编码函数返回字节，解码函数接收字节。本节的两次明确转换是 `string(data)` 显示编码结果和 `[]byte(文字)` 准备解码输入。
+
+## 缺字段、null、omitempty 与不可信输入
+
+没有出现在 JSON 中的字段，解码到新建的零值结构体时保持零值；如果复用已有结构体，缺字段可能保留旧值。因此每份独立请求应准备新的目标，不要让上一请求的数据漏进下一请求。普通 int 字段也无法直接区分“没提供”和“明确提供0”，有此需求时用指针字段或专门的输入类型。
+
+标签 `json:"name,omitempty"` 会在编码时按规则省略空值；`json:"-"` 表示不编码该字段。省略不等于业务校验，不能据此保证必填字段存在。nil 切片通常编码为 null，非 nil 空切片编码为 []，对外接口需要统一约定。
+
+解码到 any 时 JSON 数字默认常成为 float64，大整数可能失去精度；结构明确时优先用具体字段类型，需要保留数字文字时了解 Decoder.UseNumber。json.Unmarshal 会拒绝尾部额外的非空白 JSON，Decoder.Decode 只读一个值，若用于请求流还要确认后面结束，见 [严格 JSON 边界](go-json-boundary.md)。
 
 ## 先运行一个小例子
 
@@ -83,11 +87,45 @@ Marshal 返回 JSON 字节与 error；显示后，另一份 incoming 作为解�
 
 ### 参考答案
 
-true正常编解码；数字不能写入string字段，Unmarshal返回错误。
+true 能正常编码；独立的 incoming 把 title 换成数字，虽然 JSON 格式合法，却与 Go string 不匹配。失败后不再读目标字段；实际排错时还应显示 err 的原因。
 
-## 本节容易混淆的地方
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
 
-这里是最小编解码，不是完整接口校验。未知字段、额外值、大小限制在HTTP章节处理。
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+)
+
+type Problem struct {
+    Title string `json:"title"`
+    Solved bool `json:"solved"`
+}
+
+func main() {
+	p := Problem{Title: "Two Sum", Solved: true}
+	data, err := json.Marshal(p)
+	if err != nil { fmt.Println(err); return }
+	fmt.Println(string(data))
+	var decoded Problem
+	err = json.Unmarshal([]byte(`{"title":123,"solved":false}`), &decoded)
+	if err != nil { fmt.Println("解码失败"); return }
+	fmt.Println(decoded.Title)
+}
+```
+
+预期结果：
+
+```output
+{"title":"Two Sum","solved":true}
+解码失败
+```
+
+## 解码失败后不要信任部分写入
+
+Unmarshal 遇到类型错误时，目标中部分字段可能已经写入。即使 Title 看起来正确，只要 err 非 nil，当前整条输入就未通过本例约定。先结束失败路径，再用一条新目标重试，不要把部分数据保存成成功记录。
 
 ## 合法格式也可能类型不匹配
 
@@ -115,6 +153,41 @@ true正常编解码；数字不能写入string字段，Unmarshal返回错误。
 
 ### 参考答案
 
-导出字段决定哪些Go数据能被编码，标签决定JSON名称；输入minutes的数字20与文字“20”类型不同。先处理解码error，再显示目标字段，才能证明数据转换成功，而非仅看到程序没有崩溃。
+两个导出字段使用小写 JSON 名。把输入中的分钟改成 "20" 会类型不匹配，加尾逗号会格式错误；两者都应走解码失败分支，不显示成功记录。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+)
+
+type StudyRecord struct {
+    Title string `json:"title"`
+    Minutes int `json:"minutes"`
+}
+
+func main() {
+	record := StudyRecord{Title: "复习", Minutes: 20}
+	data, err := json.Marshal(record)
+	if err != nil { fmt.Println("编码失败：", err); return }
+	fmt.Println(string(data))
+	incoming := []byte(`{"title":"复习","minutes":20}`)
+	var decoded StudyRecord
+	err = json.Unmarshal(incoming, &decoded)
+	if err != nil { fmt.Println("解码失败：", err); return }
+	fmt.Println(decoded.Title, decoded.Minutes)
+}
+```
+
+预期结果：
+
+```output
+{"title":"复习","minutes":20}
+复习 20
+```
 
 参考：[Go JSON 包文档](https://pkg.go.dev/encoding/json@go1.22.0)。

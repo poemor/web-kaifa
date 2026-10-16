@@ -2,10 +2,6 @@
 
 使用一个可离线显示的图片，解释src与alt的职责。
 
-## 图片、src 与 alt是什么意思
-
-img使用src定位图像，alt提供图片的文字替代。img没有结束标签。下面用内嵌SVG小图保证例子离线可用；自己的照片应放在images文件夹并写真实相对路径。
-
 ## 图像地址与图像内容不是同一件事
 
 `src` 是图像来源，`alt` 是无法依靠图像时的文字替代，`width` 和 `height` 是展示尺寸。**`alt` 要说明图片提供的信息，不能把文件名当说明。** 本节图像表示“蓝色矩形中的白色圆形”。
@@ -15,6 +11,14 @@ img使用src定位图像，alt提供图片的文字替代。img没有结束标�
 换成自己的图片时，在同一练习目录新建 `images`，放入 `photo.png`，把 src 改为 `images/photo.png`，再把 alt 改成对这张图片的有效描述。扩展名和大小写要与实际文件一致。后面会用 CSS 限制展示宽度；设置宽高不会缩小磁盘上的文件体积。
 
 图片是空元素，写一个 `<img ...>` 即可，不要另写 `</img>`。预期出现 120×80 的蓝底白圆。加载失败时的 alt 显示方式可能因浏览器和空间而不同，也可在开发者工具检查属性值。
+
+## 尺寸、加载与多种资源
+
+alt不是鼠标悬停提示；纯装饰图可用空alt，含信息的图片要描述其作用，悬停title不能替代它。
+
+img 的 width、height 可以为浏览器预留空间，减少图片加载后布局跳动；响应式缩放交给 CSS。src 是文件地址，alt 是与使用场景相关的替代文字，不是重复文件名。若图片本身是链接的唯一内容，替代文字也要说明链接目的。
+
+照片常用 JPEG/WebP/AVIF，透明图可用 PNG，图标和几何线条可用 SVG。不要把任意不可信 SVG 源码直接注入页面。大型图片可在后续学 srcset/sizes 与 loading="lazy"，但首屏关键图不要一律延迟加载。
 
 ## 先看一个完整例子
 
@@ -46,10 +50,24 @@ img使用src定位图像，alt提供图片的文字替代。img没有结束标�
 
 ### 参考答案
 
-图片不显示时可看到替代文字，说明图片路径与替代描述是不同工作。
+故意保留不存在的路径，Network 会报告资源找不到，img 的 naturalWidth 为0；有意义的 alt 保留时间信息。恢复为真实图片地址后，图片应成功加载，不能只凭有 alt 就说图已修好。
 
-## 本节容易混淆的地方
+将下面完整页面保存为 `index.html`，打开后按说明验证。
 
-alt不是鼠标悬停提示。只有装饰用途的图片可用空alt，但信息图应描述其意义。
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>图片路径检查</h1>
+<img src="images/missing.png" alt="课程时间表：周六上午十点开始" width="240" height="120">
+</body>
+</html>
+```
+
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

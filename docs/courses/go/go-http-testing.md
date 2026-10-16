@@ -114,10 +114,51 @@ go test -v ./...
 
 ### 参考答案
 
-只断言200会漏掉 wrong；只找正文包含字符串 ok也不能证明它是目标字段。测试必须调用正在交付的处理逻辑，不能另写一份假响应拿来通过。
+把status字段改wrong后，字段断言应失败，即使状态仍200。解析JSON后比较指定键，比全文搜索ok更可靠；路由改错则应在经过Mux的测试中暴露404。
 
 ## 独立练习
 
 为 [加法Handler](#/learn/go/go-http-query) 写正常输入、缺少a、非数字、超范围四个测试，分别检查状态和正文。增加错误测试后，故意删掉范围检查，证明测试可以发现它。
 
 参考：[Go httptest](https://pkg.go.dev/net/http/httptest)、[Go testing](https://pkg.go.dev/testing)。
+
+## 分层测试与真实通信各证明什么
+
+直接调用Handler适合验证业务响应，经过ServeMux还能验证路径和方法；httptest.NewServer再用Client请求才能覆盖真实HTTP往返，但仍不同于公网、反向代理和数据库的全链路。
+
+断言状态、媒体类型、正文结构和关键字段，失败响应也检查是否误泄露内部错误。测试应从正式Handler入口进入，不能在测试里重写一份总会返回200的替身当交付证据。修改一个确定错误并看到测试失败，才能说明该断言有区分力。
+
+### 参考答案：独立实现与验收
+
+独立练习复用查询参数课完整main.go，在旁新增main_test.go，不另写一份加法逻辑：
+
+```go
+package main
+
+import (
+    "net/http/httptest"
+    "strings"
+    "testing"
+)
+
+func TestAddContract(t *testing.T) {
+    cases := []struct { name, target string; status int; body string }{
+        {"正常", "/add?a=10&b=20", 200, "30"},
+        {"缺a", "/add?b=20", 400, "a and b"},
+        {"非数字", "/add?a=x&b=20", 400, "a and b"},
+        {"超范围", "/add?a=10001&b=20", 400, "a and b"},
+    }
+    for _, tc := range cases {
+        t.Run(tc.name, func(t *testing.T) {
+            rec := httptest.NewRecorder()
+            add(rec, httptest.NewRequest("GET", tc.target, nil))
+            if rec.Code != tc.status { t.Fatalf("status=%d want=%d", rec.Code, tc.status) }
+            if tc.status == 200 && rec.Body.String() != tc.body { t.Fatalf("body=%q", rec.Body.String()) }
+            if tc.status != 200 && !strings.Contains(rec.Body.String(), tc.body) { t.Fatalf("error body=%q", rec.Body.String()) }
+        })
+    }
+}
+
+```
+
+运行go test -count=1 ./...应通过。删掉add中a>10000与b>10000的范围检查，超范围测试必须失败；恢复后再次通过。四组测试针对处理逻辑，不代表已经验证真实监听或数据库。

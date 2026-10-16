@@ -2,10 +2,6 @@
 
 保存多项数据，访问下标并追加一项。
 
-## 数组与元素访问是什么意思
-
-数组按顺序保存一组值，下标从0开始。length是元素数，push在末尾追加。数组可以混合类型，但本节保持元素形状一致以便理解。
-
 ## 数组的顺序与索引
 
 数组字面量使用方括号，`[60,80]` 里各项用逗号分开；`scores[0]` 的方括号表示按索引读取。**第一项的索引是 0；最后一项的索引是 length−1。** 有三项时有效索引是 0、1、2，不是 1、2、3。
@@ -15,6 +11,12 @@
 用前面学过的 for 可以从 i=0 开始，每轮检查 `i<scores.length`，再把 `scores[i]` 加进循环外的 total。不要用 <=，否则多读一次 undefined，后续数字计算可能得到 NaN。空数组 length=0，从第一轮就不进入循环，总和应为 0。
 
 本节保持数组元素都是数字。数组也可保存文字或对象，但同一组数据的形状越一致，后续处理越容易说明和校验。
+
+## 修改、复制与越界的不同后果
+
+数组可用push追加、pop取走末项、slice复制指定范围、splice原地删除/插入。slice不修改原数组，splice会；const数组只禁止把变量换成另一数组，不禁止push。展开 `[...items]` 是浅副本，嵌套对象仍可能共享。
+
+读取越界通常得到undefined，写入过大下标可能造成稀疏数组；后续求和出现NaN时先检查有没有读到不存在的项。for...of读取值，普通for可按需要读取下标。JS的sort默认按字符串方式排序，数字排序要明确比较函数，不能把[2,10]的默认结果当数值升序。
 
 ## 先看一个完整例子
 
@@ -63,10 +65,34 @@ undefined
 
 ### 参考答案
 
-总分240；空数组没有轮次，总分0。
+总分按元素值累计，空数组循环零次。避免用i<=scores.length，多出来的末次会读到undefined。
 
-## 本节容易混淆的地方
+将下面完整页面保存为 `index.html`，打开后按说明验证。
 
-JavaScript读取越界不像Go那样一定panic，得到undefined也可能在后面的计算中造成NaN。
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>控制台独立练习</h1>
+<p>打开开发者工具的 Console，核对下列日志。</p>
+<script>
+const scores = [60, 80, 100];
+let total = 0;
+for (const score of scores) { total += score; }
+console.log(total);
+const empty = [];
+let emptyTotal = 0;
+for (const score of empty) { emptyTotal += score; }
+console.log(emptyTotal);
+</script>
+</body>
+</html>
+```
+
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

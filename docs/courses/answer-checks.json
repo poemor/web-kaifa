@@ -1,0 +1,1254 @@
+[
+  {
+    "chapter": "go-vscode",
+    "answer": 0,
+    "language": "go",
+    "output": "我保存了新代码"
+  },
+  {
+    "chapter": "go-program",
+    "answer": 1,
+    "language": "go",
+    "output": "学习计划开始\n今天写两句程序"
+  },
+  {
+    "chapter": "go-program",
+    "answer": 0,
+    "language": "go",
+    "output": "我开始学习 Go"
+  },
+  {
+    "chapter": "go-syntax",
+    "answer": 1,
+    "language": "go",
+    "output": "先阅读\n再练习"
+  },
+  {
+    "chapter": "go-syntax",
+    "answer": 0,
+    "language": "go",
+    "output": "第一行"
+  },
+  {
+    "chapter": "go-variables",
+    "answer": 1,
+    "language": "go",
+    "output": "10\n25"
+  },
+  {
+    "chapter": "go-variables",
+    "answer": 0,
+    "language": "go",
+    "output": "60\n75"
+  },
+  {
+    "chapter": "go-types",
+    "answer": 1,
+    "language": "go",
+    "output": "0 0.0 false \"\"\n2 1.5 true \"阿青\""
+  },
+  {
+    "chapter": "go-types",
+    "answer": 0,
+    "language": "go",
+    "output": "3 2.5 true \"小林\""
+  },
+  {
+    "chapter": "go-constants",
+    "answer": 1,
+    "language": "go",
+    "output": "30\n29"
+  },
+  {
+    "chapter": "go-constants",
+    "answer": 0,
+    "language": "go",
+    "output": "60\nfalse"
+  },
+  {
+    "chapter": "go-operators",
+    "answer": 1,
+    "language": "go",
+    "output": "4\n1\ntrue"
+  },
+  {
+    "chapter": "go-operators",
+    "answer": 0,
+    "language": "go",
+    "output": "2\n2\n3"
+  },
+  {
+    "chapter": "go-strings",
+    "answer": 1,
+    "language": "go",
+    "output": "阿青的学习记录\n今天练习 30 分钟"
+  },
+  {
+    "chapter": "go-strings",
+    "answer": 0,
+    "language": "go",
+    "output": "你好，阿青\n今天练习 30 分钟"
+  },
+  {
+    "chapter": "go-if",
+    "answer": 0,
+    "language": "go",
+    "output": "及格"
+  },
+  {
+    "chapter": "go-switch",
+    "answer": 0,
+    "language": "go",
+    "output": "未知星期"
+  },
+  {
+    "chapter": "go-for",
+    "answer": 1,
+    "language": "go",
+    "output": "12"
+  },
+  {
+    "chapter": "go-for",
+    "answer": 0,
+    "language": "go",
+    "output": "6"
+  },
+  {
+    "chapter": "go-functions",
+    "answer": 0,
+    "language": "go",
+    "output": "1\n0\n6\n0\n-6"
+  },
+  {
+    "chapter": "go-scope",
+    "answer": 0,
+    "language": "go",
+    "output": "调用前 4\n调用后 8"
+  },
+  {
+    "chapter": "go-recursion",
+    "answer": 0,
+    "language": "go",
+    "output": "6\n0"
+  },
+  {
+    "chapter": "go-project-minutes",
+    "answer": 0,
+    "language": "go",
+    "output": "3 天共练习 90 分钟\n已达到本次目标"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "按空白读取数字：fmt.Scan",
+    "input": "3 2.5\n",
+    "output": "输入数量和单价，例如 3 2.5：\n数量 3，单价 2.50，合计 7.50"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "按空白读取数字：fmt.Scan",
+    "input": "3 wrong\n",
+    "output": "输入数量和单价，例如 3 2.5：\n读取失败，成功读入 1 项"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "按空白读取数字：fmt.Scan",
+    "input": "-1 2.5\n",
+    "output": "输入数量和单价，例如 3 2.5：\n数量和单价不能为负"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "0\n",
+    "output": "输入本次练习分钟数：\n本次计划 0 分钟"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "abc\n",
+    "output": "输入本次练习分钟数：\n请输入整数分钟"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "1441\n",
+    "output": "输入本次练习分钟数：\n分钟数必须在 0 到 1440 之间"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "\n",
+    "output": "输入本次练习分钟数：\n输入为空"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "",
+    "output": "输入本次练习分钟数：\n没有输入"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "answer": 1,
+    "input": "阿青\n",
+    "output": "你好，阿青"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "answer": 1,
+    "input": "\n",
+    "output": "称呼为空"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "answer": 1,
+    "input": "",
+    "output": "没有输入"
+  },
+  {
+    "chapter": "go-strings",
+    "section": "输出不止 Println：格式、返回字符串与目标位置",
+    "language": "go",
+    "output": "开始练习 阿青\n分钟=030，小时=0.50，完成=false，进度=50%\n类型=string，文字=\"阿青 练习 30 分钟\""
+  },
+  {
+    "chapter": "go-arrays",
+    "answer": 1,
+    "language": "go",
+    "output": "14\n4 [11 12 13 24]\n[11 12 13 24]\n[99 12 13 24]"
+  },
+  {
+    "chapter": "go-arrays",
+    "answer": 0,
+    "language": "go",
+    "output": "95"
+  },
+  {
+    "chapter": "go-slices",
+    "answer": 1,
+    "language": "go",
+    "output": "[Go Web] 2 [Go Web]\n[Go Web SQL] 3 [Go Web]"
+  },
+  {
+    "chapter": "go-slices",
+    "answer": 0,
+    "language": "go",
+    "output": "[60 80 100 90]\n[60 80]"
+  },
+  {
+    "chapter": "go-slice-sharing",
+    "answer": 1,
+    "language": "go",
+    "output": "[9 7]\n[4 50]"
+  },
+  {
+    "chapter": "go-slice-sharing",
+    "answer": 0,
+    "language": "go",
+    "output": "[9 8] [9 8] [5 2]"
+  },
+  {
+    "chapter": "go-range",
+    "answer": 1,
+    "language": "go",
+    "output": "2"
+  },
+  {
+    "chapter": "go-range",
+    "answer": 0,
+    "language": "go",
+    "output": "0 80\n总分 80"
+  },
+  {
+    "chapter": "go-returns",
+    "answer": 1,
+    "language": "go",
+    "output": "0 false\n0 true\n9 true"
+  },
+  {
+    "chapter": "go-returns",
+    "answer": 0,
+    "language": "go",
+    "output": "0 true\n0 false"
+  },
+  {
+    "chapter": "go-maps",
+    "answer": 1,
+    "language": "go",
+    "output": "2 1 2\n0 false 2\n0 true 3\n0 false 2"
+  },
+  {
+    "chapter": "go-maps",
+    "answer": 0,
+    "language": "go",
+    "output": "0 true"
+  },
+  {
+    "chapter": "go-unicode",
+    "answer": 1,
+    "language": "go",
+    "output": "6 2\n中"
+  },
+  {
+    "chapter": "go-unicode",
+    "answer": 0,
+    "language": "go",
+    "output": "6 2\n0 中\n3 文"
+  },
+  {
+    "chapter": "go-pointers",
+    "answer": 1,
+    "language": "go",
+    "output": "3\n4"
+  },
+  {
+    "chapter": "go-pointers",
+    "answer": 0,
+    "language": "go",
+    "output": "3\n9"
+  },
+  {
+    "chapter": "go-structs",
+    "answer": 1,
+    "language": "go",
+    "output": "Go笔记 0 false\nWeb练习 25 true\nGo笔记 10 true\nWeb练习 25 true"
+  },
+  {
+    "chapter": "go-structs",
+    "answer": 0,
+    "language": "go",
+    "output": "新题目\nValid Parentheses"
+  },
+  {
+    "chapter": "go-methods",
+    "answer": 1,
+    "language": "go",
+    "output": "新题 false\n另一题 true\n\"\" false\n另一题 true"
+  },
+  {
+    "chapter": "go-methods",
+    "answer": 0,
+    "language": "go",
+    "output": "false"
+  },
+  {
+    "chapter": "go-interfaces",
+    "answer": 0,
+    "language": "go",
+    "output": "学习组"
+  },
+  {
+    "chapter": "go-errors",
+    "answer": 1,
+    "language": "go",
+    "output": "9"
+  },
+  {
+    "chapter": "go-errors",
+    "answer": 0,
+    "language": "go",
+    "output": "4\n0"
+  },
+  {
+    "chapter": "go-defer",
+    "answer": 1,
+    "language": "go",
+    "output": "开始\n继续 2\n结束\n登记值 1\n开始\n提前返回\n结束\n登记值 1"
+  },
+  {
+    "chapter": "go-defer",
+    "answer": 0,
+    "language": "go",
+    "output": "先执行\n第二个登记\n最后执行"
+  },
+  {
+    "chapter": "go-packages",
+    "answer": 0,
+    "language": "go",
+    "files": [
+      "calc/add.go",
+      "main.go"
+    ],
+    "module": "example.com/book/packages",
+    "output": "5\n6"
+  },
+  {
+    "chapter": "go-testing",
+    "answer": 0,
+    "language": "go-test",
+    "files": [
+      "main_test.go"
+    ],
+    "support": {
+      "main.go": "package main\nfunc Add(a,b int) int { return a+b }\n"
+    },
+    "output": null,
+    "mutation": {
+      "file": "main.go",
+      "from": "a+b",
+      "to": "a-b"
+    }
+  },
+  {
+    "chapter": "go-json",
+    "answer": 1,
+    "language": "go",
+    "output": "{\"title\":\"复习\",\"minutes\":20}\n复习 20"
+  },
+  {
+    "chapter": "go-json",
+    "answer": 0,
+    "language": "go",
+    "output": "{\"title\":\"Two Sum\",\"solved\":true}\n解码失败"
+  },
+  {
+    "chapter": "go-files",
+    "answer": 1,
+    "language": "go",
+    "output": "读取成功\n我记录了一个问题。",
+    "support": {
+      "notes.txt": "我记录了一个问题。"
+    }
+  },
+  {
+    "chapter": "go-files",
+    "answer": 1,
+    "language": "go",
+    "support": {
+      "notes.txt": ""
+    },
+    "output": "文件为空"
+  },
+  {
+    "chapter": "go-files",
+    "answer": 1,
+    "language": "go",
+    "output": null,
+    "contains": [
+      "读取失败",
+      "notes.txt"
+    ]
+  },
+  {
+    "chapter": "go-sort",
+    "answer": 1,
+    "language": "go",
+    "output": "lin 2\nwu 1"
+  },
+  {
+    "chapter": "go-project-wordfreq",
+    "answer": 0,
+    "language": "go",
+    "output": "输入 \" \"\n输入 \"a\"\na:1\n输入 \"b a\"\na:1\nb:1\n输入 \"c b a\"\na:1\nb:1"
+  },
+  {
+    "chapter": "web-document",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "title": "我的厨房笔记",
+    "text": {
+      "h1": "番茄鸡蛋"
+    },
+    "count": {
+      "p": 2
+    }
+  },
+  {
+    "chapter": "web-elements",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "text": {
+      "strong": "周五下午",
+      "#submission-note": "请在周五下午前交作品，文件名写清姓名。"
+    },
+    "count": {
+      "strong": 1
+    }
+  },
+  {
+    "chapter": "web-text",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "count": {
+      "ol > li": 3
+    }
+  },
+  {
+    "chapter": "web-links",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "text": {
+      "#schedule": "今日安排"
+    },
+    "count": {
+      "a[href=\"about.html\"]": 1,
+      "a[href=\"#schedule\"]": 1
+    }
+  },
+  {
+    "chapter": "web-images",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "count": {
+      "img[alt]": 1
+    },
+    "attributes": {
+      "img": {
+        "src": "images/missing.png",
+        "alt": "课程时间表：周六上午十点开始"
+      }
+    }
+  },
+  {
+    "chapter": "web-sections",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "count": {
+      "main": 1,
+      "main > section": 2,
+      "h1": 1,
+      "h2": 2
+    }
+  },
+  {
+    "chapter": "web-forms",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      "input[required]": 2
+    },
+    "labels": {
+      "label[for=\"nickname\"]": "nickname",
+      "label[for=\"topic\"]": "topic"
+    },
+    "invalidForms": [
+      "form"
+    ]
+  },
+  {
+    "chapter": "web-css",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      "p": 2
+    },
+    "style": {
+      "h1": {
+        "color": "rgb(22, 78, 128)"
+      },
+      "p": {
+        "color": "rgb(20, 83, 45)"
+      }
+    }
+  },
+  {
+    "chapter": "web-selectors",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      ".notice": 2,
+      "#bulletin-title": 1
+    },
+    "style": {
+      ".notice": {
+        "color": "rgb(20, 83, 45)"
+      }
+    }
+  },
+  {
+    "chapter": "web-cascade",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "style": {
+      ".parent > p:first-child": {
+        "color": "rgb(0, 128, 0)"
+      },
+      ".direct": {
+        "color": "rgb(128, 0, 128)"
+      }
+    }
+  },
+  {
+    "chapter": "web-units",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "style": {
+      ".reading": {
+        "fontSize": "20px",
+        "lineHeight": "32px",
+        "maxWidth": "384px"
+      },
+      ".fixed": {
+        "fontSize": "12px"
+      }
+    }
+  },
+  {
+    "chapter": "web-box",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "box": {
+      ".content": {
+        "width": 268
+      },
+      ".border": {
+        "width": 240
+      }
+    }
+  },
+  {
+    "chapter": "web-flow",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      ".step": 2
+    },
+    "style": {
+      ".step": {
+        "display": "inline-block",
+        "width": "80px"
+      }
+    }
+  },
+  {
+    "chapter": "web-flex",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      "nav > a": 4
+    },
+    "noOverflow": true
+  },
+  {
+    "chapter": "web-grid",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "count": {
+      ".cards > article": 5
+    },
+    "noOverflow": true
+  },
+  {
+    "chapter": "web-responsive",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      ".courses > article": 3
+    },
+    "noOverflow": true,
+    "grid": {
+      ".courses": {
+        "320": 1,
+        "639": 1,
+        "640": 2,
+        "641": 2,
+        "768": 2,
+        "1440": 2
+      }
+    }
+  },
+  {
+    "chapter": "web-position",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "count": {
+      "article": 2,
+      ".limited .badge": 1
+    },
+    "style": {
+      ".limited": {
+        "position": "relative"
+      },
+      ".badge": {
+        "position": "absolute",
+        "left": "12px",
+        "bottom": "12px"
+      }
+    }
+  },
+  {
+    "chapter": "web-overflow",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "noOverflow": true
+  },
+  {
+    "chapter": "web-css-variables",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "style": {
+      ".note": {
+        "paddingTop": "16px"
+      },
+      ".action": {
+        "marginTop": "16px"
+      }
+    },
+    "noOverflow": true
+  },
+  {
+    "chapter": "web-js-start",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "本次采购",
+      "15",
+      "请自行核对"
+    ]
+  },
+  {
+    "chapter": "web-js-variables",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "false",
+      "string number boolean",
+      "true",
+      "string number boolean"
+    ]
+  },
+  {
+    "chapter": "web-js-operators",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "28",
+      "NaN true",
+      "0 false",
+      "0 false"
+    ]
+  },
+  {
+    "chapter": "web-js-strings",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "李 小雨，你选择了 Web。",
+      "8 4"
+    ]
+  },
+  {
+    "chapter": "web-js-if",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "免运费"
+    ]
+  },
+  {
+    "chapter": "web-js-loops",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "4",
+      "3",
+      "2",
+      "1",
+      "轮数 4"
+    ]
+  },
+  {
+    "chapter": "web-js-functions",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "1",
+      "0",
+      "6",
+      "0",
+      "-6"
+    ]
+  },
+  {
+    "chapter": "web-js-scope",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "函数内余额",
+      "15 10 原始余额",
+      "15 原始余额"
+    ]
+  },
+  {
+    "chapter": "web-js-arrays",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "240",
+      "0"
+    ]
+  },
+  {
+    "chapter": "web-js-objects",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "8 3",
+      "苏州"
+    ]
+  },
+  {
+    "chapter": "web-json",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "string",
+      "true 2",
+      "Web布局 30"
+    ]
+  },
+  {
+    "chapter": "web-js-callbacks",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "[2,4]",
+      "[0,-2,1,2,3,4]",
+      "[]",
+      "[]"
+    ]
+  },
+  {
+    "chapter": "web-js-map",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "[\"价格：10\",\"价格：20\",\"价格：30\"]",
+      "[\"价格：20\",\"价格：30\"]",
+      "3 3 2"
+    ]
+  },
+  {
+    "chapter": "web-dom",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "text": {
+      "h1": "设备在线",
+      "#device-result": "已检查1台"
+    }
+  },
+  {
+    "chapter": "web-events",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "text": {
+      "#count": "0"
+    },
+    "clicks": [
+      "#like",
+      "#like",
+      "#undo",
+      "#undo",
+      "#undo"
+    ]
+  },
+  {
+    "chapter": "web-dom-list",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "count": {
+      "li": 3,
+      "img": 0
+    },
+    "text": {
+      "li:last-child": "<img src=x>"
+    }
+  },
+  {
+    "chapter": "web-ui-state",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {
+      "#query": "笔记"
+    },
+    "text": {
+      "#total": "2",
+      "li:first-child": "算法笔记 / 120页"
+    },
+    "count": {
+      "li": 2
+    }
+  },
+  {
+    "chapter": "web-ui-state",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {
+      "#query": "不存在"
+    },
+    "text": {
+      "#total": "0"
+    },
+    "count": {
+      "li": 0
+    }
+  },
+  {
+    "chapter": "web-js-errors",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "console": [
+      "结果 6",
+      "本次检查结束",
+      "输入必须是有限非负数",
+      "本次检查结束"
+    ]
+  },
+  {
+    "chapter": "web-promise",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "开始",
+      "同步结束",
+      "订单无效",
+      "12"
+    ]
+  },
+  {
+    "chapter": "web-async",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "console": [
+      "同步日志",
+      "账单 23"
+    ]
+  },
+  {
+    "chapter": "web-modules",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "main.js": "import { totalCost } from \"./utils/cost.js\";\ndocument.querySelector(\"#total\").textContent = String(totalCost(3, 7));",
+      "utils/cost.js": "export function totalCost(quantity, price) {\n  return quantity * price;\n}"
+    },
+    "text": {
+      "#total": "21"
+    }
+  },
+  {
+    "chapter": "web-storage",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {
+      "#topic": "Go",
+      "#minutes": "25"
+    },
+    "clicks": [
+      "#save"
+    ],
+    "text": {
+      "#status": "已保存"
+    },
+    "reload": true,
+    "values": {
+      "#topic": "Go",
+      "#minutes": "25"
+    },
+    "afterReloadText": {
+      "#status": "已读取保存的偏好"
+    }
+  },
+  {
+    "chapter": "web-storage",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "fills": {},
+    "clicks": [],
+    "text": {
+      "#status": "读取失败，原记录保留"
+    },
+    "reload": false,
+    "values": {},
+    "afterReloadText": {},
+    "storageSeed": {
+      "own-reading-preferences": "bad json"
+    },
+    "storagePreserved": {
+      "own-reading-preferences": "bad json"
+    }
+  },
+  {
+    "chapter": "web-fetch",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "book.json": "{\"name\":\"算法手记\",\"pages\":120}"
+    },
+    "text": {
+      "#status": "算法手记 / 120页"
+    }
+  },
+  {
+    "chapter": "web-fetch",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "book.json": "null"
+    },
+    "text": {
+      "#status": "读取失败：书籍字段不合格"
+    }
+  },
+  {
+    "chapter": "web-request-states",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "books.json": "[{\"name\":\"算法笔记\",\"pages\":120},{\"name\":\"Go笔记\",\"pages\":80}]"
+    },
+    "text": {
+      "#status": "共2本"
+    },
+    "count": {
+      "li": 2
+    }
+  },
+  {
+    "chapter": "web-request-states",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "books.json": "[]"
+    },
+    "text": {
+      "#status": "没有书籍"
+    },
+    "count": {
+      "li": 0
+    }
+  },
+  {
+    "chapter": "web-cancel-request",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "support": {
+      "a.json": "{\"name\":\"甲书单\"}",
+      "b.json": "{\"name\":\"乙书单\"}",
+      "c.json": "{\"name\":\"丙书单\"}"
+    },
+    "clicks": [
+      "[data-name=\"a\"]",
+      "[data-name=\"b\"]",
+      "[data-name=\"c\"]"
+    ],
+    "settleMs": 750,
+    "text": {
+      "#status": "c：丙书单"
+    }
+  },
+  {
+    "chapter": "web-cancel-request",
+    "answer": 0,
+    "language": "html",
+    "output": null,
+    "support": {
+      "b.json": "{\"name\":\"乙书单\"}",
+      "c.json": "{\"name\":\"丙书单\"}"
+    },
+    "clicks": [
+      "[data-name=\"a\"]",
+      "[data-name=\"b\"]",
+      "[data-name=\"c\"]"
+    ],
+    "settleMs": 750,
+    "text": {
+      "#status": "c：丙书单"
+    }
+  },
+  {
+    "chapter": "web-rendering",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "support": {
+      "menu.json": "{\"dish\":\"番茄鸡蛋面\"}"
+    },
+    "text": {
+      "#notice": "本周三中午开放。",
+      "#menu": "番茄鸡蛋面"
+    }
+  },
+  {
+    "chapter": "go-http-message",
+    "answer": 0,
+    "language": "go",
+    "output": "/add 10 20"
+  },
+  {
+    "chapter": "go-http-handler",
+    "answer": 1,
+    "language": "go",
+    "output": "200 Hello"
+  },
+  {
+    "chapter": "go-http-query",
+    "answer": 0,
+    "language": "go",
+    "output": "/add?a=100&b=0 200\n/add?a=101&b=0 400\n/add?b=0 400\n/add?a=1.5&b=0 400"
+  },
+  {
+    "chapter": "go-http-json",
+    "answer": 0,
+    "language": "go",
+    "output": "200 9\n201 9\n204 0"
+  },
+  {
+    "chapter": "go-json-boundary",
+    "answer": 0,
+    "language": "go",
+    "output": "额外JSON"
+  },
+  {
+    "chapter": "go-http-testing",
+    "answer": 1,
+    "language": "go-test",
+    "files": [
+      "main_test.go"
+    ],
+    "support": {
+      "main.go": "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"net/http/httptest\"\n\t\"strconv\"\n)\n\nfunc add(w http.ResponseWriter, r *http.Request) {\n\t// 查询参数来源是请求 URL，不是服务器终端输入。\n\taText := r.URL.Query().Get(\"a\")\n\tbText := r.URL.Query().Get(\"b\")\n\ta, errA := strconv.Atoi(aText)\n\tb, errB := strconv.Atoi(bText)\n\t// 缺失、非整数或超出接口范围都走错误分支，且不写成功结果。\n\tif errA != nil || errB != nil || a < 0 || a > 10000 || b < 0 || b > 10000 {\n\t\thttp.Error(w, \"a and b must be integers from 0 to 10000\", http.StatusBadRequest)\n\t\treturn\n\t}\n\t// Fprint 写响应正文；最后 main 再把记录器中的正文打印到终端。\n\tif _, err := fmt.Fprint(w, a+b); err != nil {\n\t\tfmt.Println(\"写响应失败：\", err)\n\t}\n}\n\nfunc main() {\n\tmux := http.NewServeMux()\n\tmux.HandleFunc(\"GET /add\", add)\n\trec := httptest.NewRecorder()\n\treq := httptest.NewRequest(\"GET\", \"/add?a=10&b=20\", nil)\n\tmux.ServeHTTP(rec, req)\n\tfmt.Println(rec.Code, rec.Body.String())\n}\n"
+    },
+    "output": null,
+    "mutation": {
+      "file": "main.go",
+      "from": "a > 10000",
+      "to": "false"
+    }
+  },
+  {
+    "chapter": "go-repository",
+    "answer": 1,
+    "language": "go",
+    "output": "读取失败"
+  },
+  {
+    "chapter": "go-config",
+    "answer": 0,
+    "language": "go",
+    "output": "8080",
+    "unsetEnv": [
+      "BOOK_PORT"
+    ]
+  },
+  {
+    "chapter": "go-pagination",
+    "answer": 1,
+    "language": "go",
+    "output": "1 [1 2 3 4 5]\n2 [6 7 8 9 10]\n3 [11 12]\n4 []"
+  },
+  {
+    "chapter": "go-goroutines",
+    "answer": 1,
+    "language": "go",
+    "output": null,
+    "contains": [
+      "任务甲 3",
+      "任务乙 12"
+    ]
+  },
+  {
+    "chapter": "go-mutex",
+    "answer": 1,
+    "language": "go",
+    "output": "100"
+  },
+  {
+    "chapter": "go-channels",
+    "answer": 1,
+    "language": "go",
+    "output": "9"
+  },
+  {
+    "chapter": "go-context",
+    "answer": 1,
+    "language": "go",
+    "output": "true\nWeb true"
+  },
+  {
+    "chapter": "go-type-assertion",
+    "answer": 1,
+    "language": "go",
+    "output": "\"Go\" true\n\"\" false\n\"\" false\n\"\" false"
+  },
+  {
+    "chapter": "go-generics",
+    "answer": 1,
+    "language": "go",
+    "output": "2 true\nWeb true\n0 false"
+  },
+  {
+    "chapter": "web-frameworks",
+    "answer": 1,
+    "language": "html",
+    "output": null,
+    "clicks": [
+      "#spend",
+      "#spend",
+      "#spend",
+      "#spend"
+    ],
+    "text": {
+      "#spent": "20",
+      "#remaining": "-5",
+      "#over": "已超支"
+    }
+  }
+]

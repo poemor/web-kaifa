@@ -58,3 +58,32 @@ TSX 文件允许 TypeScript 和 JSX 界面语法一起使用，普通浏览器�
 ## 本节没有替你完成哪些事情
 
 计数只保存在当前组件内存，刷新会丢失。原项目提供更多列表与路由，是后面的组合参考；不要把计数小例子误称为已经学会请求清理、表单保存或身份权限。参考：[React 状态](https://react.dev/learn/state-a-components-memory)、[React Props](https://react.dev/learn/passing-props-to-a-component)。
+
+## 状态快照、不可变更新与列表身份
+
+每次渲染读取当次状态快照，setState安排后续更新；依赖旧值的新状态优先用函数式更新。对象/数组状态用新对象或新数组表达变化，不直接修改旧快照再期待自动更新。
+
+列表key使用稳定记录id，帮助对应同一组件；随机key会不断重建状态，数组下标在可重排列表也可能错配。Props是输入，不由子组件直接修改；回调让子组件表达意图，再由拥有者更新状态。
+
+### 参考答案：独立实现与验收
+
+保留本节已有main.tsx挂载入口，将src/App.tsx完整替换：
+
+```tsx
+import { useState } from "react";
+
+type CountProps = { count: number };
+function CountLabel({ count }: CountProps) { return <p>练习了 {count} 次</p>; }
+export default function App() {
+  const [count, setCount] = useState(0);
+  return <main>
+    <h1>计数与重置</h1>
+    <CountLabel count={count} />
+    <button type="button" onClick={() => setCount(value => value + 1)}>练习一次</button>
+    <button type="button" onClick={() => setCount(0)}>重置</button>
+  </main>;
+}
+
+```
+
+先typecheck，再dev。初始0，增加两次2，重置0，刷新0。Tab/Enter应能完成两种动作。reset放在事件回调里执行，不在渲染中调用setCount；状态只在内存，没有保存服务。

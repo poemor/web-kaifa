@@ -73,6 +73,45 @@ go run .
 
 ### 参考答案
 
-查询常为200，创建完成为201，删除采用204时不写正文。先编码会先确定200，后写201已迟了。正式测试用 `rec.Result().Header` 检查实际响应头，下一节综合这些检查。
+200/201示例都编码 {"id":1} 加结尾换行，共9字节；204跳过Content-Type与Encode，正文长度0。把Encode放到WriteHeader之前会隐式先确定200，这是写入顺序的可观察后果。
+
+下面是可直接替换的完整 `main.go`。在本节独立模块中保存后运行 `go run .`。
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "net/http/httptest"
+)
+
+func main() {
+	for _, status := range []int{http.StatusOK, http.StatusCreated, http.StatusNoContent} {
+	    rec := httptest.NewRecorder()
+	    if status != http.StatusNoContent { rec.Header().Set("Content-Type", "application/json") }
+	    rec.WriteHeader(status)
+	    if status != http.StatusNoContent {
+	        if err := json.NewEncoder(rec).Encode(map[string]int{"id": 1}); err != nil { fmt.Println(err); return }
+	    }
+	    fmt.Println(rec.Code, rec.Body.Len())
+	}
+}
+```
+
+预期结果：
+
+```output
+200 9
+201 9
+204 0
+```
 
 参考：[Go ResponseWriter](https://pkg.go.dev/net/http#ResponseWriter)、[Go JSON Encoder](https://pkg.go.dev/encoding/json#Encoder)。
+
+## 头部与正文一旦发出，错误处理方式就改变
+
+第一次Write通常隐式确定200，WriteHeader只应按合同确定一次最终状态；之后再改Header通常不能改变已发送的响应。记录器的Header映射还可继续修改，因此测试真实已提交头部应看Result().Header。
+
+204没有正文，不应再Encode。编码可能因不支持的类型或网络写入失败而失败；需要保证完整JSON时可先编码到缓冲，再提交状态和正文。日志只能说明写出失败，不能把已经发出的半截成功响应改造成全新的500。

@@ -2,10 +2,6 @@
 
 给按钮绑定click事件，点击后执行函数。
 
-## 事件与点击处理函数是什么意思
-
-事件表示发生了一个动作。addEventListener把处理函数交给浏览器，等事件发生再调用。绑定时传函数，不是把函数先执行一遍。
-
 ## 浏览器何时调用处理函数
 
 点击、输入、按键等动作会产生事件。`button.addEventListener("click",function(){...})` 在按钮上登记一个处理函数，浏览器在 click 发生时调用它。**登记监听器不等于立即执行处理函数。**
@@ -15,6 +11,12 @@
 本例只有一个按钮和一个结果 p，执行顺序是：脚本初始化 → 找到两个元素 → 登记回调 → 等待操作 → 点击后更新数字与文字。原生 button 支持鼠标和键盘，type=button 表示普通操作，放入表单也不会意外提交。
 
 输入框通常使用 input 事件来响应内容变化，表单使用 submit 来响应提交。下一节先创建列表，再把输入事件和筛选连接起来。先用 Tab/Enter 点两次，应得到 2；刷新后内存计数重新初始化为 0。
+
+## 事件对象、默认动作与传播
+
+监听器接收event，可读取type、target等信息。target是事件起点，currentTarget是当前处理函数绑定的元素；子元素点击时二者可能不同。事件可以向祖先传播，父容器可据target做委托，但要验证目标属于预期控件。
+
+preventDefault阻止可取消的默认动作，例如提交或链接导航；它不自动停止传播。stopPropagation阻止继续传播，也不替代业务校验。addEventListener传函数而非调用结果；解绑要保留同一个函数引用，重复绑定匿名函数可能导致一次点击处理多次。
 
 ## 先看一个完整例子
 
@@ -57,11 +59,7 @@ result.textContent = String(count);
 
 ### 参考答案
 
-结果先2，刷新后0；原生button支持键盘操作。
-
-## 本节容易混淆的地方
-
-不要重复在每次点击中再绑定同一个监听器，否则处理次数可能增长。
+原例用Tab定位button，Enter两次后显示2；刷新重建状态为0。键盘功能来自原生button，不来自click回调自身。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
@@ -72,3 +70,33 @@ result.textContent = String(count);
 从空文件做“点赞”和“撤回”两个原生按钮及一个数量显示。点赞加 1，撤回减 1 但不得小于 0，两个回调共享同一份计数。绑定完成前不能先执行点击逻辑。
 
 自查：初始0；点赞两次2；撤回一次1；再撤回到0后继续撤回仍0。Tab/Enter 能完成两种动作，数量随每次真实操作变化，刷新回0。不能各按钮维护一份互不相同的计数。
+
+### 参考答案：独立变式
+
+两个回调更新同一个count，撤回前检查大于0。初始0，点赞两次2，撤回一次1，继续撤回到0后保持0；刷新回0，未实现持久化。
+
+下面是完整 index.html，保存后用浏览器打开；需要服务器时按本节启动说明运行。
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>点赞练习</h1>
+<button id="like" type="button">点赞</button>
+<button id="undo" type="button">撤回</button>
+<p>当前数量：<output id="count">0</output></p>
+<script>
+let count = 0;
+const output = document.querySelector("#count");
+function render() { output.textContent = String(count); }
+document.querySelector("#like").addEventListener("click", () => { count++; render(); });
+document.querySelector("#undo").addEventListener("click", () => { if (count > 0) count--; render(); });
+</script>
+</body>
+</html>
+```

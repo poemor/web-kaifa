@@ -71,3 +71,49 @@ document.querySelector("#result").textContent = String(add(2, 3));
 从空文件创建 index.html、main.js 和 utils/cost.js。在工具模块独立公开一个计算数量×单价的函数，入口模块导入它，将3份7元的结果显示到你自己的元素。写出文件目录与两条加载路径，再实现。
 
 自查：页面显示数字21，模块之间没有靠全局变量交换函数。移错目录导致资源加载失败，写错导出名称则是导出匹配错误，两者需分别观察后恢复；type=module 和保存三个文件都是运行前提。
+
+## 模块加载边界与导出方式
+
+模块有自己的作用域，顶层名字不会自动成为window属性。命名导出要按名字导入，默认导出每模块最多一个；动态import返回Promise，用于按需加载，不是把任意字符串当代码执行。
+
+浏览器模块的相对导入必须写清路径和扩展名，通过HTTP提供正确的JavaScript媒体类型。依赖路径错会请求404，导出名错则会在模块链接时报错；两者都要从Network与Console分别定位。直接file打开受浏览器限制，按本节启动本地静态服务。
+
+### 参考答案：独立实现与验收
+
+目录为 index.html、main.js、utils/cost.js。在这个独立目录运行 `python -m http.server 8800`，打开 http://127.0.0.1:8800/。
+
+index.html：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>独立练习</title>
+</head>
+<body>
+<h1>采购合计</h1>
+<p id="total">尚未计算</p>
+<script type="module" src="main.js"></script>
+</body>
+</html>
+
+```
+
+main.js：
+
+```js
+import { totalCost } from "./utils/cost.js";
+document.querySelector("#total").textContent = String(totalCost(3, 7));
+```
+
+utils/cost.js：
+
+```js
+export function totalCost(quantity, price) {
+  return quantity * price;
+}
+```
+
+预期正文为21。入口脚本相对HTML找main.js，main.js再相对自己找utils/cost.js；改路径和改导出名要分开制造错误、观察后恢复。

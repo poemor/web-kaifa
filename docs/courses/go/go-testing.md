@@ -75,6 +75,35 @@ got -1, want 5
 
 ### 参考答案
 
-每项都要真的调用函数、比较独立期望并能报告失败。只打印结果而不比较，或把期待值写成 Add 的再次调用，都不能有效发现算法错误。例子测试成功是验证代码的证据，不会自动更新你的学习完成状态。
+在本节已有 main.go（Add 仍返回 a+b）旁，把 main_test.go 写成下面的完整测试文件。每个 case 的期望来自手算，go test ./... 不要求运行 main。
+
+```go
+package main
+
+import "testing"
+
+func TestAddZero(t *testing.T) {
+    got := Add(0, 0)
+    if got != 0 { t.Fatalf("got %d, want 0", got) }
+}
+func TestAddNegative(t *testing.T) {
+    got := Add(-2, 3)
+    if got != 1 { t.Fatalf("got %d, want 1", got) }
+}
+func TestAddMixed(t *testing.T) {
+    got := Add(10, -4)
+    if got != 6 { t.Fatalf("got %d, want 6", got) }
+}
+```
+
+保存后运行 `go test -count=1 ./...`，应退出成功并显示 ok。把 Add 临时改成 a-b 再运行，Negative 应报告 got -5、Mixed 应报告 got 14；Zero 仍可能通过，证明单独的零值用例不足以发现这个错误。恢复 a+b 后再通过，才完成“先成功、故意失败、修复成功”的闭环。
 
 参考：[Go 官方 testing 文档](https://pkg.go.dev/testing@go1.22.0)。
+
+## 表驱动、子测试、覆盖率和竞争检查
+
+案例多时可把输入与独立期望放进一个表，遍历时用 `t.Run(名字, func(t *testing.T){...})` 分别报告结果。表只是组织方法，不能替代选取有区分力的输入。测试错误分支时既检查 error，也检查失败后不再产生成功数据。
+
+`go test -run TestAdd -count=1 ./...` 只选名字匹配的测试并避免复用缓存；`go test -cover ./...` 报告语句覆盖比例，但覆盖过不代表断言正确。学完 goroutine 后用 `go test -race ./...` 检查真实执行路径上的数据竞争；它不是所有并发错误都能静态证明的工具。
+
+t.Errorf 标记当前测试失败但继续，t.Fatalf 标记失败并停止当前测试函数。后者适合前提已不成立、继续比较只会制造无意义报错的情况。测试文件不要依赖某次本机数据、网络或随机时间来让结果碰巧通过。
