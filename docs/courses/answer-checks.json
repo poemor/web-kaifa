@@ -136,5 +136,88 @@
     "answer": 0,
     "language": "go",
     "output": "3 天共练习 90 分钟\n已达到本次目标"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "按空白读取数字：fmt.Scan",
+    "input": "3 2.5\n",
+    "output": "输入数量和单价，例如 3 2.5：\n数量 3，单价 2.50，合计 7.50"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "按空白读取数字：fmt.Scan",
+    "input": "3 wrong\n",
+    "output": "输入数量和单价，例如 3 2.5：\n读取失败，成功读入 1 项"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "按空白读取数字：fmt.Scan",
+    "input": "-1 2.5\n",
+    "output": "输入数量和单价，例如 3 2.5：\n数量和单价不能为负"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "0\n",
+    "output": "输入本次练习分钟数：\n本次计划 0 分钟"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "abc\n",
+    "output": "输入本次练习分钟数：\n请输入整数分钟"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "1441\n",
+    "output": "输入本次练习分钟数：\n分钟数必须在 0 到 1440 之间"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "\n",
+    "output": "输入本次练习分钟数：\n输入为空"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "section": "一整行转为整数，并校验范围",
+    "input": "",
+    "output": "输入本次练习分钟数：\n没有输入"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "answer": 1,
+    "input": "阿青\n",
+    "output": "你好，阿青"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "answer": 1,
+    "input": "\n",
+    "output": "称呼为空"
+  },
+  {
+    "chapter": "go-input",
+    "language": "go",
+    "answer": 1,
+    "input": "",
+    "output": "没有输入"
+  },
+  {
+    "chapter": "go-strings",
+    "section": "输出不止 Println：格式、返回字符串与目标位置",
+    "language": "go",
+    "output": "开始练习 阿青\n分钟=030，小时=0.50，完成=false，进度=50%\n类型=string，文字=\"阿青 练习 30 分钟\""
   }
 ]

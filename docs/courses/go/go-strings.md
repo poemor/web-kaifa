@@ -28,6 +28,62 @@ fmt.Println(`C:\notes\go`) // 反引号内的反斜杠原样保留。
 
 Print 只输出值，Println 在值之间加空格并在最后换行，Printf 按格式输出且不自动换行。要生成字符串供后续保存或比较，用 `fmt.Sprintf("今天 %d 分钟", minutes)`；Sprintf 返回文字而不打印。先在终端练清这四者，再把字符串用于文件或 HTTP。
 
+## 输出不止 Println：格式、返回字符串与目标位置
+
+| 工具 | 自动换行吗 | 结果去哪里 |
+| --- | --- | --- |
+| `fmt.Print(a, b)` | 否 | 标准输出；空格规则不应代替显式格式 |
+| `fmt.Println(a, b)` | 是 | 标准输出，参数之间加空格 |
+| `fmt.Printf(格式, 参数...)` | 否 | 标准输出，完全按格式安排 |
+| `fmt.Sprint`、`fmt.Sprintf` | 否 | 返回字符串，不直接显示 |
+| `fmt.Fprint`、`fmt.Fprintf`、`fmt.Fprintln` | 由所选函数决定 | 第一个参数指定写入目标，例如标准错误或文件 |
+
+常用格式符按实际参数类型选择：
+
+| 格式 | 示例和用途 |
+| --- | --- |
+| `%v` | 通用值显示；调试时先看值 |
+| `%T` | 显示类型，例如 int、string |
+| `%d`、`%b`、`%x` | 整数的十进制、二进制、十六进制 |
+| `%f`、`%.2f`、`%e` | 浮点默认小数、两位小数、科学计数法 |
+| `%s`、`%q` | 直接显示字符串、带引号和转义显示字符串 |
+| `%c`、`%U` | 按字符或 Unicode 编号显示整数码点 |
+| `%t` | 显示 true/false |
+| `%%` | 显示一个百分号，不消耗参数 |
+| `%6d`、`%06d`、`%-6s` | 最小宽度6、用0补齐整数、字符串左对齐；宽度不是截断上限 |
+
+下面是可单独运行的完整 main.go，演示如何分辨空格、换行与返回的字符串：
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    name := "阿青"
+    minutes := 30
+    fmt.Print("开始")
+    fmt.Println("练习", name)
+    fmt.Printf("分钟=%03d，小时=%.2f，完成=%t，进度=50%%\n", minutes, float64(minutes)/60, false)
+    report := fmt.Sprintf("%s 练习 %d 分钟", name, minutes)
+    fmt.Printf("类型=%T，文字=%q\n", report, report)
+}
+```
+
+预期：
+
+```output
+开始练习 阿青
+分钟=030，小时=0.50，完成=false，进度=50%
+类型=string，文字="阿青 练习 30 分钟"
+```
+
+第一条 Print 不换行，因此后面的 Println 紧接“开始”；Sprintf 不产生一行输出，直到下一条 Printf 才显示 report。`%.2f` 仅控制显示的小数位，不会把内部数值改成精确的两位小数。
+
+需要将错误信息与正常结果分开时，在 main.go 的 import 中加入 os，并在 main 内写 `fmt.Fprintln(os.Stderr, "输入无效")`。普通 Println 仍写标准输出。学完错误处理后还应检查写入调用返回的错误，例如下游文件或管道关闭；不能仅因调用了打印函数就认定数据已成功保存。
+
+macOS/Linux 和 cmd 可用 `go run . > result.txt 2> errors.txt` 分别保存标准输出和标准错误。重定向后终端看不到原来的正常输出，要去 result.txt 检查；PowerShell 的文本编码行为取决于版本，按自己的终端文档核对，不把它当作二进制转发工具。
+
 ## 先运行一个小例子
 
 在已初始化的独立 Go 练习目录中，把下面完整代码保存为 main.go。本节替换原文件，不在文件末尾追加另一份 main 函数。

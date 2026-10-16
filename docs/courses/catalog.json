@@ -532,6 +532,30 @@
       }
     },
     {
+      "id": "go-input",
+      "track": "go",
+      "level": "intro",
+      "title": "从终端读取一行输入",
+      "goal": "读取数字和整行文字，区分空行、输入结束、转换失败与非法值。",
+      "prerequisites": [
+        "go-strings",
+        "go-if"
+      ],
+      "checks": [
+        "输入带空格的称呼，再输入空行，记录程序收到的内容。",
+        "读取一整行文字，并检查读取错误。",
+        "独立一行称呼问候，区分正常称呼/空行/EOF/32字节限制异常并恢复。"
+      ],
+      "example": {
+        "kind": "go",
+        "files": {
+          "main.go": "package main\n\nimport (\n\t\"bufio\"\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\t// os.Stdin 是标准输入；这里交给 Scanner 按行读取。\n\tscanner := bufio.NewScanner(os.Stdin)\n\tif scanner.Scan() { // 等到一行输入或输入结束，再返回是否读到一行。\n\t\tfmt.Println(\"读到：\" + scanner.Text()) // Text 不包含末尾的换行符。\n\t}\n\t// 正常输入结束不算读取错误；真正的异常由 Err 返回。\n\terr := scanner.Err()\n\tif err != nil {\n\t\tfmt.Println(err)\n\t}\n}\n"
+        },
+        "output": "读到：hello world",
+        "input": "hello world\n"
+      }
+    },
+    {
       "id": "go-switch",
       "track": "go",
       "level": "intro",
@@ -1015,29 +1039,6 @@
           "main.go": "package main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n)\n\ntype Problem struct {\n\tTitle  string `json:\"title\"`  // Go 字段叫 Title，对外的 JSON 键叫 title。\n\tSolved bool   `json:\"solved\"` // bool 会编码成 JSON 的 true 或 false。\n}\n\nfunc main() {\n\tp := Problem{Title: \"Two Sum\", Solved: false}\n\tdata, err := json.Marshal(p) // 将结构体编码为 JSON 字节切片。\n\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tfmt.Println(string(data)) // 把字节转换成字符串，才能直观看到 JSON 文字。\n\n\t// 单独的输入文字用于练习解码；反引号保留内部的双引号。\n\tincoming := []byte(`{\"title\":\"Two Sum\",\"solved\":false}`)\n\tvar decoded Problem // 先准备一条空记录，再让解码函数写入它。\n\terr = json.Unmarshal(incoming, &decoded)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tfmt.Println(decoded.Title)\n}\n"
         },
         "output": "{\"title\":\"Two Sum\",\"solved\":false}\nTwo Sum"
-      }
-    },
-    {
-      "id": "go-input",
-      "track": "go",
-      "level": "basic",
-      "title": "从终端读取一行输入",
-      "goal": "读取一整行文字，并检查读取错误。",
-      "prerequisites": [
-        "go-errors"
-      ],
-      "checks": [
-        "输入带空格的称呼，再输入空行，记录程序收到的内容。",
-        "读取一整行文字，并检查读取错误。",
-        "独立一行称呼问候，区分正常称呼/空行/EOF/32字节限制异常并恢复。"
-      ],
-      "example": {
-        "kind": "go",
-        "files": {
-          "main.go": "package main\n\nimport (\n\t\"bufio\"\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\t// os.Stdin 是标准输入；这里交给 Scanner 按行读取。\n\tscanner := bufio.NewScanner(os.Stdin)\n\tif scanner.Scan() { // 等到一行输入或输入结束，再返回是否读到一行。\n\t\tfmt.Println(\"读到：\" + scanner.Text()) // Text 不包含末尾的换行符。\n\t}\n\t// 正常输入结束不算读取错误；真正的异常由 Err 返回。\n\terr := scanner.Err()\n\tif err != nil {\n\t\tfmt.Println(err)\n\t}\n}\n"
-        },
-        "output": "读到：hello world",
-        "input": "hello world\n"
       }
     },
     {

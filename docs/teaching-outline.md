@@ -29,6 +29,7 @@ Web先认识浏览器与HTML/CSS/JavaScript的职责，再逐项学习标签、�
 | [算术与比较运算符](courses/go/go-operators.md) | 计算总数、余数和比较结果，观察整数除法。 |
 | [字符串与终端输出](courses/go/go-strings.md) | 连接字符串，区分打印文字与打印变量。 |
 | [if 与 else 条件语句](courses/go/go-if.md) | 根据分数选择执行哪一个分支。 |
+| [从终端读取一行输入](courses/go/go-input.md) | 读取数字和整行文字，区分空行、EOF、转换错误与范围校验。 |
 | [switch 多分支选择](courses/go/go-switch.md) | 按一个值选择明确的分支，处理没有匹配的情况。 |
 | [for 循环与累加](courses/go/go-for.md) | 跟踪循环变量，计算 1 到 5 的和。 |
 | [函数参数与返回值](courses/go/go-functions.md) | 定义一个 Add 函数，区分定义、调用和返回。 |
@@ -58,7 +59,6 @@ Web先认识浏览器与HTML/CSS/JavaScript的职责，再逐项学习标签、�
 | [包与模块的实际组织](courses/go/go-packages.md) | 建立两个文件，把函数放到可导入的calc包。 |
 | [第一份单元测试](courses/go/go-testing.md) | 比较真实结果与自己手算的期望，改错后看到失败。 |
 | [结构体与 JSON 编解码](courses/go/go-json.md) | 将Go结构体变成JSON文字，再读取回来。 |
-| [从终端读取一行输入](courses/go/go-input.md) | 读取一整行文字，并检查读取错误。 |
 | [文件读取与路径](courses/go/go-files.md) | 读取一个本地文件，不存在时显示错误。 |
 | [字符串处理与排序](courses/go/go-sort.md) | 先把文字拆成单词，再建立确定的输出顺序。 |
 | [实战 词频统计与稳定排名](courses/go/go-project-wordfreq.md) | 把字符串、map、切片、结构体和排序连成一个命令行工具。 |

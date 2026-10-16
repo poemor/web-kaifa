@@ -26,7 +26,11 @@ def main():
     for check in checks:
         if check["language"] != "go":
             continue  # Browser answers have their own DOM checks.
-        block = answer_blocks(check["chapter"])[check["answer"]]
+        if "section" in check:
+            text = (ROOT / f"docs/courses/{check['chapter'].split('-')[0]}/{check['chapter']}.md").read_text()
+            block = re.search(r"## " + re.escape(check["section"]) + r"\n(.*?)(?=\n## |\Z)", text, re.S).group(1)
+        else:
+            block = answer_blocks(check["chapter"])[check["answer"]]
         code = re.findall(r"```go\n(.*?)\n```", block, re.S)
         assert len(code) == 1, check
         with tempfile.TemporaryDirectory(prefix="course-answer-") as name:
@@ -44,7 +48,7 @@ def main():
                     check, result.stdout, result.stderr
                 )
         count += 1
-    print(f"PASS: {count} Go answer programs match their published output.")
+    print(f"PASS: {count} Go answer/example runs match their published output.")
 
 
 if __name__ == "__main__":

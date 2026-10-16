@@ -316,7 +316,7 @@ go build -o hello .
 
 ## 7. 输入、文件与项目在哪里继续
 
-[从终端读取一行输入](../../index.html#/learn/go/go-input)位于初阶，需要已经学过变量、条件、函数与错误处理。入门先做[学习时长计算器](../../index.html#/learn/go/go-project-minutes)，初阶再做词频统计。安装结束不要求立即完成这些项目。
+[终端输入课](../../index.html#/learn/go/go-input)已放到入门阶段，学过变量、类型、输出和条件后即可开始，课内会先解释读取函数交回的数据与错误。入门先做[学习时长计算器](../../index.html#/learn/go/go-project-minutes)，初阶再做词频统计。安装结束不要求立即完成这些项目。
 
 ## 8. 插件、配置与 F5 调试，从哪里继续
 

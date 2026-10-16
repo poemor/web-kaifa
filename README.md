@@ -32,7 +32,7 @@
 
 ## 从这里开始
 
-准备好工具后，在网站“Go 后端”或“Web 开发”进入四层课程目录。Go先读程序结构、变量、类型、条件、循环与函数；Web先读文档结构、标签、文字、链接、CSS与盒模型。新手不用先配置F5或完整工程；函数、数据结构之后再做输入与文件，JavaScript之后再做DOM与请求。
+准备好工具后，在网站“Go 后端”或“Web 开发”进入四层课程目录。Go先读程序结构、变量、类型、条件、终端输入输出、循环与函数；Web先读文档结构、标签、文字、链接、CSS与盒模型。新手不用先配置F5或完整工程；输入先从短文本与数字开始，文件读写在数据结构和错误处理后展开，JavaScript之后再做DOM与请求。
 
 入门/初阶源码包：[学习时长计算器](assets/downloads/go-study-minutes.zip)、[学习名片页](assets/downloads/web-profile-card.zip)、[响应式活动页](assets/downloads/web-responsive-events.zip)。中级新增 [Go HTML 模板页面](assets/downloads/go-template-pages.zip)，可以启动服务观察服务器生成的 HTML。后续配套有词频工具、活动搜索、内存CRUD、持久化API、安全会话与部署恢复项目，各自README写明运行条件和限制。
 
