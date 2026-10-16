@@ -20,6 +20,8 @@
 
 ## 先看一个完整例子
 
+这里固定300px用于测量；320px窗口加上页面边距后可能溢出。测量结束用于实际布局时应设置适应容器的宽度或max-width。
+
 在自己的独立练习文件夹新建 index.html，保存下面完整内容，用浏览器打开。修改后先保存，再刷新。
 
 ```html
@@ -52,10 +54,6 @@
 ### 参考答案
 
 原例 padding 为20px、1px边框时，content-box外宽342px；改 padding=30px 后外宽362px。border-box 声明300px时外宽仍300px，padding=30px后内容宽238px。要同时记下当前参数，不能把不同实验的数字混用。
-
-## 本节容易混淆的地方
-
-示例刻意固定300px用于测量，在320px手机且页面有边距时可能溢出。正式布局需给max-width或适应容器。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 

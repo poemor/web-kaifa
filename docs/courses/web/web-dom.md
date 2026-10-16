@@ -54,10 +54,6 @@ script放在元素之后，因此执行时标题已存在。#title匹配id=title
 
 选择#missing返回null，访问它的textContent会抛TypeError；先判断是否存在，才能给出可理解的失败提示。
 
-## 本节容易混淆的地方
-
-开发者工具里临时改DOM不会自动保存到源码。使用innerHTML处理不可信文字会把它当HTML解释，文字显示优先textContent。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：同步两个页面信息

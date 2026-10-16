@@ -76,8 +76,4 @@ article { min-width: 0; padding: 8px; border: 1px solid; }
 ```
 
 
-## 本节容易混淆的地方
-
-Grid只布局直接子项。不要用绝对定位手工算每张卡片的位置。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

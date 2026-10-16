@@ -57,10 +57,6 @@ a:focus-visible { outline: 3px solid var(--brand); outline-offset: 4px; }
 
 把 --brand 改为 #14532d 后，所有引用此变量的链接与焦点规则同步改变。用 Tab 聚焦，看到外框后 Enter 跳到真实目标，才验证了键盘路径。
 
-## 本节容易混淆的地方
-
-没有键盘功能的div不会因为加hover就成为按钮。先使用语义正确的交互元素。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：共享间距与独立焦点

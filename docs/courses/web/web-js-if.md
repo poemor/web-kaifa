@@ -67,10 +67,6 @@ if (score < 0 || score > 100) {
 
 -1和101非法，0和59未及格，60和100及格；再测NaN或Infinity，应在有效数字检查时被拒绝。
 
-## 本节容易混淆的地方
-
-不要用连续独立if假装互斥分支，多个条件可能同时执行。比较前也要确认输入真的是有效数字。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：按规则计算运费

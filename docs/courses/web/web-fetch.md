@@ -84,10 +84,6 @@ data.json完整内容：
 
 三种失败分别来自HTTP状态、JSON格式、业务字段类型。恢复正确文件后得到活动数据。
 
-## 本节容易混淆的地方
-
-浏览器地址与文件位置共同决定./data.json解析到哪里。fetch成功不是业务数据一定正确。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 参考：[MDN HTTP 概览](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview)、[MDN 使用 Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)。

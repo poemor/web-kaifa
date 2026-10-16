@@ -67,10 +67,6 @@ console.log("结束");
 
 同步日志先执行，拒绝由catch打印message；如果没有catch或await的处理，可能产生未处理拒绝提示，不能只看成功分支。
 
-## 本节容易混淆的地方
-
-异步不等于所有代码并行执行，也不代表能忽略失败。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：将完成值交给下一步

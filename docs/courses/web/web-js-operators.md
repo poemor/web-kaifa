@@ -69,10 +69,6 @@ true
 
 Number("")、Number("  ")、Number("0")都是0；转换成功不能证明用户输入了有意义的数字。
 
-## 本节容易混淆的地方
-
-用==会引入额外转换规则，起步例子用===。NaN不等于自己，不用value===NaN检测。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：模拟采购输入的转换表

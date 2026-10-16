@@ -56,10 +56,6 @@ p { font-size: 1rem; }
 
 根字号20px时1rem等于20px；已有12px固定字号仍是12px。用 Computed 看计算值，别只凭视觉猜比例。
 
-## 本节容易混淆的地方
-
-不要把所有百分比都解释成屏幕百分比，也不要以缩小字体解决小屏溢出。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：比较可缩放文字与固定文字

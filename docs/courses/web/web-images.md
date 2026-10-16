@@ -14,6 +14,8 @@
 
 ## 尺寸、加载与多种资源
 
+alt不是鼠标悬停提示；纯装饰图可用空alt，含信息的图片要描述其作用，悬停title不能替代它。
+
 img 的 width、height 可以为浏览器预留空间，减少图片加载后布局跳动；响应式缩放交给 CSS。src 是文件地址，alt 是与使用场景相关的替代文字，不是重复文件名。若图片本身是链接的唯一内容，替代文字也要说明链接目的。
 
 照片常用 JPEG/WebP/AVIF，透明图可用 PNG，图标和几何线条可用 SVG。不要把任意不可信 SVG 源码直接注入页面。大型图片可在后续学 srcset/sizes 与 loading="lazy"，但首屏关键图不要一律延迟加载。
@@ -67,9 +69,5 @@ img 的 width、height 可以为浏览器预留空间，减少图片加载后布
 </html>
 ```
 
-
-## 本节容易混淆的地方
-
-alt不是鼠标悬停提示。只有装饰用途的图片可用空alt，但信息图应描述其意义。
 
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

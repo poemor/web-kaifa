@@ -58,10 +58,6 @@ display:none 会让元素不参与布局，通常也不出现在辅助技术阅�
 
 改成 block 后每个标签另起块行；普通 span 用 inline 时80px的 width 不按行内块方式生效。去掉测量规则前先看 Computed，避免把内容长度差异当布局行为。
 
-## 本节容易混淆的地方
-
-不要用很多空格或br拼布局。先理解流，再学Flex和Grid。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：文字中的步骤标签

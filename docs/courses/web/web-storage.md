@@ -78,10 +78,6 @@ document.querySelector("#save").addEventListener("click", () => {
 
 显示读取失败，原记录仍可检查；主动保存才写入新演示值。
 
-## 本节容易混淆的地方
-
-不要在localStorage保存密码或把它当可靠服务器身份。重要数据清空与导入应先备份并可撤销。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：保存自己的阅读偏好

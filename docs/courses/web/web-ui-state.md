@@ -72,10 +72,6 @@ render先取得查询，再得到found。数量与列表都读found，因此保�
 
 原例查“编程”、不存在关键词、空查询，应依次1、0、2项。数量与行数从同一筛选结果计算，每轮先清空旧列表。
 
-## 本节容易混淆的地方
-
-只更新列表不更新数量，或只改状态不render，都会让显示与数据不一致。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：按书名筛选并显示页数

@@ -55,10 +55,6 @@ article { padding: 16px; background: #edf2f7; }
 
 原版在360px是一列，768与1440px两列。把断点改900px后，768px回到一列；同时测试899/900/901px，900应已经命中新规则。
 
-## 本节容易混淆的地方
-
-设备模拟是检查方式之一，不能凭某个手机型号认定所有宽度都适配。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：为三张课程卡选择断点

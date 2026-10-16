@@ -69,10 +69,6 @@ load开始后在await处等待值，成功时打印5。拒绝会进入catch。�
 
 把等待对象改为拒绝后，应只报告加载失败，不继续显示成功数据。try必须包住await语句，才能捕获该次拒绝。
 
-## 本节容易混淆的地方
-
-await仅在支持的位置使用，本例放在async函数中。catch覆盖的是包在try中的操作。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：等待完成后返回账单

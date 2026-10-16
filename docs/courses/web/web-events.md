@@ -61,10 +61,6 @@ result.textContent = String(count);
 
 原例用Tab定位button，Enter两次后显示2；刷新重建状态为0。键盘功能来自原生button，不来自click回调自身。
 
-## 本节容易混淆的地方
-
-不要重复在每次点击中再绑定同一个监听器，否则处理次数可能增长。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：可撤销的点赞计数

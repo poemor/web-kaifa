@@ -53,10 +53,6 @@ p选择所有段落，color控制文字色，blue是蓝色值。花括号包住�
 
 `p { color: green; background-color: lightyellow; }` 会同时改变文字和背景。到 Styles 中分别取消两条声明，能验证它们各自控制的属性。
 
-## 本节容易混淆的地方
-
-CSS放在style或.css文件，不要作为正文文字写到body里。外部CSS用head中的link rel="stylesheet"引入。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：独立制作提示说明

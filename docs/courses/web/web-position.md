@@ -54,10 +54,6 @@ card的relative为badge提供参照。角标离卡片右上角8px，正文仍按
 
 移除 card 的 relative 后，absolute 角标会去找更外层的包含块，可能贴到页面而不是卡片。恢复后先确认其父卡片边框与偏移距离，再看 z-index；后者不能修复参照错误。
 
-## 本节容易混淆的地方
-
-fixed常相对视口，sticky需满足滚动和top等条件。z-index也受层叠上下文影响，数字大不是万能。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：两张卡片各有自己的角标

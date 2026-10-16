@@ -90,8 +90,4 @@ console.log(prices.length, labels.length, selected.length);
 ```
 
 
-## 本节容易混淆的地方
-
-不要用map来主要进行DOM副作用却丢掉返回值。只做逐项操作时选择合适的循环。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

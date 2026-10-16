@@ -57,10 +57,6 @@ doctype声明采用现代HTML规则。html包住文档，lang声明主要语言�
 
 修改 title 后只看标签页，修改 h1 后只看正文。两者不随对方自动变化。
 
-## 本节容易混淆的地方
-
-HTML代码保存在index.html中。网站练习框不会自动改动你的本机文件；没保存就刷新会继续看到磁盘旧内容。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：制作食谱说明页

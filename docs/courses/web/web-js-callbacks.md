@@ -68,10 +68,6 @@ filter把40、60、80依次交给passed，保留后两项。调用处传passed�
 
 输入[60,80]时>=80只留[80]，空输入得到[]；filter不删除原数组项目。
 
-## 本节容易混淆的地方
-
-filter返回新数组。忘记接收返回值或回调没return，会让你看不到期望结果。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：保留正偶数

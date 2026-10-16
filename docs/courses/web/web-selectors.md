@@ -61,10 +61,6 @@
 
 `.event-title` 只匹配有该类的元素，`h2` 匹配全部 h2。把类加给第二项会扩大类规则的范围，修改选择器则是改变选择规则，两种实验应分开。
 
-## 本节容易混淆的地方
-
-写.event-title与写event-title不同，后者选择同名标签而非class。不要给很多元素重复同一个id。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：区分公告与重点公告

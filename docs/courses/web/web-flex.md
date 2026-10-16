@@ -52,10 +52,6 @@ nav { display: flex; gap: 16px; justify-content: space-between; align-items: cen
 
 column 把主轴转为竖向，justify-content 沿竖向分配空间，align-items 控制横向。若容器高度恰好等于内容总高度，几乎没有可分配空间，视觉效果也就不明显。
 
-## 本节容易混淆的地方
-
-不要固定认为justify-content就是水平居中。先看flex-direction与容器可用空间。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：四项可操作的目录

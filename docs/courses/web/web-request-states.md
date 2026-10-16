@@ -79,10 +79,6 @@ events.json完整内容：
 
 两项成功并有列表；空数组显示没有活动；对象被判为形状错误。
 
-## 本节容易混淆的地方
-
-显示空数组不等于加载失败，重试按钮也不能替代具体错误原因。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：书籍清单的四种状态

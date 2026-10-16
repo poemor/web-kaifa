@@ -6,6 +6,8 @@
 
 教学补全的实际范围、分批检查与恢复点见 [2026-10-16 修订记录](docs/teaching-revision-20261016.md)。本 fork 的源码更新不表示上游在线站点已发布。
 
+本次补写覆盖125章：Go输入输出已移到入门，基础语法、Web语言与工程章节补充具体规则及题解；重复尾注已删减。新增答案可分别用 `python3 scripts/check_course_answers.py` 与 `node scripts/check_course_browser_answers.cjs` 复验，环境要求与未验证项见修订记录。
+
 **本机阅读**：下载或克隆仓库，双击 [index.html](index.html)。课程、提示模板和进度功能不需要安装依赖；官方资料入口需要联网。
 
 ## 网页里可以做什么

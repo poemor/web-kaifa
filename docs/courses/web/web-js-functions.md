@@ -92,8 +92,4 @@ console.log(multiply(-2, 3));
 ```
 
 
-## 本节容易混淆的地方
-
-调用add()与把add函数本身交给别处是两件事；事件章节会使用后者。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

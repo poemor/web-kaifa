@@ -74,10 +74,6 @@ minutes先20再30。typeof返回值的类型名称。比较得到true。const na
 
 minutes为0时 minutes > 0 为false；给 const name 重新赋值会抛 TypeError。恢复后再运行，不能拿错误之前的日志当作后续代码已执行。
 
-## 本节容易混淆的地方
-
-const不是“所有内容永远不可变”。undefined常来自没有提供值，null是显式的空值，二者不要混用。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：安排学习计划的三种值

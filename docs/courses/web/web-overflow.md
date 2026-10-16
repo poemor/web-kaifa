@@ -81,8 +81,4 @@ p { overflow-wrap: anywhere; }
 ```
 
 
-## 本节容易混淆的地方
-
-用overflow-x:hidden藏住内容不能证明布局修好了。图片用max-width:100%，需要裁切才加固定比例与object-fit。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

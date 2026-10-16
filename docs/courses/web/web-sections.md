@@ -81,8 +81,4 @@ main 表示页面主要内容，header/footer 的含义取决于所属页面或�
 ```
 
 
-## 本节容易混淆的地方
-
-不要以为换成header就会自动固定在顶部，或所有容器都应该写section。没有主题的样式容器可以用div。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

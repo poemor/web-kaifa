@@ -25,6 +25,24 @@
 
 真实PostgreSQL、Docker停止/数据卷、远程CI和公网部署仍未执行。SQL及交付题给出真实环境要求和验收方法，不能据单元测试或模板文本称这些环境已通过。原始5份materials文件的大小与SHA-256均校验通过，用户学习进度未更新。
 
+最后复读删除39个重复的“本节容易混淆”尾段，把图片替代描述、固定宽度测量等仍有价值的限制放回相应正文。125篇本地Markdown章节链接检查无断链。
+
+最后一轮test_site通过54个既有内容入口、预览、完成规则、持久化、备份导入导出往返、异常输入恢复与4种手机宽度。该检查使用隔离浏览器上下文，未读取或改写用户实际学习记录。
+
+新增React重置与Vue重置题解在独立followup-04副本中通过typecheck及生产构建，两条真实浏览器路径均验证增加两次、重置、刷新。TypeScript商品/状态完整入口通过严格检查，错误quantity类型被拒绝；Node的5项断言直接运行通过，includes改startsWith、去掉trim两种故意错误均使对应测试失败。Vue结果不提升为vue-tsc完整SFC类型验收。
+
+## 复验入口
+
+```sh
+node scripts/build_course_book.cjs --check
+node scripts/check_site.cjs
+python3 scripts/check_materials.py
+python3 scripts/check_course_answers.py
+node scripts/check_course_browser_answers.cjs
+```
+
+答案检查使用`docs/courses/answer-checks.json`直接提取正文代码，Go程序在临时独立模块运行。可用`GO_TOOLCHAIN_EXE`选择Go路径，`COURSE_BROWSER_EXECUTABLE`选择已安装的浏览器可执行路径。完整阅读检查仍用test_course_book/test_course_navigation，受策略禁止file访问的环境可显式设置COURSE_HTTP_ONLY=1并保留跳过记录；这不等于已验证离线读取。
+
 答案检查清单在 `docs/courses/answer-checks.json`。运行 `GO_TOOLCHAIN_EXE=/path/to/go python3 scripts/check_course_answers.py` 会从正文直接提取答案代码并核对结果，默认使用 PATH 中的 go。原示例、交互和需要数据库的工程另按各自验证脚本检查；本表没有把未执行的检查记成通过。
 
 Linux 检查时发现旧下载包的换行和排序依赖制作平台。本次让源码 ZIP 检查接受等价的 CRLF/LF，打包顺序固定按文件名排序，并固定 VS Code 包的平台元数据；没有删除源码或替换原教材。

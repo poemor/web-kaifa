@@ -95,8 +95,4 @@ console.log(emptyTotal);
 ```
 
 
-## 本节容易混淆的地方
-
-JavaScript读取越界不像Go那样一定panic，得到undefined也可能在后面的计算中造成NaN。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

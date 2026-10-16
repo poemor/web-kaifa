@@ -94,8 +94,4 @@ console.log(nested.address.city);
 ```
 
 
-## 本节容易混淆的地方
-
-给不存在的属性名拼错可能得到undefined，不会自动指出你的业务字段错误。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

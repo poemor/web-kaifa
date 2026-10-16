@@ -62,10 +62,6 @@ script在本例body末尾，内容按顺序执行。带引号的是文字，不�
 
 2+3 改成2*3，第二条控制台结果由5变6；正文仍由HTML决定，不会自动替换。
 
-## 本节容易混淆的地方
-
-在控制台输入临时代码不会自动保存到index.html。刷新还会重新执行文件内容，检查你看的日志属于哪次运行。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：只在控制台生成一张小收据

@@ -93,8 +93,4 @@ render();
 ```
 
 
-## 本节容易混淆的地方
-
-直接使用innerHTML插入用户数据可能改变结构或造成脚本注入风险。输入数据优先作为文字。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

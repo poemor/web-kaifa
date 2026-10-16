@@ -66,10 +66,6 @@ form 的 method="get" 把数据放进查询字符串，适合本课虚构数据�
 
 for 与 id 不匹配时，点击标签不再聚焦目标。恢复一致后分别点击两个标签，确认焦点到对应输入，不只用鼠标直接点输入框。
 
-## 本节容易混淆的地方
-
-required不阻止全部空白文本，也不自动保存数据。只读原生属性，不把“校验通过”描述为“提交成功”。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：两字段学习意向表

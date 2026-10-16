@@ -88,8 +88,4 @@ h1是页面主题，h2是本周安排这个分主题。ul表示无序列表，�
 ```
 
 
-## 本节容易混淆的地方
-
-不要用很多br代替段落，也不要仅为字号把h1换成h4。外观在CSS章节调整。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。

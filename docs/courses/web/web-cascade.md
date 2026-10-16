@@ -56,10 +56,6 @@ p { color: blue; }
 
 移除 .note 后 p 的蓝色直接规则生效；再移除 p 的颜色规则，才使用父 div 的绿色。后写规则只有在其他层叠条件相同、权重相同时才凭次序胜出。
 
-## 本节容易混淆的地方
-
-不能说“最后一条CSS永远生效”。!important不是解决所有覆盖问题的工具，先看匹配与权重。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：预测两种覆盖来源

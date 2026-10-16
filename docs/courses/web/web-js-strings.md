@@ -67,10 +67,6 @@ trim去掉两端空白，结果保存在clean，原name仍包含空格。模板�
 
 trim 返回去除两端空白的新字符串，原 name 不变；表情的 length 应按码元解释，不能据“看上去一字”直接预期1。
 
-## 本节容易混淆的地方
-
-模板必须用反引号而非普通引号。trim只处理边界空白，不移除字符串中间空格。
-
 参考：[MDN Web 学习文档](https://developer.mozilla.org/zh-CN/docs/Learn_web_development)。
 
 ## 独立变式：生成一条课程通知
